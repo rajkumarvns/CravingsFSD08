@@ -52,30 +52,38 @@ const Navbar = () => {
         </div>
 
         {isLogin ? (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center bg-white/10 hover:bg-white/20 border border-white/20 transition-all duration-300 rounded-full pr-2 pl-1 py-1 shadow-lg backdrop-blur-md group">
             <button
-              className="flex gap-2 items-center text-(--color-primary-content) border border-transparent hover:border-(--color-primary-content)  px-3 py-1 rounded"
+              className="flex items-center gap-3 cursor-pointer text-left focus:outline-none"
               title="Go to Dashboard"
               onClick={handleNavigate}
             >
-              <img
-                src={user?.photo.url}
-                alt={user?.fullName}
-                className="w-12 h-12 rounded-full object-cover object-top"
-              />
-              <div className="flex flex-col items-start">
-                <span className="text-base">{user?.fullName}</span>
-                <span className="text-xs text-(--color-primary-content)/80 uppercase">
+              <div className="relative">
+                <img
+                  src={user?.photo.url}
+                  alt={user?.fullName}
+                  className="w-10 h-10 rounded-full object-cover object-top ring-2 ring-white/40 group-hover:ring-white transition-all duration-300"
+                />
+                <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-(--color-primary) rounded-full"></div>
+              </div>
+              <div className="flex flex-col mr-3">
+                <span className="text-sm font-bold text-white leading-tight">
+                  {user?.fullName}
+                </span>
+                <span className="text-[10px] font-bold text-white/80 uppercase tracking-wider">
                   {role}
                 </span>
               </div>
             </button>
+            
+            <div className="w-[1px] h-8 bg-white/20 mx-1"></div>
+            
             <button
               onClick={handleLogout}
-              className="text-(--color-primary-content) border border-transparent hover:border-(--color-primary-content) hover:bg-(--color-error) px-3 py-3 rounded"
+              className="text-white/80 hover:text-white hover:bg-red-500/90 p-2.5 rounded-full transition-all duration-300 ml-1 flex items-center justify-center focus:outline-none"
               title="Logout"
             >
-              <FaPowerOff />
+              <FaPowerOff size={16} />
             </button>
           </div>
         ) : (
