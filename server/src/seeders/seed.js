@@ -7,7 +7,7 @@ import userSeed from "./user.seed.js";
 
 const Seed = async () => {
   try {
-    connectDB();
+    await connectDB();
 
     await adminSeed();
     await userSeed();
