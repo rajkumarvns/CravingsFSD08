@@ -276,25 +276,25 @@ const HelpCenter = () => {
                     errors.issueType ? "border-red-500 border-2" : "border-white/20"
                   }`}
                 >
-                  <option value="" className="text-gray-850">
+                  <option value="" className="bg-(--color-secondary) text-(--color-secondary-content)">
                     Select issue type
                   </option>
-                  <option value="Accounts & Profile">
+                  <option value="Accounts & Profile" className="bg-(--color-secondary) text-(--color-secondary-content)">
                     Accounts & Profile
                   </option>
-                  <option value="Order Issues">
+                  <option value="Order Issues" className="bg-(--color-secondary) text-(--color-secondary-content)">
                     Order Issues
                   </option>
-                  <option value="Payment & Billing">
+                  <option value="Payment & Billing" className="bg-(--color-secondary) text-(--color-secondary-content)">
                     Payment & Billing
                   </option>
-                  <option value="Delivery Problem">
+                  <option value="Delivery Problem" className="bg-(--color-secondary) text-(--color-secondary-content)">
                     Delivery Problem
                   </option>
-                  <option value="Restaurant / Menu">
+                  <option value="Restaurant / Menu" className="bg-(--color-secondary) text-(--color-secondary-content)">
                     Restaurant / Menu
                   </option>
-                  <option value="Other">
+                  <option value="Other" className="bg-(--color-secondary) text-(--color-secondary-content)">
                     Other
                   </option>
                 </select>

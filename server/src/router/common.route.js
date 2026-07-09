@@ -1,6 +1,9 @@
 import express from "express";
 import multer from "multer";
-import { EditUserProfile } from "../controller/common.controller.js";
+import {
+  EditUserProfile,
+  UpdateUserPassword,
+} from "../controller/common.controller.js";
 import { AuthProtect } from "../middleware/auth.middelware.js";
 
 const Upload = multer();

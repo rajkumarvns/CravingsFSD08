@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import RestaurantSidebar from "../../components/restaurantDashboard/RestaurantSidebar";
 import RestaurantOverview from "../../components/restaurantDashboard/RestaurantOverview";
+import RestaurantMenu from "../../components/restaurantDashboard/RestaurantMenu";
 import RestaurantSetting from "../../components/restaurantDashboard/RestaurantSetting";
 import RestaurantOrders from "../../components/restaurantDashboard/RestaurantOrders";
 
@@ -42,6 +43,7 @@ const RestaurantDashboard = () => {
         </div>
         <div className="w-14/17 bg-(--color-base-100) p-4 rounded-lg shadow-md h-full">
           {activeTab === "overview" && <RestaurantOverview />}
+          {activeTab === "menu" && <RestaurantMenu />}
           {activeTab === "orders" && <RestaurantOrders />}
           {activeTab === "settings" && <RestaurantSetting />}
         </div>

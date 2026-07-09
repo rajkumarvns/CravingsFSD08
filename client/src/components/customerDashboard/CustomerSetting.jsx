@@ -1,9 +1,10 @@
+import React, { useState } from "react";
 import api from "../../config/ApiConfig";
 import toast from "react-hot-toast";
-import { MdOutlineAddAPhoto } from "react-icons/md";
-import PasswordChangeModal from "../commomModals/PasswordChangeModal";
-
-const CustomerSetting = () => {
+import { MdOutlineAddAPhoto, MdEdit, MdOutlineLockReset } from "react-icons/md";
+import { useAuth } from "../../context/AuthContext";
+import PasswordChangeModal from "../commonModals/PasswordChangeModal";
+ const CustomerSetting = () => {
   const { user, setUser } = useAuth();
   const [editingProfile, setEditingProfile] = useState(false);
   const [profilePic, setProfilePic] = useState(null);
@@ -179,3 +180,4 @@ const CustomerSetting = () => {
     </>
   );
 };
+export default CustomerSetting;
