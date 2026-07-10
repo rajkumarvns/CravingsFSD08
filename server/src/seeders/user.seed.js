@@ -34,6 +34,17 @@ const userSeed = async () => {
         phone: "9876543210",
         photo: { url: "https://placehold.co/600x400?text=R", publicId: null },
       },
+
+      {
+        fullName: "admin1",
+        email: "admin1@gmail.com".toLowerCase(),
+        password: await bcrypt.hash("Admin@123", 10),
+        dob: "2000-01-01",
+        gender: "male",
+        userType: "admin",
+        phone: "9876543210",
+        photo: { url: "https://placehold.co/600x400?text=R", publicId: null },
+      },
     ];
 
     //Seeding Restaurant
