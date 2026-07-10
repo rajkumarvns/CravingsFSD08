@@ -4,7 +4,7 @@ import connectDB from "./src/config/dbConnection.config.js";
 import AuthRouter from "./src/router/auth.route.js";
 import PublicRouter from "./src/router/public.route.js";
 import CommonRouter from "./src/router/common.route.js";
-import MenuRouter from "./src/router/menu.router.js";
+import MenuRouter from "./src/router/menu.route.js";
 import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
