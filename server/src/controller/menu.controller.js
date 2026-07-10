@@ -3,8 +3,8 @@ import Menu from "../models/menu.model.js";
 export const getMenuItems = async (req, res, next) => {
   try {
     const { restaurantId } = req.params;
-    const menuItems = await Menu.find({ restaurantId });
-    res.status(200).json({ success: true, data: menuItems });
+    const menu = await Menu.findOne({ restaurantId });
+    res.status(200).json({ success: true, data: menu ? menu.menuItems : [] });
   } catch (error) {
     next(error);
   }
@@ -12,7 +12,7 @@ export const getMenuItems = async (req, res, next) => {
 
 export const createMenuItem = async (req, res, next) => {
   try {
-    const { name, description, price, category } = req.body;
+    const { itemName, description, price, category } = req.body;
     
     // In a real app, restaurantId comes from req.user (authenticated manager)
     // For now, if passed in body, use it, else wait for auth middleware integration
@@ -22,15 +22,24 @@ export const createMenuItem = async (req, res, next) => {
       return res.status(400).json({ success: false, message: "Restaurant ID is required" });
     }
 
-    const newItem = await Menu.create({
-      restaurantId,
-      name,
+    const newItem = {
+      itemName,
       description,
-      price,
+      price:
+      Number(price),
       category,
-    });
+      image: { url: "", publicId: "" },
+    };
 
-    res.status(201).json({ success: true, data: newItem, message: "Menu item created successfully" });
+    const updatedMenu = await Menu.findOneAndUpdate(
+      { restaurantId },
+      { $push: { menuItems: newItem } },
+      { new: true, upsert: true }
+    );
+
+    const addedItem = updatedMenu.menuItems[updatedMenu.menuItems.length - 1];
+
+    res.status(201).json({ success: true, data: addedItem, message: "Menu item created successfully" });
   } catch (error) {
     next(error);
   }

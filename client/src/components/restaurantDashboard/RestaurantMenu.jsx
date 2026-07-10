@@ -11,7 +11,7 @@ const RestaurantMenu = () => {
   // Form State for creating new item
   const [isAdding, setIsAdding] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
+    itemName: "",
     description: "",
     price: "",
     category: "",
@@ -51,7 +51,7 @@ const RestaurantMenu = () => {
         toast.success("Menu item added!");
         setMenuItems([...menuItems, res.data.data]);
         setIsAdding(false);
-        setFormData({ name: "", description: "", price: "", category: "" });
+        setFormData({ itemName: "", description: "", price: "", category: "" });
       }
     } catch (error) {
       toast.error("Failed to add menu item");
@@ -83,9 +83,9 @@ const RestaurantMenu = () => {
                 <label className="block text-sm mb-1">Item Name</label>
                 <input
                   type="text"
-                  name="name"
+                  name="itemName"
                   required
-                  value={formData.name}
+                  value={formData.itemName}
                   onChange={handleChange}
                   className="w-full p-2 rounded border border-(--color-secondary) bg-transparent"
                   placeholder="e.g. Margherita Pizza"
@@ -158,7 +158,7 @@ const RestaurantMenu = () => {
               {menuItems.map((item) => (
                 <tr key={item._id} className="border-b border-(--color-secondary) hover:bg-(--color-base-100) transition-colors">
                   <td className="py-3 font-medium">
-                    <div>{item.name}</div>
+                    <div>{item.itemName}</div>
                     <div className="text-xs text-(--color-neutral)">{item.description}</div>
                   </td>
                   <td className="py-3">{item.category}</td>

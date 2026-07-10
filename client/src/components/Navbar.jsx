@@ -60,7 +60,7 @@ const Navbar = () => {
             >
               <div className="relative">
                 <img
-                  src={user?.photo.url}
+                  src={user?.photo?.url}
                   alt={user?.fullName}
                   className="w-10 h-10 rounded-full object-cover object-top ring-2 ring-white/40 group-hover:ring-white transition-all duration-300"
                 />

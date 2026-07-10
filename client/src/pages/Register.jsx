@@ -89,8 +89,8 @@ const Register = () => {
   };
 
   return (
-    <div className="h-[90vh] bg-[url('/foodTable.webp')] flex items-center justify-end bg-cover bg-center p-10 md:pe-30">
-      <div className="bg-white rounded-lg shadow-md px-10 py-6 max-w-md w-full overflow-y-auto max-h-[85vh]">
+    <div className="min-h-[90vh] bg-[url('/foodTable.webp')] flex items-center justify-end bg-cover bg-center p-10 py-12 md:pe-30">
+      <div className="bg-white rounded-lg shadow-md px-10 py-6 max-w-md w-full">
         <h1 className="text-3xl font-bold text-(--color-primary) mb-2 text-center">
           Create Account
         </h1>
