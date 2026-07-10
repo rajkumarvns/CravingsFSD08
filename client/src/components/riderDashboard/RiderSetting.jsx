@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { MdEdit, MdOutlineAddAPhoto, MdOutlineLockReset } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../config/ApiConfig";
 import toast from "react-hot-toast";
+import { MdOutlineAddAPhoto } from "react-icons/md";
 import PasswordChangeModal from "../commonModals/PasswordChangeModal";
+
 const RiderSetting = () => {
   const { user, setUser } = useAuth();
   const [editingProfile, setEditingProfile] = useState(false);
@@ -12,6 +14,7 @@ const RiderSetting = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] =
     useState(false);
+
   const [formData, setFormData] = useState({
     fullName: user?.fullName || "",
     email: user?.email || "",
@@ -117,6 +120,7 @@ const RiderSetting = () => {
                     className="w-full h-full rounded-full object-cover border-2 border-(--color-primary)"
                   />
                 </div>
+
                 {editingProfile && (
                   <div
                     className="absolute cursor-pointer bottom-1 right-1 border p-2 rounded-full w-fit bg-(--color-base-200)"
@@ -136,6 +140,7 @@ const RiderSetting = () => {
                   </div>
                 )}
               </div>
+
               <div className="space-y-4 w-full">
                 <div className="grid grid-cols-5 gap-2 justify-center items-center">
                   <label className="block text-sm font-semibold mb-2">
@@ -161,6 +166,7 @@ const RiderSetting = () => {
                     className={`w-full px-3 py-2 border ${editingProfile ? "border-(--color-secondary) text-(--color-secondary) disabled:bg-(--color-secondary)/50 cursor-not-allowed" : "border-transparent"} rounded col-span-4`}
                     disabled
                   />
+
                   <label className="block text-sm font-semibold mb-2">
                     Phone
                   </label>
@@ -178,6 +184,7 @@ const RiderSetting = () => {
           </div>
         </div>
       </div>
+
       {isPasswordChangeModalOpen && (
         <PasswordChangeModal
           open={isPasswordChangeModalOpen}

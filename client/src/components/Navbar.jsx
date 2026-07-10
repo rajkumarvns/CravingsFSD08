@@ -37,7 +37,7 @@ const Navbar = () => {
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-          "Unknown error occurred during registration. Please try again.",
+        "Unknown error occurred during registration. Please try again.",
       );
     }
   };
@@ -75,9 +75,9 @@ const Navbar = () => {
                 </span>
               </div>
             </button>
-            
-            <div className="w-[1px] h-8 bg-white/20 mx-1"></div>
-            
+
+            <div className="w-1px h-8 bg-white/20 mx-1"></div>
+
             <button
               onClick={handleLogout}
               className="text-white/80 hover:text-white hover:bg-red-500/90 p-2.5 rounded-full transition-all duration-300 ml-1 flex items-center justify-center focus:outline-none"

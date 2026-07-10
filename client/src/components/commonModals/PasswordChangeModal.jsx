@@ -4,7 +4,6 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { LuLoaderCircle } from "react-icons/lu";
 import api from "../../config/ApiConfig";
 import toast from "react-hot-toast";
-import passwordChangeModal from "../commonModals/PasswordChangeModal";
 
 const PasswordChangeModal = ({ open, onClose }) => {
   const [formData, setFormData] = useState({
@@ -101,7 +100,7 @@ const PasswordChangeModal = ({ open, onClose }) => {
                   Confirm New Password
                 </label>
                 <input
-                  type="password"
+                  type="text"
                   id="confirmNewPassword"
                   name="confirmNewPassword"
                   value={formData.confirmNewPassword}
