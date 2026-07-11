@@ -1,199 +1,181 @@
-import React, { useState, useEffect } from "react";
-import { MdEdit } from "react-icons/md";
-import { MdOutlineLockReset } from "react-icons/md";
-import { useAuth } from "../../context/AuthContext";
+import React from "react";
+import { useState } from "react";
+import { IoIosCloseCircleOutline } from "react-icons/io";
+import { LuLoaderCircle } from "react-icons/lu";
 import api from "../../config/ApiConfig";
 import toast from "react-hot-toast";
-import { MdOutlineAddAPhoto } from "react-icons/md";
-import PasswordChangeModal from "../commonModals/PasswordChangeModal";
 
-const AdminSetting = () => {
-  const { user, setUser } = useAuth();
-  const [editingProfile, setEditingProfile] = useState(false);
-  const [profilePic, setProfilePic] = useState(null);
-  const [profilePicPreview, setProfilePicPreview] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] =
-    useState(false);
-
+const ForgotPasswordModal = ({ open, onClose }) => {
   const [formData, setFormData] = useState({
-    fullName: user?.fullName || "",
-    email: user?.email || "",
-    phone: user?.phone || "",
+    email: "",
+    otp: "",
+    newPassword: "",
+    confirmNewPassword: "",
   });
 
-  // Profile handlers
-  const handleProfileChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const [isLoading, setIsLoading] = useState(false);
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
 
-  const handleSaveProfile = async () => {
+  const handleCloseModal = () => {
+    onClose();
+    setFormData({
+      email: "",
+      otp: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    });
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+  const handleResetPassword = async () => {
     try {
       setIsLoading(true);
+      if (!isOtpSent) {
+        const res = await api.post("/auth/send-otp", formData);
+        toast.success(res.data.message);
+        setIsOtpSent(true);
+      }
 
-      const payload = new FormData();
-      payload.append("fullName", formData.fullName);
-      payload.append("email", formData.email.toLowerCase());
-      payload.append("phone", formData.phone);
-
-      payload.append("displayPic", profilePic);
-
-      const response = await api.put(`/common/edit-profile`, payload);
-
-      setUser(response.data.data);
-      sessionStorage.setItem("cravingUser", JSON.stringify(response.data.data));
-
-      setEditingProfile(false);
-      toast.success("Profile updated successfully!");
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to update profile");
+      if (isOtpSent && !isOtpVerified) {
+        const res = await api.post("/auth/verify-otp", formData);
+        toast.success(res.data.message);
+        setIsOtpVerified(true);
+      }
+      if (isOtpSent && isOtpVerified) {
+        const res = await api.post("/auth/reset-password", formData);
+        toast.success(res.data.message);
+        setIsOtpVerified(true);
+        handleCloseModal();
+      }
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          "Unknown error occurred during registration. Please try again.",
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleCancelProfile = () => {
-    setFormData({
-      fullName: user.fullName,
-      email: user.email,
-      phone: user.phone,
-    });
-    setProfilePicPreview(null);
-    setEditingProfile(false);
-  };
-
-  const handleProfilePicChange = (e) => {
-    const file = e.target.files[0];
-    setProfilePicPreview(URL.createObjectURL(file));
-    setProfilePic(file);
-  };
-
+  if (!open) return null;
   return (
     <>
-      <div className="overflow-y-auto h-full p-6 space-y-6">
-        {/* User Profile Section */}
-        <div className="bg-(--color-base-200) rounded-lg p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold">Profile Information</h3>
-            {!editingProfile ? (
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setEditingProfile(true)}
-                  className="flex items-center gap-2 bg-(--color-primary) text-(--color-primary-content) px-3 py-1 rounded text-sm"
-                >
-                  <MdEdit /> Edit
-                </button>
-                <button
-                  onClick={() => setIsPasswordChangeModalOpen(true)}
-                  className="flex items-center gap-2 border border-(--color-primary) text-(--color-primary) px-3 py-1 rounded text-sm hover:bg-(--color-primary) hover:text-(--color-primary-content)"
-                >
-                  <MdOutlineLockReset /> Change Password
-                </button>
-              </div>
-            ) : (
-              <div className="flex gap-2 justify-end">
-                <button
-                  onClick={handleSaveProfile}
-                  className="flex items-center gap-2 bg-(--color-primary) text-(--color-primary-content) px-3 py-1 rounded text-sm"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Saving..." : "Save Changes"}
-                </button>
-                <button
-                  onClick={handleCancelProfile}
-                  className="flex items-center gap-2 bg-(--color-secondary) text-(--color-secondary-content) px-3 py-1 rounded text-sm"
-                  disabled={isLoading}
-                >
-                  Cancel
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div>
-            <div className="flex items-center gap-6">
-              <div className="relative">
-                <div className="w-36 h-36">
-                  <img
-                    src={profilePicPreview || user?.photo?.url}
-                    alt="Profile"
-                    className="w-full h-full rounded-full object-cover border-2 border-(--color-primary)"
-                  />
-                </div>
-
-                {editingProfile && (
-                  <div
-                    className="absolute cursor-pointer bottom-1 right-1 border p-2 rounded-full w-fit bg-(--color-base-200)"
-                    title="Change Photo"
-                  >
-                    <label htmlFor="profilePic" className="cursor-pointer">
-                      <MdOutlineAddAPhoto className="text-xl" />
-                    </label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      name="profilePic"
-                      id="profilePic"
-                      className="hidden"
-                      onChange={handleProfilePicChange}
-                    />
-                  </div>
-                )}
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-999">
+        <div className="bg-white w-xl rounded shadow max-h-[80vh] overflow-y-auto relative">
+          <header className="flex justify-between p-4 border-b border-(--color-secondary)">
+            <div className="font-bold text-xl text-(--color-primary)">
+              Forgot Password
+            </div>
+            <button onClick={handleCloseModal}>
+              <IoIosCloseCircleOutline className="text-red-400 hover:text-red-700 text-2xl" />
+            </button>
+          </header>
+          <main>
+            <div className="p-4">
+              <div className="flex flex-col gap-2">
+                <label htmlFor="email" className="font-semibold">
+                  Your Registred Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="border border-(--color-secondary) rounded px-3 py-2 disabled:bg-(--color-secondary) disabled:text-(--color-secondary-content)"
+                  disabled={isLoading || isOtpSent}
+                />
               </div>
 
-              <div className="space-y-4 w-full">
-                <div className="grid grid-cols-5 gap-2 justify-center items-center">
-                  <label className="block text-sm font-semibold mb-2">
-                    Full Name
+              {isOtpSent && (
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="otp" className="font-semibold">
+                    Your OTP
                   </label>
                   <input
                     type="text"
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleProfileChange}
-                    className={`w-full px-3 py-2 border ${editingProfile ? "border-(--color-secondary)" : "border-transparent"} rounded col-span-4`}
-                    disabled={!editingProfile}
-                  />
-
-                  <label className="block text-sm font-semibold mb-2">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleProfileChange}
-                    className={`w-full px-3 py-2 border ${editingProfile ? "border-(--color-secondary) text-(--color-secondary) disabled:bg-(--color-secondary)/50 cursor-not-allowed" : "border-transparent"} rounded col-span-4`}
-                    disabled
-                  />
-
-                  <label className="block text-sm font-semibold mb-2">
-                    Phone
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleProfileChange}
-                    className={`w-full px-3 py-2 border ${editingProfile ? "border-(--color-secondary)" : "border-transparent"} rounded col-span-4`}
-                    disabled={!editingProfile}
+                    id="otp"
+                    name="otp"
+                    value={formData.otp}
+                    onChange={handleChange}
+                    className="border border-(--color-secondary) rounded px-3 py-2 disabled:bg-(--color-secondary) disabled:text-(--color-secondary-content)"
+                    disabled={isLoading || isOtpVerified}
                   />
                 </div>
-              </div>
+              )}
+
+              {isOtpSent && isOtpVerified && (
+                <>
+                  <div className="flex flex-col gap-2">
+                    <label htmlFor="newPassword" className="font-semibold">
+                      Create Your New Password
+                    </label>
+                    <input
+                      type="password"
+                      id="newPassword"
+                      name="newPassword"
+                      value={formData.newPassword}
+                      onChange={handleChange}
+                      className="border border-(--color-secondary) rounded px-3 py-2 disabled:bg-(--color-secondary) disabled:text-(--color-secondary-content)"
+                      disabled={isLoading}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="confirmNewPassword"
+                      className="font-semibold"
+                    >
+                      Confirm Your New Password
+                    </label>
+                    <input
+                      type="text"
+                      id="confirmNewPassword"
+                      name="confirmNewPassword"
+                      value={formData.confirmNewPassword}
+                      onChange={handleChange}
+                      className="border border-(--color-secondary) rounded px-3 py-2 disabled:bg-(--color-secondary) disabled:text-(--color-secondary-content)"
+                      disabled={isLoading}
+                    />
+                  </div>
+                </>
+              )}
             </div>
-          </div>
+          </main>
+          <footer className="w-full p-4 border-t border-(--color-secondary) flex justify-end gap-3">
+            <button
+              onClick={handleCloseModal}
+              className="flex items-center gap-2 bg-(--color-secondary) text-(--color-secondary-content) px-3 py-1 rounded text-sm"
+              disabled={isLoading}
+            >
+              Cancel
+            </button>
+            <button
+              className="flex items-center gap-2 bg-(--color-primary) text-(--color-primary-content) px-3 py-1 rounded text-sm"
+              onClick={handleResetPassword}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <LuLoaderCircle className="animate-spin" /> Loading...
+                </>
+              ) : isOtpSent ? (
+                isOtpVerified ? (
+                  "Reset Password"
+                ) : (
+                  "Verify OTP"
+                )
+              ) : (
+                "Send OTP"
+              )}
+            </button>
+          </footer>
         </div>
       </div>
-
-      {isPasswordChangeModalOpen && (
-        <PasswordChangeModal
-          open={isPasswordChangeModalOpen}
-          onClose={() => setIsPasswordChangeModalOpen(false)}
-        />
-      )}
     </>
   );
 };
 
-export default AdminSetting;
+export default ForgotPasswordModal;
