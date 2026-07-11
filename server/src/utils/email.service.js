@@ -1,84 +1,86 @@
 import nodemailer from "nodemailer";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const sendOTPEmail = (email, newOTP) => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export const sendOTPEmail = async (email, newOTP, fullName = "User") => {
   try {
-    const subject = "OTP Verification";
-    const mailOptions = {
-      from: '"Cravings Food Delivery" <your-email@gmail.com>',
-      to: user.email,
-      subject: "🍔 Welcome to Cravings - Registration Successful!",
-      html: `
-  <div style="font-family:Arial,sans-serif;background:#f8f9fa;padding:30px;">
-    <div style="max-width:600px;margin:auto;background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.GMAIL_USERNAME,
+        pass: process.env.GMAIL_PASSCODE,
+      },
+    });
 
-      <div style="background:#ff6b35;padding:20px;text-align:center;color:white;">
-        <h1>🍔 Cravings</h1>
-        <p>Your Favorite Food Delivery Partner</p>
+    const logoPath = path.resolve(__dirname, "../../../client/src/assets/circleLogo.png");
+
+    const mailOptions = {
+      from: process.env.GMAIL_USERNAME ? `"Cravings Food Delivery" <${process.env.GMAIL_USERNAME}>` : '"Cravings Food Delivery" <noreply@cravings.com>',
+      to: email,
+      subject: "🍔 Cravings - Your OTP Verification Code",
+      html: `
+  <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; padding: 40px 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+      
+      <!-- Header -->
+      <div style="background: linear-gradient(135deg, #ff6b35 0%, #ff8a5c 100%); padding: 40px 20px; text-align: center;">
+        <img src="cid:cravingslogo" alt="Cravings Logo" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
+        <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: 1px;">OTP Verification</h1>
       </div>
 
-      <div style="padding:30px;color:#333;">
-        <h2>Hello ${user.fullName}, 👋</h2>
-
-        <p>
-          Welcome to <strong>Cravings Food Delivery</strong>!
-          Your account has been created successfully.
+      <!-- Body -->
+      <div style="padding: 40px 30px; color: #4a4a4a;">
+        <h2 style="margin-top: 0; color: #2d3748; font-size: 22px;">Hello ${fullName}, 👋</h2>
+        
+        <p style="font-size: 16px; line-height: 1.6; color: #718096; margin-bottom: 30px;">
+          Thank you for choosing <strong>Cravings Food Delivery</strong>. To complete your secure login or registration, please use the One-Time Password (OTP) below:
         </p>
 
-        <table style="width:100%;border-collapse:collapse;margin:20px 0;">
-          <tr>
-            <td style="padding:10px;border:1px solid #ddd;"><strong>Name</strong></td>
-            <td style="padding:10px;border:1px solid #ddd;">${user.fullName}</td>
-          </tr>
-          <tr>
-            <td style="padding:10px;border:1px solid #ddd;"><strong>Email</strong></td>
-            <td style="padding:10px;border:1px solid #ddd;">${user.email}</td>
-          </tr>
-          <tr>
-            <td style="padding:10px;border:1px solid #ddd;"><strong>Account Status</strong></td>
-            <td style="padding:10px;border:1px solid #ddd;color:green;">
-              Active ✅
-            </td>
-          </tr>
-        </table>
-
-        <p>
-          You can now:
+        <!-- OTP Box -->
+        <div style="background: #f8fafc; border: 2px dashed #cbd5e0; border-radius: 12px; padding: 25px; text-align: center; margin-bottom: 30px;">
+          <span style="font-size: 42px; font-weight: 800; color: #ff6b35; letter-spacing: 8px;">${newOTP}</span>
+        </div>
+        
+        <p style="font-size: 14px; line-height: 1.6; color: #a0aec0; text-align: center; margin-bottom: 30px;">
+          This code will expire in <strong>10 minutes</strong>. If you did not request this OTP, please ignore this email or contact support.
         </p>
 
-        <ul>
-          <li>🍕 Order delicious food online</li>
-          <li>🏪 Explore nearby restaurants</li>
-          <li>🚴 Track your orders in real time</li>
-          <li>❤️ Save your favorite meals</li>
-        </ul>
-
-        <div style="text-align:center;margin:30px 0;">
-          <a href="http://localhost:5173"
-             style="background:#ff6b35;color:white;padding:14px 30px;
-                    text-decoration:none;border-radius:6px;font-size:16px;">
-            Explore Cravings
+        <div style="text-align: center;">
+          <a href="http://localhost:5173" style="display: inline-block; background: #ff6b35; color: #ffffff; text-decoration: none; padding: 16px 36px; border-radius: 50px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3); transition: all 0.3s ease;">
+            Visit Cravings
           </a>
         </div>
-
-        <p>
-          Thank you for choosing <strong>Cravings Food Delivery</strong>.
-          We look forward to serving your favorite meals.
-        </p>
-
-        <p>
-          Happy Ordering! 🍽️
-        </p>
       </div>
 
-      <div style="background:#222;color:white;text-align:center;padding:15px;font-size:14px;">
-        © 2026 Cravings Food Delivery <br>
-        Made with ❤️ using MERN Stack
+      <!-- Footer -->
+      <div style="background: #2d3748; padding: 25px; text-align: center; border-top: 1px solid #1a202c;">
+        <p style="margin: 0; color: #a0aec0; font-size: 13px; line-height: 1.5;">
+          © ${new Date().getFullYear()} Cravings Food Delivery.<br>
+          Serving happiness, one meal at a time. 🍽️
+        </p>
       </div>
 
     </div>
   </div>
-  `,
+      `,
+      attachments: [
+        {
+          filename: 'logo.png',
+          path: logoPath,
+          cid: 'cravingslogo'
+        }
+      ]
     };
+
+    if (process.env.GMAIL_USERNAME && process.env.GMAIL_PASSCODE) {
+      await transporter.sendMail(mailOptions);
+    } else {
+      console.warn("Gmail credentials not found in env, skipping actual email send.");
+    }
+
   } catch (error) {
     console.error("Error sending OTP email:", error);
   }
