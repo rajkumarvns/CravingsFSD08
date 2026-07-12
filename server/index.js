@@ -7,6 +7,7 @@ import CommonRouter from "./src/router/common.route.js";
 import MenuRouter from "./src/router/menu.route.js";
 import morgan from "morgan";
 import cors from "cors";
+import restaurantRouter from "./src/router/restaurant.route.js";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -21,6 +22,7 @@ app.use("/auth", AuthRouter);
 app.use("/public", PublicRouter);
 app.use("/common", CommonRouter);
 app.use("/menu", MenuRouter);
+app.use("/restaurant", restaurantRouter);
 
 //Default API
 app.get("/", (req, res) => {

@@ -15,10 +15,15 @@ export const sendOTPEmail = async (email, newOTP, fullName = "User") => {
       },
     });
 
-    const logoPath = path.resolve(__dirname, "../../../client/src/assets/circleLogo.png");
+    const logoPath = path.resolve(
+      __dirname,
+      "../../../client/src/assets/circleLogo.png",
+    );
 
     const mailOptions = {
-      from: process.env.GMAIL_USERNAME ? `"Cravings Food Delivery" <${process.env.GMAIL_USERNAME}>` : '"Cravings Food Delivery" <noreply@cravings.com>',
+      from: process.env.GMAIL_USERNAME
+        ? `"Cravings Food Delivery" <${process.env.GMAIL_USERNAME}>`
+        : '"Cravings Food Delivery" <noreply@cravings.com>',
       to: email,
       subject: "🍔 Cravings - Your OTP Verification Code",
       html: `
@@ -49,7 +54,7 @@ export const sendOTPEmail = async (email, newOTP, fullName = "User") => {
         </p>
 
         <div style="text-align: center;">
-          <a href="http://localhost:5173" style="display: inline-block; background: #ff6b35; color: #ffffff; text-decoration: none; padding: 16px 36px; border-radius: 50px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3); transition: all 0.3s ease;">
+          <a href="http://172.168.6.80:5173" style="display: inline-block; background: #ff6b35; color: #ffffff; text-decoration: none; padding: 16px 36px; border-radius: 50px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3); transition: all 0.3s ease;">
             Visit Cravings
           </a>
         </div>
@@ -68,19 +73,20 @@ export const sendOTPEmail = async (email, newOTP, fullName = "User") => {
       `,
       attachments: [
         {
-          filename: 'logo.png',
+          filename: "logo.png",
           path: logoPath,
-          cid: 'cravingslogo'
-        }
-      ]
+          cid: "cravingslogo",
+        },
+      ],
     };
 
     if (process.env.GMAIL_USERNAME && process.env.GMAIL_PASSCODE) {
       await transporter.sendMail(mailOptions);
     } else {
-      console.warn("Gmail credentials not found in env, skipping actual email send.");
+      console.warn(
+        "Gmail credentials not found in env, skipping actual email send.",
+      );
     }
-
   } catch (error) {
     console.error("Error sending OTP email:", error);
   }
