@@ -4,24 +4,16 @@ import {
   deleteMultipleImages,
   UploadSingleImage,
   deleteSingleImage,
-} from "../utils/imageUpload.service.js";
+} from "../utils/image.service.js";
 
 export const restaurantUpdateProfile = async (req, res, next) => {
   try {
     const currentUser = req.user;
     const restaurantDataFromFE = req.body;
-    const coverImageFromFE = req.files?.coverImage;
+    const coverImageFromFE = req.files?.coverImage?.[0];
     const restaurantImageFromFE = req.files?.restaurantImage;
 
     const dataKeys = Object.keys(restaurantDataFromFE);
-
-    dataKeys.forEach((key) => {
-      if (!restaurantDataFromFE[key]) {
-        const error = new Error(`Missing required field: ${key}`);
-        error.statusCode = 400;
-        return next(error);
-      }
-    });
 
     const existingRestaurant = await Restaurant.findOne({
       managerId: currentUser._id,
@@ -76,8 +68,9 @@ export const restaurantUpdateProfile = async (req, res, next) => {
         restaurantDataFromFE.restaurantImage = restaurantImage;
       }
       dataKeys.forEach((key) => {
-        existingRestaurant[key] =
-          restaurantDataFromFE[key] || existingRestaurant[key];
+        if (restaurantDataFromFE[key] !== undefined) {
+          existingRestaurant.set(key, restaurantDataFromFE[key]);
+        }
       });
       await existingRestaurant.save();
       return res.status(200).json({

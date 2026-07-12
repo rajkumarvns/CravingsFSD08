@@ -42,6 +42,10 @@ const UserSchema = mongoose.Schema(
       required: true,
       default: "customer",
     },
+    lastPasswordChange: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,

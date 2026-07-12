@@ -53,7 +53,7 @@ const ForgotPasswordModal = ({ open, onClose }) => {
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-          "Unknown error occurred during registration. Please try again.",
+          "Unknown error occurred during password reset. Please try again.",
       );
     } finally {
       setIsLoading(false);

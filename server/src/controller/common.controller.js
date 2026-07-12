@@ -30,7 +30,7 @@ export const EditUserProfile = async (req, res, next) => {
       // console.log(dataURI.slice(0, 100));
 
       const result = await cloudinary.uploader.upload(dataURI, {
-        folder: "Cravings678/profile",
+        folder: "CravingFSDs08/profile",
         width: 500,
         height: 500,
         crop: "fill",
@@ -67,6 +67,21 @@ export const UpdateUserPassword = async (req, res, next) => {
       return next(error);
     }
     const currentUser = req.user;
+
+    // Check if 24 hours have passed since the last password change
+    if (currentUser.lastPasswordChange) {
+      const hoursSinceLastChange =
+        (new Date() - new Date(currentUser.lastPasswordChange)) /
+        (1000 * 60 * 60);
+      if (hoursSinceLastChange < 24) {
+        const error = new Error(
+          "You can only change your password once every 24 hours",
+        );
+        error.statusCode = 400;
+        return next(error);
+      }
+    }
+
     const isPasswordMatch = await bcrypt.compare(
       oldPassword,
       currentUser.password,
@@ -78,6 +93,7 @@ export const UpdateUserPassword = async (req, res, next) => {
     }
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     currentUser.password = hashedPassword;
+    currentUser.lastPasswordChange = new Date();
     await currentUser.save();
     await new Promise((resolve) => setTimeout(resolve, 2000));
     res.status(200).json({ message: "Password updated successfully" });
