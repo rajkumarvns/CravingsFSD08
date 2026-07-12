@@ -74,7 +74,7 @@ const RiderSetting = () => {
         {/* User Profile Section */}
         <div className="bg-(--color-base-100) rounded-2xl shadow-xl overflow-hidden border border-(--color-base-300)">
           {/* Cover Banner */}
-          <div className="h-32 bg-gradient-to-r from-(--color-primary) to-(--color-secondary) relative">
+          <div className="h-32 bg-linear-to-r from-(--color-primary) to-(--color-secondary) relative">
             <div className="absolute top-4 right-4 z-10">
               {!editingProfile ? (
                 <div className="flex gap-2">
@@ -115,7 +115,7 @@ const RiderSetting = () => {
           <div className="px-8 pb-8 relative">
             <div className="flex flex-col md:flex-row gap-8">
               {/* Profile Avatar */}
-              <div className="-mt-16 relative flex-shrink-0 z-10 mx-auto md:mx-0">
+              <div className="-mt-16 relative shrink-0 z-10 mx-auto md:mx-0">
                 <div className="w-32 h-32 rounded-full p-1 bg-(--color-base-100) shadow-lg relative group">
                   <img
                     src={profilePicPreview || user?.photo?.url}
