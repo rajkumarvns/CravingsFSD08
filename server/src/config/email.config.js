@@ -7,8 +7,8 @@ const sendEmail = async (to, subject, message) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.GMAIL_USERNAME || "rajkumar966601@gmail.com",
-        pass: process.env.GMAIL_PASSCODE || "eursxapbmduyzufp",
+        user: process.env.GMAIL_USERNAME,
+        pass: process.env.GMAIL_PASSCODE,
       },
     });
     console.log("Transporter created successfully");
@@ -29,7 +29,7 @@ const sendEmail = async (to, subject, message) => {
 export default sendEmail;
 
 sendEmail(
-  "rajkumar9666021@gmail.com",
+  "errg221057@gmail.com",
   "Test Email",
   "<h1>This is a test email</h1>",
 );
