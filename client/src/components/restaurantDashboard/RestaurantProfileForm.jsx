@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { MdOutlineAddAPhoto, MdDelete } from "react-icons/md";
 import api from "../../config/ApiConfig";
 import { useAuth } from "../../context/AuthContext";
+import runningLoader from "../../assets/runningLoader.gif";
 
 const RestaurantProfileForm = () => {
   const { user } = useAuth();
@@ -339,7 +340,14 @@ const RestaurantProfileForm = () => {
 
       <div className="flex justify-end gap-4 mt-6 border-t pt-6">
         <button type="submit" disabled={isLoading} className="bg-(--color-primary) text-(--color-primary-content) px-6 py-2 rounded-lg font-semibold disabled:bg-opacity-70 flex items-center gap-2">
-          {isLoading ? "Saving Profile..." : "Save Restaurant Profile"}
+          {isLoading ? (
+            <>
+              <img src={runningLoader} alt="Loading..." className="w-6 h-6 object-contain" />
+              Saving Profile...
+            </>
+          ) : (
+            "Save Restaurant Profile"
+          )}
         </button>
       </div>
 
