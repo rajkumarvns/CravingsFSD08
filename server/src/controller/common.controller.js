@@ -3,7 +3,7 @@ import cloudinary from "../config/cloudinary.config.js";
 import bcrypt from "bcrypt";
 export const EditUserProfile = async (req, res, next) => {
   try {
-    const { email, fullName, phone } = req.body;
+    const { email, fullName, phone, dob, gender, address, city, state, pincode } = req.body;
     const newPhoto = req.file;
 
     console.log("Req Body :", req.body);
@@ -46,6 +46,12 @@ export const EditUserProfile = async (req, res, next) => {
 
     existingUser.fullName = fullName;
     existingUser.phone = phone;
+    if (dob) existingUser.dob = dob;
+    if (gender) existingUser.gender = gender;
+    if (address) existingUser.address = address;
+    if (city) existingUser.city = city;
+    if (state) existingUser.state = state;
+    if (pincode) existingUser.pincode = pincode;
 
     await existingUser.save();
 
