@@ -45,9 +45,16 @@ const ForgotPasswordModal = ({ open, onClose }) => {
         setIsOtpVerified(true);
       }
       if (isOtpSent && isOtpVerified) {
+        // Check if both passwords match
+        if (formData.newPassword !== formData.confirmNewPassword) {
+          toast.error("New Password and Confirm Password do not match.");
+          return;
+        }
+
         const res = await api.post("/auth/reset-password", formData);
+
         toast.success(res.data.message);
-        setIsOtpVerified(true);
+
         handleCloseModal();
       }
     } catch (error) {
@@ -64,7 +71,7 @@ const ForgotPasswordModal = ({ open, onClose }) => {
   return (
     <>
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-999">
-        <div className="bg-white w-xl rounded shadow max-h-[80vh] overflow-y-auto relative">
+        <div className="bg-white w-xl rounded-3xl shadow max-h-[80vh] overflow-y-auto relative">
           <header className="flex justify-between p-4 border-b border-(--color-secondary)">
             <div className="font-bold text-xl text-(--color-primary)">
               Forgot Password
