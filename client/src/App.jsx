@@ -1,6 +1,6 @@
 import React from "react";
 import { Toaster } from "react-hot-toast";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -14,6 +14,15 @@ import RiderDashboard from "./pages/dashboard/RiderDashboard";
 import AdminDashboard from "./pages/dashboard/AdminDashboard";
 
 const App = () => {
+  const location = useLocation();
+  const hideFooterRoutes = [
+    "/customer-dashboard",
+    "/restaurant-dashboard",
+    "/rider-dashboard",
+    "/admin-dashboard"
+  ];
+  const shouldShowFooter = !hideFooterRoutes.includes(location.pathname);
+
   return (
     <>
       <Toaster />
@@ -31,7 +40,7 @@ const App = () => {
         <Route path="/rider-dashboard" element={<RiderDashboard />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
       </Routes>
-      <Footer />
+      {shouldShowFooter && <Footer />}
     </>
   );
 };

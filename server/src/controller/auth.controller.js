@@ -97,7 +97,11 @@ export const LoginUser = async (req, res, next) => {
 
 export const LogoutUser = async (req, res, next) => {
   try {
-    res.clearCookie("Oreo", { maxAge: 0 });
+    res.clearCookie("Oreo", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
 
     res.status(200).json({ message: "Logout Sucessfully" });
   } catch (error) {

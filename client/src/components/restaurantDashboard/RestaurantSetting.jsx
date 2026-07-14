@@ -5,8 +5,7 @@ import api from "../../config/ApiConfig";
 import toast from "react-hot-toast";
 import { MdOutlineAddAPhoto } from "react-icons/md";
 import PasswordChangeModal from "../commonModals/PasswordChangeModal";
-import RestaurantProfileForm from "./RestaurantProfileForm";
-
+import RestaurantProfileContainer from "./RestaurantProfile";
 const RestaurantSetting = () => {
   const { user, setUser } = useAuth();
   const [activeTab, setActiveTab] = useState("user");
@@ -75,19 +74,21 @@ const RestaurantSetting = () => {
       <div className="overflow-y-auto h-full p-6 space-y-6">
 
         {/* Tabs for Settings */}
-        <div className="flex gap-4 border-b border-(--color-base-300) pb-2">
-          <button
-            className={`font-semibold pb-2 border-b-2 ${activeTab === "user" ? "border-(--color-primary) text-(--color-primary)" : "border-transparent text-gray-500 hover:text-gray-700"}`}
-            onClick={() => setActiveTab("user")}
-          >
-            User Profile
-          </button>
-          <button
-            className={`font-semibold pb-2 border-b-2 ${activeTab === "restaurant" ? "border-(--color-primary) text-(--color-primary)" : "border-transparent text-gray-500 hover:text-gray-700"}`}
-            onClick={() => setActiveTab("restaurant")}
-          >
-            Restaurant Profile
-          </button>
+        <div className="flex justify-between items-center border-b border-(--color-base-300) pb-2">
+          <div className="flex gap-4">
+            <button
+              className={`font-semibold pb-2 border-b-2 ${activeTab === "user" ? "border-(--color-primary) text-(--color-primary)" : "border-transparent text-gray-500 hover:text-gray-700"}`}
+              onClick={() => setActiveTab("user")}
+            >
+              User Profile
+            </button>
+            <button
+              className={`font-semibold pb-2 border-b-2 ${activeTab === "restaurant" ? "border-(--color-primary) text-(--color-primary)" : "border-transparent text-gray-500 hover:text-gray-700"}`}
+              onClick={() => setActiveTab("restaurant")}
+            >
+              Restaurant Profile
+            </button>
+          </div>
         </div>
 
         {activeTab === "user" && (
@@ -224,7 +225,7 @@ const RestaurantSetting = () => {
         )}
 
         {activeTab === "restaurant" && (
-          <RestaurantProfileForm />
+          <RestaurantProfileContainer />
         )}
       </div>
 

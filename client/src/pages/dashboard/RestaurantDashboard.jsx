@@ -34,14 +34,14 @@ const RestaurantDashboard = () => {
 
   return (
     <>
-      <div className="h-[91vh] flex gap-2 p-2">
-        <div className="w-3/17 bg-(--color-base-200) p-4 rounded-lg shadow-md h-full">
+      <div className="h-[calc(100vh-64px)] flex gap-2 p-2 overflow-hidden">
+        <div className="w-3/17 bg-(--color-base-200) p-4 rounded-lg shadow-md h-full overflow-y-auto hidden md:block">
           <RestaurantSidebar
             activeTab={activeTab}
             setActiveTab={setActiveTab}
           />
         </div>
-        <div className="w-14/17 bg-(--color-base-100) p-4 rounded-lg shadow-md h-full">
+        <div className="flex-1 bg-(--color-base-100) p-4 rounded-lg shadow-md h-full overflow-y-auto">
           {activeTab === "overview" && <RestaurantOverview />}
           {activeTab === "menu" && <RestaurantMenu />}
           {activeTab === "orders" && <RestaurantOrders />}

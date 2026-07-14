@@ -6,6 +6,30 @@ import {
   deleteSingleImage,
 } from "../utils/image.service.js";
 
+export const getRestaurantProfile = async (req, res, next) => {
+  try {
+    const currentUser = req.user;
+    const existingRestaurant = await Restaurant.findOne({
+      managerId: currentUser._id,
+    });
+
+    if (!existingRestaurant) {
+      return res.status(404).json({
+        message: "Restaurant profile not found",
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Restaurant profile fetched successfully",
+      data: existingRestaurant,
+    });
+  } catch (error) {
+    console.log(error.message);
+    next();
+  }
+};
+
 export const restaurantUpdateProfile = async (req, res, next) => {
   try {
     const currentUser = req.user;
@@ -18,6 +42,14 @@ export const restaurantUpdateProfile = async (req, res, next) => {
     const existingRestaurant = await Restaurant.findOne({
       managerId: currentUser._id,
     });
+
+    if (restaurantDataFromFE.socialMediaLinks) {
+      try {
+        restaurantDataFromFE.socialMediaLinks = JSON.parse(restaurantDataFromFE.socialMediaLinks);
+      } catch (e) {
+        console.error("Failed to parse socialMediaLinks", e);
+      }
+    }
 
     if (!existingRestaurant) {
       if (coverImageFromFE) {
@@ -57,15 +89,41 @@ export const restaurantUpdateProfile = async (req, res, next) => {
         dataKeys.push("coverImage");
         restaurantDataFromFE.coverImage = coverImage;
       }
-      if (restaurantImageFromFE && restaurantImageFromFE.length > 0) {
-        await deleteMultipleImages(existingRestaurant.restaurantImage);
+      if (restaurantDataFromFE.existingRestaurantImages) {
+        try {
+          const keptImages = JSON.parse(restaurantDataFromFE.existingRestaurantImages);
+          const keptImageUrls = keptImages.map((img) => img.url);
+          
+          // Find images that exist in the DB but are NOT in the keptImages array
+          const imagesToDelete = existingRestaurant.restaurantImage.filter(
+            (img) => !keptImageUrls.includes(img.url)
+          );
+          
+          // Delete only the removed images from Cloudinary
+          if (imagesToDelete.length > 0) {
+            await deleteMultipleImages(imagesToDelete);
+          }
+          
+          // Temporarily set restaurantDataFromFE.restaurantImage to keptImages
+          restaurantDataFromFE.restaurantImage = keptImages;
+          dataKeys.push("restaurantImage");
+        } catch (e) {
+          console.error("Failed to parse existingRestaurantImages", e);
+        }
+      }
 
-        const restaurantImage = await uploadMultipleImages(
+      if (restaurantImageFromFE && restaurantImageFromFE.length > 0) {
+        const newImages = await uploadMultipleImages(
           restaurantImageFromFE,
           `restaurant/${currentUser.phone}/restaurantPhotos`,
         );
+        
         dataKeys.push("restaurantImage");
-        restaurantDataFromFE.restaurantImage = restaurantImage;
+        if (restaurantDataFromFE.restaurantImage) {
+           restaurantDataFromFE.restaurantImage = [...restaurantDataFromFE.restaurantImage, ...newImages];
+        } else {
+           restaurantDataFromFE.restaurantImage = newImages;
+        }
       }
       dataKeys.forEach((key) => {
         if (restaurantDataFromFE[key] !== undefined) {
