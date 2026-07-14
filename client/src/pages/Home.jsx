@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { IoSearch, IoStar } from "react-icons/io5";
 import {
   MdRestaurant,
@@ -15,10 +15,29 @@ import api from "../config/ApiConfig";
 const Home = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [searchQuery, setSearchQuery] = useState("");
+  
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search") || "";
+  const selectedCategory = searchParams.get("category") || "all";
+
+  const setSearchQuery = (value) => {
+    setSearchParams((prev) => {
+      if (value) prev.set("search", value);
+      else prev.delete("search");
+      return prev;
+    });
+  };
+
+  const setSelectedCategory = (value) => {
+    setSearchParams((prev) => {
+      if (value && value !== "all") prev.set("category", value);
+      else prev.delete("category");
+      return prev;
+    });
+  };
+
   const [restaurants, setRestaurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [loading, setLoading] = useState(true);
 
   const categories = [

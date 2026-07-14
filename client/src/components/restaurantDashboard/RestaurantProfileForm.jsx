@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { MdOutlineAddAPhoto, MdDelete } from "react-icons/md";
 import api from "../../config/ApiConfig";
@@ -7,6 +8,12 @@ import runningLoader from "../../assets/runningLoader.gif";
 
 const RestaurantProfileForm = () => {
   const { user } = useAuth();
+  
+  // Using params and query parameters as requested
+  const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const mode = searchParams.get("mode") || "edit";
+
   const [isLoading, setIsLoading] = useState(false);
   const [coverImage, setCoverImage] = useState(null);
   const [coverImagePreview, setCoverImagePreview] = useState(null);
@@ -339,6 +346,13 @@ const RestaurantProfileForm = () => {
       </div>
 
       <div className="flex justify-end gap-4 mt-6 border-t pt-6">
+        <button 
+          type="button" 
+          onClick={() => window.history.back()}
+          className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300 transition"
+        >
+          Cancel
+        </button>
         <button type="submit" disabled={isLoading} className="bg-(--color-primary) text-(--color-primary-content) px-6 py-2 rounded-lg font-semibold disabled:bg-opacity-70 flex items-center gap-2">
           {isLoading ? (
             <>
