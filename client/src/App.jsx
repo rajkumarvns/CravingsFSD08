@@ -8,6 +8,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import CustomerDashboard from "./pages/dashboard/CustomerDashboard";
 import Contact from "./pages/Contact";
+import Feedback from "./pages/Feedback";
 import HelpCenter from "./pages/HelpCenter";
 import RestaurantDashboard from "./pages/dashboard/RestaurantDashboard";
 import RiderDashboard from "./pages/dashboard/RiderDashboard";
@@ -30,6 +31,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/feedback" element={<Feedback />} />
         <Route path="/help-center" element={<HelpCenter />} />
 
         <Route path="/login" element={<Login />} />
