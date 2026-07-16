@@ -5,6 +5,7 @@ import RiderSidebar from "../../components/riderDashboard/RiderSidebar";
 import RiderOverview from "../../components/riderDashboard/RiderOverview";
 import RiderOrders from "../../components/riderDashboard/RiderOrders";
 import RiderSetting from "../../components/riderDashboard/RiderSetting";
+import RiderProfileContainer from "../../components/riderDashboard/RiderProfile/RiderProfile";
 
 const RiderDashboard = () => {
   const { isLogin, role } = useAuth();
@@ -39,6 +40,7 @@ const RiderDashboard = () => {
         <div className="w-14/17 bg-(--color-base-100) p-4 rounded-lg shadow-md h-full">
           {activeTab === "overview" && <RiderOverview />}
           {activeTab === "orders" && <RiderOrders />}
+          {activeTab === "profile" && <RiderProfileContainer />}
           {activeTab === "settings" && <RiderSetting />}
         </div>
       </div>
