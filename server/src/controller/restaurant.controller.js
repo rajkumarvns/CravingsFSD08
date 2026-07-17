@@ -141,3 +141,30 @@ export const restaurantUpdateProfile = async (req, res, next) => {
     next();
   }
 };
+
+export const toggleRestaurantStatus = async (req, res, next) => {
+  try {
+    const currentUser = req.user;
+    const existingRestaurant = await Restaurant.findOne({
+      managerId: currentUser._id,
+    });
+
+    if (!existingRestaurant) {
+      return res.status(404).json({
+        message: "Restaurant profile not found",
+        data: null,
+      });
+    }
+
+    existingRestaurant.isOpen = !existingRestaurant.isOpen;
+    await existingRestaurant.save();
+
+    return res.status(200).json({
+      message: `Restaurant is now ${existingRestaurant.isOpen ? "Open" : "Closed"}`,
+      data: existingRestaurant,
+    });
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};

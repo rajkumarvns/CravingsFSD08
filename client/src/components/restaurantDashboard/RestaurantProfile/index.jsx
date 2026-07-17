@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { MdRestaurantMenu, MdAddCircleOutline } from "react-icons/md";
 import api from "../../../config/ApiConfig";
 import RestaurantInformation from "./RestaurantInformation";
@@ -33,6 +34,19 @@ const RestaurantProfileContainer = () => {
     }
   };
 
+  const handleToggleStatus = async () => {
+    try {
+      const response = await api.patch("/restaurant/toggle-status");
+      if (response.data?.data) {
+        setProfileData(response.data.data);
+        toast.success(response.data.message || "Status updated!");
+      }
+    } catch (error) {
+      console.error("Error toggling status:", error);
+      toast.error(error.response?.data?.message || "Failed to update status");
+    }
+  };
+
   useEffect(() => {
     fetchProfile();
   }, []);
@@ -49,6 +63,22 @@ const RestaurantProfileContainer = () => {
     <div className="space-y-6 pb-10">
       {isProfileCreated ? (
         <>
+          <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <div>
+              <h2 className="text-xl font-bold text-gray-800">{profileData?.restaurantName || "Restaurant Profile"}</h2>
+              <p className="text-sm text-gray-500">Manage your restaurant details and settings</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className={`font-semibold ${profileData?.isOpen ? "text-green-600" : "text-red-500"}`}>
+                {profileData?.isOpen ? "Currently Open" : "Currently Closed"}
+              </span>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" className="sr-only peer" checked={profileData?.isOpen || false} onChange={handleToggleStatus} />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+              </label>
+            </div>
+          </div>
+
           <div className="flex gap-4 border-b border-(--color-base-300) pb-2 overflow-x-auto whitespace-nowrap">
             <button
               className={`font-semibold pb-2 border-b-2 transition-colors ${activeTab === "basic" ? "border-(--color-primary) text-(--color-primary)" : "border-transparent text-gray-500 hover:text-gray-700"}`}
