@@ -1,17 +1,27 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import RestaurantSidebar from "../../components/restaurantDashboard/RestaurantSidebar";
+import Sidebar from "../../components/Sidebar";
 import RestaurantOverview from "../../components/restaurantDashboard/RestaurantOverview";
 import RestaurantMenu from "../../components/restaurantDashboard/RestaurantMenu";
 import RestaurantSetting from "../../components/restaurantDashboard/RestaurantSetting";
 import RestaurantOrders from "../../components/restaurantDashboard/RestaurantOrders";
+import { MdDashboard, MdRestaurantMenu } from "react-icons/md";
+import { FaShoppingCart } from "react-icons/fa";
+import { IoMdSettings } from "react-icons/io";
 
 const RestaurantDashboard = () => {
   const { isLogin,role } = useAuth();
   const navigate = useNavigate();
   const active = useLocation().state?.activeTab;
   const [activeTab, setActiveTab] = React.useState(active || "overview");
+
+  const mainTabs = [
+    { name: "Overview", value: "overview", icon: <MdDashboard size={20} /> },
+    { name: "Menu", value: "menu", icon: <MdRestaurantMenu size={20} /> },
+    { name: "Orders", value: "orders", icon: <FaShoppingCart size={20} /> },
+  ];
+  const settingsTab = { name: "Settings", value: "settings", icon: <IoMdSettings size={20} /> };
 
   if (!isLogin || role !== "restaurant") {
     return (
@@ -34,14 +44,17 @@ const RestaurantDashboard = () => {
 
   return (
     <>
-      <div className="h-[calc(100vh-64px)] flex gap-2 p-2 overflow-hidden">
-        <div className="w-3/17 bg-(--color-base-200) p-4 rounded-lg shadow-md h-full overflow-y-auto hidden md:block">
-          <RestaurantSidebar
+      <div className="h-[calc(100vh-64px)] flex gap-4 p-4 overflow-hidden">
+        <div className="hidden md:block h-full">
+          <Sidebar
             activeTab={activeTab}
             setActiveTab={setActiveTab}
+            mainTabs={mainTabs}
+            settingsTab={settingsTab}
+            subtitle="Restaurant"
           />
         </div>
-        <div className="flex-1 bg-(--color-base-100) p-4 rounded-lg shadow-md h-full overflow-y-auto">
+        <div className="flex-1 bg-(--color-base-100) p-4 rounded-2xl shadow-xl h-full overflow-y-auto">
           {activeTab === "overview" && <RestaurantOverview />}
           {activeTab === "menu" && <RestaurantMenu />}
           {activeTab === "orders" && <RestaurantOrders />}

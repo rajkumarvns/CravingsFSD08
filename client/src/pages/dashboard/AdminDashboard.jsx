@@ -2,15 +2,24 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import AdminSetting from "../../components/adminDashboard/AdminSetting";
-import AdminSidebar from "../../components/adminDashboard/AdminSidebar";
+import Sidebar from "../../components/Sidebar";
 import AdminOverview from "../../components/adminDashboard/AdminOverview";
 import AdminOrders from "../../components/adminDashboard/AdminOrders";
+import { MdDashboard } from "react-icons/md";
+import { FaShoppingCart } from "react-icons/fa";
+import { IoMdSettings } from "react-icons/io";
 
 const AdminDashboard = () => {
   const { isLogin, role } = useAuth();
   const navigate = useNavigate();
   const active = useLocation().state?.activeTab;
   const [activeTab, setActiveTab] = React.useState(active || "overview");
+
+  const mainTabs = [
+    { name: "Overview", value: "overview", icon: <MdDashboard size={20} /> },
+    { name: "Orders", value: "orders", icon: <FaShoppingCart size={20} /> },
+  ];
+  const settingsTab = { name: "Settings", value: "settings", icon: <IoMdSettings size={20} /> };
 
   if (!isLogin || role !== "admin") {
     return (
@@ -32,11 +41,9 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <div className="h-[91vh] flex gap-2 p-2">
-        <div className="w-3/17 bg-(--color-base-200) p-4 rounded-lg shadow-md h-full">
-          <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-        </div>
-        <div className="w-14/17 bg-(--color-base-100) p-4 rounded-lg shadow-md h-full">
+      <div className="h-[91vh] flex gap-4 p-4">
+        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} mainTabs={mainTabs} settingsTab={settingsTab} subtitle="Admin Panel" />
+        <div className="flex-1 bg-(--color-base-100) p-4 rounded-2xl shadow-xl h-full overflow-y-auto">
           {activeTab === "overview" && <AdminOverview />}
           {activeTab === "orders" && <AdminOrders />}
           {activeTab === "settings" && <AdminSetting />}

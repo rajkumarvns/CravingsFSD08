@@ -49,7 +49,7 @@ const Login = () => {
     }
 
     setLoading(true);
-    console.log("Login submitted:", formData);
+
 
     try {
       const res = await api.post("/auth/login", {

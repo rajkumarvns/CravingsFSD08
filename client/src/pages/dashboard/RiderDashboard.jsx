@@ -1,17 +1,27 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import RiderSidebar from "../../components/riderDashboard/RiderSidebar";
+import Sidebar from "../../components/Sidebar";
 import RiderOverview from "../../components/riderDashboard/RiderOverview";
 import RiderOrders from "../../components/riderDashboard/RiderOrders";
 import RiderSetting from "../../components/riderDashboard/RiderSetting";
 import RiderProfileContainer from "../../components/riderDashboard/RiderProfile/RiderProfile";
+import { MdDashboard } from "react-icons/md";
+import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
+import { IoMdSettings } from "react-icons/io";
 
 const RiderDashboard = () => {
   const { isLogin, role } = useAuth();
   const navigate = useNavigate();
   const active = useLocation().state?.activeTab;
   const [activeTab, setActiveTab] = React.useState(active || "overview");
+
+  const mainTabs = [
+    { name: "Overview", value: "overview", icon: <MdDashboard size={20} /> },
+    { name: "Orders", value: "orders", icon: <FaShoppingCart size={20} /> },
+    { name: "Profile", value: "profile", icon: <FaUserCircle size={20} /> },
+  ];
+  const settingsTab = { name: "Settings", value: "settings", icon: <IoMdSettings size={20} /> };
 
   if (!isLogin || role !== "rider") {
     return (
@@ -33,11 +43,9 @@ const RiderDashboard = () => {
 
   return (
     <>
-      <div className="h-[91vh] flex gap-2 p-2">
-        <div className="w-3/17 bg-(--color-base-200) p-4 rounded-lg shadow-md h-full">
-          <RiderSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-        </div>
-        <div className="w-14/17 bg-(--color-base-100) p-4 rounded-lg shadow-md h-full">
+      <div className="h-[91vh] flex gap-4 p-4">
+        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} mainTabs={mainTabs} settingsTab={settingsTab} subtitle="Rider Panel" />
+        <div className="flex-1 bg-(--color-base-100) p-4 rounded-2xl shadow-xl h-full overflow-y-auto">
           {activeTab === "overview" && <RiderOverview />}
           {activeTab === "orders" && <RiderOrders />}
           {activeTab === "profile" && <RiderProfileContainer />}
