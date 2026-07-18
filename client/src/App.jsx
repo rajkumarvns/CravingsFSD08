@@ -4,6 +4,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
+import About from "./pages/About";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import CustomerDashboard from "./pages/dashboard/CustomerDashboard";
@@ -30,6 +31,7 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/feedback" element={<Feedback />} />
         <Route path="/help-center" element={<HelpCenter />} />
