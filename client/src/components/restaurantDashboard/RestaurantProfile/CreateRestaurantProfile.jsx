@@ -143,7 +143,7 @@ const CreateRestaurantProfile = ({ onSuccess, onCancel }) => {
     <form onSubmit={handleSubmit} className="space-y-8 pb-16 animate-fade-in">
       
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-(--color-primary) to-orange-500 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-linear-to-r from-(--color-primary) to-orange-500 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden">
         <div className="relative z-10">
           <h2 className="text-3xl font-bold mb-2 flex items-center gap-3">
             <MdRestaurantMenu /> Let's Get Started!
@@ -211,7 +211,7 @@ const CreateRestaurantProfile = ({ onSuccess, onCancel }) => {
           {/* Cover Image - 40% (col-span-2) */}
           <div className="lg:col-span-2 flex flex-col h-full">
             <h4 className="font-bold mb-3 text-sm text-(--color-base-content) uppercase tracking-wide">Cover Image</h4>
-            <div className="relative w-full flex-grow min-h-[300px] bg-gray-100 rounded-2xl overflow-hidden flex items-center justify-center border-2 border-dashed border-gray-300 group hover:border-(--color-primary) transition-colors duration-300 shadow-inner">
+            <div className="relative w-full grow min-h-75 bg-gray-100 rounded-2xl overflow-hidden flex items-center justify-center border-2 border-dashed border-gray-300 group hover:border-(--color-primary) transition-colors duration-300 shadow-inner">
               {coverImagePreview ? (
                 <img src={coverImagePreview} alt="Restaurant Cover Preview" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               ) : (
@@ -237,18 +237,18 @@ const CreateRestaurantProfile = ({ onSuccess, onCancel }) => {
                 <input type="file" accept="image/*" multiple onChange={handleRestaurantImagesChange} className="hidden" />
               </label>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-gray-50/50 p-4 rounded-2xl border border-gray-200 flex-grow">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-gray-50/50 p-4 rounded-2xl border border-gray-200 grow">
               {restaurantImagesPreview.map((src, idx) => (
                 <div key={idx} className="relative group rounded-xl overflow-hidden border border-gray-200 aspect-square shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                   <img src={src} alt={`Restaurant Gallery ${idx + 1}`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <button type="button" onClick={() => removeRestaurantImage(idx)} className="absolute top-2 right-2 bg-red-500/90 backdrop-blur text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-lg hover:bg-red-600 hover:scale-110 transform duration-200">
                     <MdDelete className="text-sm" />
                   </button>
                 </div>
               ))}
               {restaurantImagesPreview.length === 0 && (
-                <div className="col-span-full flex flex-col items-center justify-center text-gray-400 py-10 border-2 border-dashed border-gray-200 rounded-2xl bg-white min-h-[200px]">
+                <div className="col-span-full flex flex-col items-center justify-center text-gray-400 py-10 border-2 border-dashed border-gray-200 rounded-2xl bg-white min-h-50">
                   <MdOutlineAddAPhoto className="text-5xl mb-3 opacity-30 text-gray-400" />
                   <span className="text-sm font-medium text-gray-500">Upload gallery images to attract customers!</span>
                 </div>
