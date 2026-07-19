@@ -43,9 +43,11 @@ const RiderDashboard = () => {
 
   return (
     <>
-      <div className="h-[91vh] flex gap-4 p-4">
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} mainTabs={mainTabs} settingsTab={settingsTab} subtitle="Rider Panel" />
-        <div className="flex-1 bg-(--color-base-100) p-4 rounded-2xl shadow-xl h-full overflow-y-auto">
+      <div className="h-[calc(100vh-64px)] flex gap-4 p-4 overflow-hidden relative">
+        <div className="h-full shrink-0">
+          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} mainTabs={mainTabs} settingsTab={settingsTab} subtitle="Rider Panel" />
+        </div>
+        <div className="flex-1 bg-(--color-base-100) p-4 rounded-2xl shadow-xl h-full overflow-y-auto w-full">
           {activeTab === "overview" && <RiderOverview />}
           {activeTab === "orders" && <RiderOrders />}
           {activeTab === "profile" && <RiderProfileContainer />}
