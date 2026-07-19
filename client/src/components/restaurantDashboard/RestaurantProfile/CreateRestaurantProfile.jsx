@@ -4,7 +4,7 @@ import { MdOutlineAddAPhoto, MdDelete, MdRestaurantMenu } from "react-icons/md";
 import api from "../../../config/ApiConfig";
 import runningLoader from "../../../assets/runningLoader.gif";
 
-const MAX_IMAGE_SIZE_BYTES = 5242880; // 5MB
+const MAX_IMAGE_SIZE_BYTES = 2097152; // 2MB
 const MAX_GALLERY_IMAGES = 8;
 
 const CreateRestaurantProfile = ({ onSuccess, onCancel }) => {
@@ -32,7 +32,7 @@ const CreateRestaurantProfile = ({ onSuccess, onCancel }) => {
   const handleCoverImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > MAX_IMAGE_SIZE_BYTES) return toast.error("Cover image size must be less than 5MB");
+      if (file.size > MAX_IMAGE_SIZE_BYTES) return toast.error("Cover image size must be less than 2MB");
       setCoverImage(file);
       setCoverImagePreview(URL.createObjectURL(file));
     }
@@ -47,7 +47,7 @@ const CreateRestaurantProfile = ({ onSuccess, onCancel }) => {
     const newPreviews = [];
     for (let file of files) {
       if (file.size > MAX_IMAGE_SIZE_BYTES) {
-        toast.error(`File ${file.name} is larger than 5MB and was skipped.`);
+        toast.error(`File ${file.name} is larger than 2MB and was skipped.`);
         continue;
       }
       validFiles.push(file);
@@ -222,7 +222,7 @@ const CreateRestaurantProfile = ({ onSuccess, onCancel }) => {
               )}
               <label className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer text-white backdrop-blur-sm z-20">
                 <MdOutlineAddAPhoto className="text-5xl mb-3 animate-bounce" />
-                <span className="text-lg font-bold tracking-wide">Upload Cover (Max 5MB)</span>
+                <span className="text-lg font-bold tracking-wide">Upload Cover (Max 2MB)</span>
                 <input type="file" accept="image/*" required={!coverImagePreview} onChange={handleCoverImageChange} className="hidden" />
               </label>
             </div>
@@ -231,7 +231,7 @@ const CreateRestaurantProfile = ({ onSuccess, onCancel }) => {
           {/* Gallery Images - 60% (col-span-3) */}
           <div className="lg:col-span-3 flex flex-col h-full">
             <div className="flex justify-between items-end mb-4">
-              <h4 className="font-bold text-sm text-(--color-base-content) uppercase tracking-wide">Gallery Images <span className="text-gray-400 font-normal lowercase">(Max 8, 5MB each)</span></h4>
+              <h4 className="font-bold text-sm text-(--color-base-content) uppercase tracking-wide">Gallery Images <span className="text-gray-400 font-normal lowercase">(Max 8, 2MB each)</span></h4>
               <label className="cursor-pointer bg-white border border-(--color-primary) text-(--color-primary) hover:bg-(--color-primary) hover:text-white px-4 py-1.5 rounded-lg text-sm flex items-center gap-2 font-bold shadow-md transition-all duration-300 transform hover:-translate-y-1">
                 <MdOutlineAddAPhoto className="text-xl" /> Add Gallery
                 <input type="file" accept="image/*" multiple onChange={handleRestaurantImagesChange} className="hidden" />
