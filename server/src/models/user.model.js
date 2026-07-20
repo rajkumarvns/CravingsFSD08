@@ -46,10 +46,16 @@ const UserSchema = mongoose.Schema(
       type: Date,
       default: null,
     },
-    address: { type: String },
-    city: { type: String },
-    state: { type: String },
-    pincode: { type: String },
+    addresses: [
+      {
+        address: { type: String, required: true },
+        city: { type: String, required: true },
+        state: { type: String, required: true },
+        pincode: { type: String, required: true },
+        country: { type: String, required: true },
+        isDefault: { type: Boolean, default: false }
+      }
+    ],
   },
   {
     timestamps: true,
