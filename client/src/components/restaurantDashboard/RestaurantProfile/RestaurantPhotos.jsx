@@ -4,7 +4,7 @@ import { MdOutlineAddAPhoto, MdDelete, MdEdit } from "react-icons/md";
 import api from "../../../config/ApiConfig";
 import runningLoader from "../../../assets/runningLoader.gif";
 
-const MAX_IMAGE_SIZE_BYTES = 2097152;//2MB
+const MAX_IMAGE_SIZE_BYTES = 1048576;//1MB
 const MAX_GALLERY_IMAGES = 8;
 
 const RestaurantPhotos = ({ initialData, onSuccess }) => {
@@ -37,7 +37,7 @@ const RestaurantPhotos = ({ initialData, onSuccess }) => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > MAX_IMAGE_SIZE_BYTES) {
-        return toast.error("Cover image size must be less than 2MB");
+        return toast.error("Cover image size must be less than 1MB");
       }
       setCoverImage(file);
       setCoverImagePreview(URL.createObjectURL(file));
@@ -59,7 +59,7 @@ const RestaurantPhotos = ({ initialData, onSuccess }) => {
 
     for (let file of files) {
       if (file.size > MAX_IMAGE_SIZE_BYTES) {
-        toast.error(`File ${file.name} is larger than 2MB and was skipped.`);
+        toast.error(`File ${file.name} is larger than 1MB and was skipped.`);
         continue;
       }
       validFiles.push(file);
@@ -251,7 +251,7 @@ const RestaurantPhotos = ({ initialData, onSuccess }) => {
                   <label className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer text-white backdrop-blur-sm z-20">
                     <MdOutlineAddAPhoto className="text-5xl mb-3 animate-bounce" />
                     <span className="text-lg font-bold tracking-wide">
-                      Upload Cover (Max 2MB)
+                      Upload Cover (Max 1MB)
                     </span>
                     <input
                       type="file"
@@ -269,7 +269,7 @@ const RestaurantPhotos = ({ initialData, onSuccess }) => {
                 <h4 className="font-bold text-sm text-(--color-base-content) uppercase tracking-wide">
                   Gallery Images{" "}
                   <span className="text-gray-400 font-normal lowercase">
-                    (Max 8, 2MB each)
+                    (Max 8, 1MB each)
                   </span>
                 </h4>
                 {isEditing && (

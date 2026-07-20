@@ -26,7 +26,7 @@ const Sidebar = ({ activeTab, setActiveTab, mainTabs, settingsTab, title = "Crav
         key={tab.value}
         className={`group relative cursor-pointer flex items-center transition-all duration-500 ease-out ${
           isCollapsed ? "justify-center p-3 w-12 h-12" : "px-4 py-3 w-full gap-4"
-        } rounded-2xl ${
+        } rounded-sm ${
           isActive
             ? "bg-(--color-primary) text-(--color-primary-content) shadow-[0_8px_20px_-4px_rgba(0,0,0,0.3)] ring-1 ring-white/20"
             : "text-(--color-neutral) hover:bg-black/5 dark:hover:bg-white/10 hover:shadow-inner"
@@ -64,7 +64,7 @@ const Sidebar = ({ activeTab, setActiveTab, mainTabs, settingsTab, title = "Crav
 
   return (
     <div
-      className={`relative h-full flex-col bg-white/40 dark:bg-black/40 backdrop-blur-2xl rounded-4xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] border border-white/40 dark:border-white/10 transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) flex ${
+      className={`relative h-full flex-col bg-white/40 dark:bg-black/40 backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] border border-white/40 dark:border-white/10 transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) flex ${
         isCollapsed ? "w-24 items-center py-8" : "w-72 p-6 z-50 absolute md:relative md:z-auto"
       }`}
     >

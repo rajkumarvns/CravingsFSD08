@@ -44,7 +44,7 @@ const RestaurantDashboard = () => {
 
   return (
     <>
-      <div className="h-[calc(100vh-64px)] flex gap-4 p-4 overflow-hidden relative">
+      <div className="h-[calc(100vh-64px)] flex gap-4 overflow-hidden relative">
         <div className="h-full shrink-0">
           <Sidebar
             activeTab={activeTab}
