@@ -14,13 +14,13 @@ const Navbar = () => {
     //console.log("Handle Navigate", role);
 
     if (role === "restaurant") {
-      navigate("/restaurant-dashboard");
+      navigate("/restaurant-dashboard", { state: { activeTab: "settings" } });
     } else if (role === "rider") {
-      navigate("/rider-dashboard");
+      navigate("/rider-dashboard", { state: { activeTab: "settings" } });
     } else if (role === "admin") {
-      navigate("/admin-dashboard");
+      navigate("/admin-dashboard", { state: { activeTab: "settings" } });
     } else {
-      navigate("/customer-dashboard");
+      navigate("/customer-dashboard", { state: { activeTab: "settings" } });
     }
   };
 

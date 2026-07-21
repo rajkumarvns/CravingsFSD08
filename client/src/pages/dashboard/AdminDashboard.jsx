@@ -12,9 +12,15 @@ import { IoMdSettings } from "react-icons/io";
 const AdminDashboard = () => {
   const { isLogin, role } = useAuth();
   const navigate = useNavigate();
-  const active = useLocation().state?.activeTab;
+  const location = useLocation();
+  const active = location.state?.activeTab;
   const [activeTab, setActiveTab] = React.useState(active || "overview");
 
+  React.useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+  }, [location.state]);
   const mainTabs = [
     { name: "Overview", value: "overview", icon: <MdDashboard size={20} /> },
     { name: "Orders", value: "orders", icon: <FaShoppingCart size={20} /> },
@@ -41,7 +47,7 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <div className="h-[calc(100vh-64px)] flex gap-4 p-4 overflow-hidden relative">
+      <div className="h-[calc(100vh-64px)] flex overflow-hidden relative">
         <div className="h-full shrink-0">
           <Sidebar
             activeTab={activeTab}
