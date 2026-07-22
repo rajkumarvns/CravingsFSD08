@@ -10,11 +10,13 @@ const RestaurantMenu = () => {
 
   // Form State for creating new item
   const [isAdding, setIsAdding] = useState(false);
+  const [editingItemId, setEditingItemId] = useState(null);
   const [formData, setFormData] = useState({
     itemName: "",
     description: "",
     price: "",
     category: "",
+    status: "available",
   });
 
   useEffect(() => {
@@ -40,22 +42,51 @@ const RestaurantMenu = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleAddItem = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post("/menu/create", {
-        ...formData,
-        restaurantId: user._id,
-      });
-      if (res.data.success) {
-        toast.success("Menu item added!");
-        setMenuItems([...menuItems, res.data.data]);
-        setIsAdding(false);
-        setFormData({ itemName: "", description: "", price: "", category: "" });
+      if (editingItemId) {
+        const res = await api.put(`/menu/update/${editingItemId}`, {
+          ...formData,
+          restaurantId: user._id,
+        });
+        if (res.data.success) {
+          toast.success("Menu item updated!");
+          setMenuItems(menuItems.map(item => item._id === editingItemId ? res.data.data : item));
+          resetForm();
+        }
+      } else {
+        const res = await api.post("/menu/create", {
+          ...formData,
+          restaurantId: user._id,
+        });
+        if (res.data.success) {
+          toast.success("Menu item added!");
+          setMenuItems([...menuItems, res.data.data]);
+          resetForm();
+        }
       }
     } catch (error) {
-      toast.error("Failed to add menu item");
+      toast.error(editingItemId ? "Failed to update menu item" : "Failed to add menu item");
     }
+  };
+
+  const handleEditClick = (item) => {
+    setEditingItemId(item._id);
+    setFormData({
+      itemName: item.itemName || "",
+      description: item.description || "",
+      price: item.price || "",
+      category: item.category || "",
+      status: item.status || "available",
+    });
+    setIsAdding(true);
+  };
+
+  const resetForm = () => {
+    setIsAdding(false);
+    setEditingItemId(null);
+    setFormData({ itemName: "", description: "", price: "", category: "", status: "available" });
   };
 
   if (loading) {
@@ -67,7 +98,10 @@ const RestaurantMenu = () => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Menu Management</h2>
         <button
-          onClick={() => setIsAdding(!isAdding)}
+          onClick={() => {
+            if (isAdding) resetForm();
+            else setIsAdding(true);
+          }}
           className="bg-(--color-primary) text-(--color-primary-content) px-4 py-2 rounded-lg font-semibold hover:opacity-90"
         >
           {isAdding ? "Cancel" : "Add New Item"}
@@ -76,8 +110,8 @@ const RestaurantMenu = () => {
 
       {isAdding && (
         <div className="bg-(--color-base-200) p-6 rounded-lg mb-6 border border-(--color-secondary)">
-          <h3 className="font-semibold text-lg mb-4">Add Menu Item</h3>
-          <form onSubmit={handleAddItem} className="space-y-4">
+          <h3 className="font-semibold text-lg mb-4">{editingItemId ? "Edit Menu Item" : "Add Menu Item"}</h3>
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm mb-1">Item Name</label>
@@ -116,6 +150,19 @@ const RestaurantMenu = () => {
                   step="0.01"
                 />
               </div>
+              <div>
+                <label className="block text-sm mb-1">Status</label>
+                <select
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  className="w-full p-2 rounded border border-(--color-secondary) bg-white text-gray-800"
+                >
+                  <option value="available">Available</option>
+                  <option value="soldout">Sold Out</option>
+                  <option value="discontinued">Discontinued</option>
+                </select>
+              </div>
             </div>
             <div>
               <label className="block text-sm mb-1">Description</label>
@@ -133,7 +180,7 @@ const RestaurantMenu = () => {
               type="submit"
               className="bg-(--color-primary) text-(--color-primary-content) px-4 py-2 rounded font-semibold w-full"
             >
-              Save Item
+              {editingItemId ? "Update Item" : "Save Item"}
             </button>
           </form>
         </div>
@@ -152,6 +199,7 @@ const RestaurantMenu = () => {
                 <th className="text-left py-2">Category</th>
                 <th className="text-left py-2">Price</th>
                 <th className="text-left py-2">Status</th>
+                <th className="text-right py-2">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -164,9 +212,22 @@ const RestaurantMenu = () => {
                   <td className="py-3">{item.category}</td>
                   <td className="py-3 font-semibold">${item.price}</td>
                   <td className="py-3">
-                    <span className={`px-2 py-1 rounded text-xs font-semibold ${item.isAvailable ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
-                      {item.isAvailable ? "Available" : "Unavailable"}
+                    <span className={`px-2 py-1 rounded text-xs font-semibold uppercase tracking-wider ${
+                      item.status === "available" ? "bg-green-100 text-green-800" :
+                      item.status === "soldout" ? "bg-orange-100 text-orange-800" :
+                      item.status === "discontinued" ? "bg-red-100 text-red-800" :
+                      "bg-gray-100 text-gray-800"
+                    }`}>
+                      {item.status || "available"}
                     </span>
+                  </td>
+                  <td className="py-3 text-right">
+                    <button 
+                      onClick={() => handleEditClick(item)}
+                      className="bg-blue-50 text-blue-600 border border-blue-200 px-3 py-1.5 rounded-md hover:bg-blue-100 hover:text-blue-700 font-medium transition-colors text-sm shadow-sm"
+                    >
+                      Edit
+                    </button>
                   </td>
                 </tr>
               ))}

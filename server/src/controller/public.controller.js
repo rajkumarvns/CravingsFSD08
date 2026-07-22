@@ -1,5 +1,6 @@
 import Contact from "../models/contact.model.js";
 import Feedback from "../models/feedback.model.js";
+import Restaurant from "../models/restaurant.model.js";
 
 export const validateFeedbackPayload = (data = {}) => {
   const errors = {};
@@ -70,6 +71,22 @@ export const FeedbackForm = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error.message);
+    next(error);
+  }
+};
+
+export const getRestaurants = async (req, res, next) => {
+  try {
+    const restaurants = await Restaurant.find({ 
+      status: "active",
+      isOpen: true 
+    }).select("-documents -financialDetails -contactDetails");
+    
+    res.status(200).json({
+      success: true,
+      data: restaurants
+    });
+  } catch (error) {
     next(error);
   }
 };

@@ -65,9 +65,9 @@ const Home = () => {
           rating: restaurant.rating || 0,
           numReviews: restaurant.numReviews || 0,
           image:
-            restaurant.images?.[0]?.URL ||
+            restaurant.coverImage?.url || restaurant.restaurantImage?.[0]?.url ||
             "https://placehold.co/300x200?text=Restaurant",
-          cuisines: restaurant.cuisineType,
+          cuisines: restaurant.cuisineTypes ? restaurant.cuisineTypes.join(", ") : "",
           geolocation: restaurant.geolocation,
           city: restaurant.city,
           address: restaurant.address,
@@ -214,41 +214,54 @@ const Home = () => {
                   className="flex flex-col bg-(--color-base-100) rounded-xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer transform hover:scale-105"
                 >
                   {/* Restaurant Image */}
-                  <div className="relative h-48 overflow-hidden bg-(--color-base-200)">
+                  <div className="relative h-56 overflow-hidden bg-(--color-base-200) group">
                     <img
                       src={restaurant.image}
                       alt={restaurant.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-                    <div className="absolute top-3 right-3 bg-(--color-primary) text-(--color-primary-content) px-3 py-1 rounded-full flex items-center gap-1 font-semibold text-sm">
-                      <IoStar size={16} />
-                      {restaurant.rating}
+                    {/* Gradient overlay for better text readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80"></div>
+                    
+                    {/* Available Now Badge */}
+                    <div className="absolute top-3 left-3 bg-green-500 text-white px-3 py-1 rounded-full flex items-center gap-2 font-bold text-xs shadow-[0_0_10px_rgba(34,197,94,0.6)] animate-pulse border border-green-400 z-10 uppercase tracking-widest">
+                      <span className="w-2 h-2 rounded-full bg-white"></span>
+                      Open Now
+                    </div>
+
+                    {/* Rating Badge */}
+                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-gray-900 px-3 py-1 rounded-full flex items-center gap-1 font-bold text-sm shadow-lg z-10">
+                      <IoStar className="text-yellow-500" size={16} />
+                      {restaurant.rating.toFixed(1)}
+                    </div>
+
+                    {/* City Location */}
+                    <div className="absolute bottom-3 left-4 text-white font-medium text-sm drop-shadow-md z-10 flex flex-col">
+                       <span className="font-bold text-xl">{restaurant.name}</span>
+                       <span className="opacity-90 text-xs mt-0.5">{restaurant.city}</span>
                     </div>
                   </div>
 
                   {/* Restaurant Info */}
-                  <div className="flex flex-col flex-1 p-4">
-                    <h3 className="font-bold text-(--color-content) text-lg mb-1">
-                      {restaurant.name}
-                    </h3>
-                    <p className="text-(--color-base-content) text-sm mb-3">
+                  <div className="flex flex-col flex-1 p-5 bg-white">
+                    <p className="text-(--color-base-content) text-sm mb-4 line-clamp-2 min-h-[40px]">
                       {restaurant.description}
                     </p>
 
                     {/* Cuisines */}
-                    <div className="flex flex-wrap gap-2 mb-3">
+                    <div className="flex flex-wrap gap-2 mb-4 mt-auto">
                       {restaurant.cuisines.split(",").map((cuisine, idx) => (
                         <span
                           key={idx}
-                          className="text-xs bg-(--color-base-300) text-(--color-base-content) px-2 py-1 rounded capitalize"
+                          className="text-xs bg-gray-100 text-gray-700 px-2.5 py-1 rounded-md capitalize font-medium"
                         >
-                          {cuisine}
+                          {cuisine.trim()}
                         </span>
                       ))}
                     </div>
 
                     {/* Footer Info */}
-                    <div className="mt-auto pt-3 border-t border-(--color-base-200)">
+                    <div className="mt-4 pt-4 border-t border-gray-100">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();

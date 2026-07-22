@@ -44,3 +44,39 @@ export const createMenuItem = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateMenuItem = async (req, res, next) => {
+  try {
+    const { itemId } = req.params;
+    const { itemName, description, price, category, status } = req.body;
+    const restaurantId = req.body.restaurantId || req.user?._id;
+
+    if (!restaurantId) {
+      return res.status(400).json({ success: false, message: "Restaurant ID is required" });
+    }
+
+    const updatedMenu = await Menu.findOneAndUpdate(
+      { restaurantId, "menuItems._id": itemId },
+      { 
+        $set: { 
+          "menuItems.$.itemName": itemName,
+          "menuItems.$.description": description,
+          "menuItems.$.price": Number(price),
+          "menuItems.$.category": category,
+          "menuItems.$.status": status,
+        } 
+      },
+      { new: true }
+    );
+
+    if (!updatedMenu) {
+      return res.status(404).json({ success: false, message: "Menu item not found" });
+    }
+
+    const updatedItem = updatedMenu.menuItems.find(item => item._id.toString() === itemId);
+
+    res.status(200).json({ success: true, data: updatedItem, message: "Menu item updated successfully" });
+  } catch (error) {
+    next(error);
+  }
+};

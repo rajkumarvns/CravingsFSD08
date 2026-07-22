@@ -10,7 +10,11 @@ const MenuItemSchema = new mongoose.Schema(
       url: { type: String },
       publicId: { type: String }
     },
-    isAvailable: { type: Boolean, default: true },
+    status: {
+      type: String,
+      enum: ["available", "soldout", "discontinued"],
+      default: "available"
+    },
     isTopRated: { type: Boolean, default: false },
     isRecommended: { type: Boolean, default: false },
     isNew: { type: Boolean, default: false },
