@@ -12,6 +12,61 @@ const CreateRestaurantProfile = ({ onSuccess, onCancel }) => {
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
+  const partnerOptions = [
+    { value: "zomato", label: "Zomato" },
+    { value: "swiggy", label: "Swiggy" },
+    { value: "uberEats", label: "Uber Eats" },
+    { value: "foodpanda", label: "Foodpanda" },
+    { value: "doorDash", label: "DoorDash" },
+    { value: "grubhub", label: "Grubhub" },
+    { value: "deliveroo", label: "Deliveroo" },
+    { value: "postmates", label: "Postmates" },
+    { value: "seamless", label: "Seamless" },
+    { value: "goPuff", label: "GoPuff" },
+    { value: "instacart", label: "Instacart" },
+    { value: "eatStreet", label: "EatStreet" },
+    { value: "caviar", label: "Caviar" },
+    { value: "chowNow", label: "ChowNow" },
+    { value: "waitr", label: "Waitr" },
+    { value: "justEat", label: "Just Eat" },
+    { value: "deliveryHero", label: "Delivery Hero" },
+    { value: "glovo", label: "Glovo" },
+    { value: "rappi", label: "Rappi" },
+    { value: "talabat", label: "Talabat" },
+    { value: "grabFood", label: "GrabFood" },
+    { value: "goFood", label: "GoFood" },
+    { value: "menulog", label: "Menulog" },
+    { value: "skipTheDishes", label: "SkipTheDishes" },
+  ];
+
+  const companyOptions = [
+    { value: "soleProprietorship", label: "Sole Proprietorship" },
+    { value: "partnership", label: "Partnership" },
+    { value: "limitedLiabilityPartnership", label: "Limited Liability Partnership (LLP)" },
+    { value: "privateLimitedCompany", label: "Private Limited Company (Pvt Ltd)" },
+    { value: "publicLimitedCompany", label: "Public Limited Company" },
+    { value: "onePersonCompany", label: "One Person Company (OPC)" },
+    { value: "jointVenture", label: "Joint Venture" },
+    { value: "nonGovernmentalOrganization", label: "Non-Governmental Organization (NGO)" },
+    { value: "trust", label: "Trust" },
+    { value: "society", label: "Society" },
+    { value: "section8Company", label: "Section 8 Company" },
+    { value: "hinduUndividedFamily", label: "Hindu Undivided Family (HUF)" },
+    { value: "cooperativeSociety", label: "Co-operative Society" },
+    { value: "branchOffice", label: "Branch Office" },
+    { value: "liaisonOffice", label: "Liaison Office" },
+    { value: "projectOffice", label: "Project Office" },
+    { value: "subsidiaryCompany", label: "Subsidiary Company" },
+    { value: "holdingCompany", label: "Holding Company" },
+    { value: "statutoryCorporation", label: "Statutory Corporation" },
+    { value: "unlimitedCompany", label: "Unlimited Company" },
+    { value: "foreignCompany", label: "Foreign Company" },
+    { value: "governmentCompany", label: "Government Company" },
+    { value: "associateCompany", label: "Associate Company" },
+    { value: "producerCompany", label: "Producer Company" },
+    { value: "nidhiCompany", label: "Nidhi Company" }
+  ];
+
   const [coverImage, setCoverImage] = useState(null);
   const [coverImagePreview, setCoverImagePreview] = useState(null);
   const [restaurantImages, setRestaurantImages] = useState([]);
@@ -305,11 +360,33 @@ const CreateRestaurantProfile = ({ onSuccess, onCancel }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium">Legal Name</label>
-            <input type="text" name="legalName" value={formData.legalName} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
+            <select
+              name="legalName"
+              value={formData.legalName}
+              onChange={handleChange}
+              required
+              className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all bg-white"
+            >
+              <option value="" disabled>Select a company...</option>
+              {partnerOptions.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium">Company Type</label>
-            <input type="text" name="companyType" value={formData.companyType} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
+            <select
+              name="companyType"
+              value={formData.companyType}
+              onChange={handleChange}
+              required
+              className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all bg-white"
+            >
+              <option value="" disabled>Select a company type...</option>
+              {companyOptions.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium">GST Certificate (Reg No.)</label>
