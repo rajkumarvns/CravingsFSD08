@@ -2,27 +2,27 @@ import React from "react";
 
 const RestaurantOverview = () => {
   const recentOrders = [
-    { id: "#ORD-1001", customer: "John Doe", amount: "$45.00", status: "Delivered" },
-    { id: "#ORD-1002", customer: "Jane Smith", amount: "$32.50", status: "Preparing" },
-    { id: "#ORD-1003", customer: "Bob Johnson", amount: "$18.75", status: "Delivered" }
+    { id: "#ORD-1001", customer: "Rahul Sharma", amount: "₹450.00", status: "Delivered" },
+    { id: "#ORD-1002", customer: "Priya Patel", amount: "₹320.50", status: "Preparing" },
+    { id: "#ORD-1003", customer: "Amit Kumar", amount: "₹180.75", status: "Delivered" }
   ];
 
   return (
     <div className="overflow-y-auto h-full">
       <h2 className="text-2xl font-bold mb-6">Restaurant Overview</h2>
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div className="bg-(--color-base-200) p-4 rounded-lg">
           <p className="text-(--color-neutral) text-sm">Total Orders</p>
           <p className="text-3xl font-bold">12</p>
         </div>
         <div className="bg-(--color-base-200) p-4 rounded-lg">
           <p className="text-(--color-neutral) text-sm">Total Sales</p>
-          <p className="text-3xl font-bold">$440.00</p>
+          <p className="text-3xl font-bold">₹4,400.00</p>
         </div>
       </div>
-      <div className="bg-(--color-base-200) p-4 rounded-lg">
+      <div className="bg-(--color-base-200) p-4 rounded-lg overflow-x-auto">
         <h3 className="font-semibold mb-3">Recent Orders</h3>
-        <table className="w-full">
+        <table className="w-full min-w-[600px]">
           <thead>
             <tr className="border-b border-(--color-secondary)">
               <th className="text-left py-2 text-sm text-(--color-neutral)">Order ID</th>
