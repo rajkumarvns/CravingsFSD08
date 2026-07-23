@@ -1,5 +1,5 @@
 import Menu from "../models/menu.model.js";
-
+import { UploadSingleImage } from "../utils/image.service.js";
 export const getMenuItems = async (req, res, next) => {
   try {
     const { restaurantId } = req.params;
@@ -22,13 +22,25 @@ export const createMenuItem = async (req, res, next) => {
       return res.status(400).json({ success: false, message: "Restaurant ID is required" });
     }
 
+    let uploadedImage = { url: "", publicId: "" };
+    if (req.file) {
+      const imageResult = await UploadSingleImage(req.file, "menu_items");
+      if (imageResult) {
+        uploadedImage = {
+          url: imageResult.url,
+          publicId: imageResult.publicId,
+        };
+      }
+    }
+
     const newItem = {
       itemName,
       description,
-      price:
-      Number(price),
+      price: Number(price),
       category,
-      image: { url: "", publicId: "" },
+      image: uploadedImage,
+      isTopRated: req.body.isTopRated === 'true' || req.body.isTopRated === true,
+      isRecommended: req.body.isRecommended === 'true' || req.body.isRecommended === true,
     };
 
     const updatedMenu = await Menu.findOneAndUpdate(
@@ -55,17 +67,35 @@ export const updateMenuItem = async (req, res, next) => {
       return res.status(400).json({ success: false, message: "Restaurant ID is required" });
     }
 
+    let imageUpdate = {};
+    if (req.file) {
+      const imageResult = await UploadSingleImage(req.file, "menu_items");
+      if (imageResult) {
+        imageUpdate = {
+          "menuItems.$.image": {
+            url: imageResult.url,
+            publicId: imageResult.publicId,
+          }
+        };
+      }
+    } else if (req.body.removeImage === 'true') {
+      imageUpdate = {
+        "menuItems.$.image": { url: "", publicId: "" }
+      };
+    }
+
+    const setFields = { ...imageUpdate };
+    if (itemName !== undefined) setFields["menuItems.$.itemName"] = itemName;
+    if (description !== undefined) setFields["menuItems.$.description"] = description;
+    if (price !== undefined) setFields["menuItems.$.price"] = Number(price);
+    if (category !== undefined) setFields["menuItems.$.category"] = category;
+    if (status !== undefined) setFields["menuItems.$.status"] = status;
+    if (req.body.isTopRated !== undefined) setFields["menuItems.$.isTopRated"] = req.body.isTopRated === 'true' || req.body.isTopRated === true;
+    if (req.body.isRecommended !== undefined) setFields["menuItems.$.isRecommended"] = req.body.isRecommended === 'true' || req.body.isRecommended === true;
+
     const updatedMenu = await Menu.findOneAndUpdate(
       { restaurantId, "menuItems._id": itemId },
-      { 
-        $set: { 
-          "menuItems.$.itemName": itemName,
-          "menuItems.$.description": description,
-          "menuItems.$.price": Number(price),
-          "menuItems.$.category": category,
-          "menuItems.$.status": status,
-        } 
-      },
+      { $set: setFields },
       { new: true }
     );
 
