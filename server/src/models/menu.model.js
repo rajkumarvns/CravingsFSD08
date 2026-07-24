@@ -6,13 +6,14 @@ const MenuItemSchema = new mongoose.Schema(
     description: { type: String, required: true },
     price: { type: Number, required: true },
     category: { type: String, required: true },
+    type: { type: String, required: true, default: "Vegetarian" },
     image: {
       url: { type: String },
       publicId: { type: String }
     },
     status: {
       type: String,
-      enum: ["available", "soldout", "discontinued"],
+      enum: ["available", "unavailable", "discontinued"],
       default: "available"
     },
     isTopRated: { type: Boolean, default: false },

@@ -12,7 +12,7 @@ export const getMenuItems = async (req, res, next) => {
 
 export const createMenuItem = async (req, res, next) => {
   try {
-    const { itemName, description, price, category } = req.body;
+    const { itemName, description, price, category, type } = req.body;
     
     // In a real app, restaurantId comes from req.user (authenticated manager)
     // For now, if passed in body, use it, else wait for auth middleware integration
@@ -38,6 +38,7 @@ export const createMenuItem = async (req, res, next) => {
       description,
       price: Number(price),
       category,
+      type: type || "Vegetarian",
       image: uploadedImage,
       isTopRated: req.body.isTopRated === 'true' || req.body.isTopRated === true,
       isRecommended: req.body.isRecommended === 'true' || req.body.isRecommended === true,
@@ -60,7 +61,7 @@ export const createMenuItem = async (req, res, next) => {
 export const updateMenuItem = async (req, res, next) => {
   try {
     const { itemId } = req.params;
-    const { itemName, description, price, category, status } = req.body;
+    const { itemName, description, price, category, type, status } = req.body;
     const restaurantId = req.body.restaurantId || req.user?._id;
 
     if (!restaurantId) {
@@ -89,6 +90,7 @@ export const updateMenuItem = async (req, res, next) => {
     if (description !== undefined) setFields["menuItems.$.description"] = description;
     if (price !== undefined) setFields["menuItems.$.price"] = Number(price);
     if (category !== undefined) setFields["menuItems.$.category"] = category;
+    if (type !== undefined) setFields["menuItems.$.type"] = type;
     if (status !== undefined) setFields["menuItems.$.status"] = status;
     if (req.body.isTopRated !== undefined) setFields["menuItems.$.isTopRated"] = req.body.isTopRated === 'true' || req.body.isTopRated === true;
     if (req.body.isRecommended !== undefined) setFields["menuItems.$.isRecommended"] = req.body.isRecommended === 'true' || req.body.isRecommended === true;
@@ -106,6 +108,31 @@ export const updateMenuItem = async (req, res, next) => {
     const updatedItem = updatedMenu.menuItems.find(item => item._id.toString() === itemId);
 
     res.status(200).json({ success: true, data: updatedItem, message: "Menu item updated successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteMenuItem = async (req, res, next) => {
+  try {
+    const { itemId } = req.params;
+    const restaurantId = req.body.restaurantId || req.user?._id;
+
+    if (!restaurantId) {
+      return res.status(400).json({ success: false, message: "Restaurant ID is required" });
+    }
+
+    const updatedMenu = await Menu.findOneAndUpdate(
+      { restaurantId },
+      { $pull: { menuItems: { _id: itemId } } },
+      { new: true }
+    );
+
+    if (!updatedMenu) {
+      return res.status(404).json({ success: false, message: "Menu or item not found" });
+    }
+
+    res.status(200).json({ success: true, message: "Menu item deleted successfully" });
   } catch (error) {
     next(error);
   }

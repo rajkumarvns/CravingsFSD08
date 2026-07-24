@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaAward, FaRegGrinStars } from "react-icons/fa";
 import { BiSolidDish } from "react-icons/bi";
 import { LuPencilLine, LuTrash2, LuEye, LuChevronDown } from "react-icons/lu";
@@ -8,13 +8,16 @@ import ConfirmModal from "./menuItems/ConfirmModal";
 import AddNewItemModal from "./menuItems/AddNewItemModal";
 import EditOrViewItem from "./menuItems/EditOrViewItem";
 import {
-  dummyMenu,
   statusChipStyles,
   statusLabels,
 } from "./menuItems/menuData";
+import api from "../../config/ApiConfig.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 const RestaurantMenu = () => {
-  const [menuItems, setMenuItems] = useState(dummyMenu);
+  const { user } = useAuth();
+  const restaurantId = user?._id;
+  const [menuItems, setMenuItems] = useState([]);
 
   const [isAddNewItemModalOpen, setIsAddNewItemModalOpen] = useState(false);
   const [isEditViewItemModalOpen, setIsEditViewItemModalOpen] = useState(false);
@@ -36,6 +39,21 @@ const RestaurantMenu = () => {
     }, 3000);
   };
 
+  useEffect(() => {
+    const fetchMenu = async () => {
+      if (!restaurantId) return;
+      try {
+        const response = await api.get(`/menu/${restaurantId}`);
+        if (response.data.success) {
+          setMenuItems(response.data.data || []);
+        }
+      } catch (error) {
+        showToast(error.response?.data?.message || "Failed to load menu", "error");
+      }
+    };
+    fetchMenu();
+  }, [restaurantId]);
+
   const filteredMenuItems = menuItems.filter(
     (item) =>
       item.itemName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -45,86 +63,102 @@ const RestaurantMenu = () => {
 
   const handleConfirmAction = async () => {
     setIsProcessing(true);
-    await new Promise((res) => setTimeout(res, 800));
-
-    const actions = {
-      delete: {
-        update: (prev) =>
-          prev.filter((m) => m.itemName !== selectedItem.itemName),
-        message: "Item deleted successfully!",
-      },
-      topRated: {
-        update: (prev) =>
-          prev.map((m) =>
-            m.itemName === selectedItem.itemName
-              ? { ...m, isTopRated: !m.isTopRated }
-              : m,
-          ),
-        message: "Top Rated status updated!",
-      },
-      recommended: {
-        update: (prev) =>
-          prev.map((m) =>
-            m.itemName === selectedItem.itemName
-              ? { ...m, isRecommended: !m.isRecommended }
-              : m,
-          ),
-        message: "Recommended status updated!",
-      },
-      new: {
-        update: (prev) =>
-          prev.map((m) =>
-            m.itemName === selectedItem.itemName
-              ? { ...m, isNew: !m.isNew }
-              : m,
-          ),
-        message: "New status updated!",
-      },
-    };
-
-    const action = actions[modalMode];
-    if (action) {
-      setMenuItems((prev) => action.update(prev));
-      showToast(action.message);
+    try {
+      if (modalMode === "delete") {
+        await api.delete(`/menu/delete/${selectedItem._id}`, {
+          data: { restaurantId },
+        });
+        setMenuItems((prev) => prev.filter((m) => m._id !== selectedItem._id));
+        showToast("Item deleted successfully!");
+      } else {
+        const toggleFieldMap = {
+          topRated: "isTopRated",
+          recommended: "isRecommended",
+          new: "isNew",
+        };
+        const field = toggleFieldMap[modalMode];
+        if (field) {
+          const newValue = !selectedItem[field];
+          const response = await api.put(`/menu/update/${selectedItem._id}`, {
+            restaurantId,
+            [field]: newValue,
+          });
+          if (response.data.success) {
+            setMenuItems((prev) =>
+              prev.map((m) => (m._id === selectedItem._id ? { ...m, [field]: newValue } : m)),
+            );
+            showToast(`${modalMode} status updated!`);
+          }
+        }
+      }
+    } catch (error) {
+      showToast(error.response?.data?.message || "Action failed", "error");
     }
-
     setIsControlsModalOpen(false);
     setIsProcessing(false);
   };
 
   const handleEditItem = async (updatedItem) => {
     setIsProcessing(true);
-    await new Promise((res) => setTimeout(res, 800));
-    setMenuItems((prev) =>
-      prev.map((m) =>
-        m.itemName === selectedItem.itemName ? { ...m, ...updatedItem } : m,
-      ),
-    );
-    setIsEditViewItemModalOpen(false);
+    try {
+      const formData = new FormData();
+      formData.append("restaurantId", restaurantId);
+      if (updatedItem.itemName !== selectedItem.itemName) formData.append("itemName", updatedItem.itemName);
+      if (updatedItem.description !== selectedItem.description) formData.append("description", updatedItem.description);
+      if (updatedItem.price !== selectedItem.price) formData.append("price", updatedItem.price);
+      if (updatedItem.category !== selectedItem.category) formData.append("category", updatedItem.category);
+      if (updatedItem.type !== selectedItem.type) formData.append("type", updatedItem.type);
+
+      if (updatedItem.imageFile) {
+        formData.append("image", updatedItem.imageFile);
+      } else if (!updatedItem.imageUrl && selectedItem.image?.url) {
+        formData.append("removeImage", "true");
+      }
+
+      const response = await api.put(`/menu/update/${selectedItem._id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      if (response.data.success) {
+        setMenuItems((prev) =>
+          prev.map((m) => (m._id === selectedItem._id ? response.data.data : m))
+        );
+        showToast("Item updated successfully!");
+        setIsEditViewItemModalOpen(false);
+      }
+    } catch (error) {
+      showToast(error.response?.data?.message || "Failed to update item", "error");
+    }
     setIsProcessing(false);
-    showToast("Item updated successfully!");
   };
 
   const handleAddItem = async (newItem) => {
     setIsProcessing(true);
-    await new Promise((res) => setTimeout(res, 800));
-    const itemToAdd = {
-      ...newItem,
-      image: {
-        url: newItem.imageUrl || "https://picsum.photos/seed/newitem/600/600",
-        publicId: "dummy-new",
-      },
-      status: "available",
-      isTopRated: false,
-      isRecommended: false,
-      isNew: true,
-      isDeleted: false,
-    };
-    delete itemToAdd.imageUrl;
-    setMenuItems((prev) => [itemToAdd, ...prev]);
-    setIsAddNewItemModalOpen(false);
+    try {
+      const formData = new FormData();
+      formData.append("restaurantId", restaurantId);
+      formData.append("itemName", newItem.itemName);
+      formData.append("description", newItem.description || "");
+      formData.append("price", newItem.price);
+      formData.append("category", newItem.category);
+      formData.append("type", newItem.type);
+      formData.append("isNew", "true");
+
+      if (newItem.imageFile) {
+        formData.append("image", newItem.imageFile);
+      }
+
+      const response = await api.post("/menu/create", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      if (response.data.success) {
+        setMenuItems((prev) => [response.data.data, ...prev]);
+        showToast("Item added successfully!");
+        setIsAddNewItemModalOpen(false);
+      }
+    } catch (error) {
+      showToast(error.response?.data?.message || "Failed to add item", "error");
+    }
     setIsProcessing(false);
-    showToast("Item added successfully!");
   };
 
   return (
@@ -160,7 +194,7 @@ const RestaurantMenu = () => {
             <div>Controls</div>
             <div>Actions</div>
           </div>
-          <div className="overflow-y-auto max-h-[70vh] pr-1 sm:pr-2 mt-2">
+          <div className="overflow-y-auto max-h-[65vh] pr-1 sm:pr-2 mt-2">
             {filteredMenuItems.map((item, index) => (
               <div
                 key={index}
@@ -168,7 +202,7 @@ const RestaurantMenu = () => {
               >
                 <div className="col-span-2 flex items-start sm:items-center gap-4 w-full">
                   <img
-                    src={item.image.url}
+                    src={item.image?.url || "https://picsum.photos/seed/fallback/600/600"}
                     alt={item.itemName}
                     className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded shadow-sm"
                   />
@@ -209,22 +243,26 @@ const RestaurantMenu = () => {
                   <div className="relative inline-flex items-center">
                     <select
                       value={item.status}
-                      className={`appearance-none rounded-md pl-3 pr-8 py-1.5 text-xs font-semibold tracking-wide transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-(--color-primary) ${
-                        statusChipStyles[item.status]
-                      }`}
+                      className={`appearance-none rounded-md pl-3 pr-8 py-1.5 text-xs font-semibold tracking-wide transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-(--color-primary) ${statusChipStyles[item.status]
+                        }`}
                       onChange={async (e) => {
                         const newStatus = e.target.value;
                         setIsProcessing(true);
-                        await new Promise((res) => setTimeout(res, 800));
-                        setMenuItems((prev) =>
-                          prev.map((m) =>
-                            m.itemName === item.itemName
-                              ? { ...m, status: newStatus }
-                              : m,
-                          ),
-                        );
+                        try {
+                          const response = await api.put(`/menu/update/${item._id}`, {
+                            restaurantId,
+                            status: newStatus
+                          });
+                          if (response.data.success) {
+                            setMenuItems((prev) =>
+                              prev.map((m) => (m._id === item._id ? { ...m, status: newStatus } : m))
+                            );
+                            showToast(`Status updated to ${newStatus}!`);
+                          }
+                        } catch (error) {
+                          showToast(error.response?.data?.message || "Failed to update status", "error");
+                        }
                         setIsProcessing(false);
-                        showToast(`Status updated to ${newStatus}!`);
                       }}
                     >
                       <option value="available">
@@ -247,11 +285,10 @@ const RestaurantMenu = () => {
                   </span>
                   <div className="flex gap-2">
                     <button
-                      className={`rounded flex items-center justify-center p-1 hover:bg-gray-100 transition-colors ${
-                        item.isTopRated
+                      className={`rounded flex items-center justify-center p-1 hover:bg-gray-100 transition-colors ${item.isTopRated
                           ? " text-(--color-primary)"
                           : "text-(--color-secondary)"
-                      }`}
+                        }`}
                       title={
                         item.isTopRated ? "Top Rated" : "Mark as Top Rated"
                       }
@@ -264,11 +301,10 @@ const RestaurantMenu = () => {
                       <FaAward size={18} />
                     </button>
                     <button
-                      className={`rounded flex items-center justify-center p-1 hover:bg-gray-100 transition-colors ${
-                        item.isRecommended
+                      className={`rounded flex items-center justify-center p-1 hover:bg-gray-100 transition-colors ${item.isRecommended
                           ? "text-(--color-primary)"
                           : "text-(--color-secondary)"
-                      }`}
+                        }`}
                       onClick={() => {
                         setSelectedItem(item);
                         setModalMode("recommended");
@@ -283,11 +319,10 @@ const RestaurantMenu = () => {
                       <AiTwotoneLike size={18} />
                     </button>
                     <button
-                      className={`px-2 py-0.5 rounded flex items-center justify-center text-xs font-semibold transition-colors ${
-                        item.isNew
+                      className={`px-2 py-0.5 rounded flex items-center justify-center text-xs font-semibold transition-colors ${item.isNew
                           ? "text-white bg-(--color-primary) border border-(--color-primary)"
                           : "text-(--color-secondary) border border-(--color-secondary) hover:bg-gray-100"
-                      }`}
+                        }`}
                       onClick={() => {
                         setSelectedItem(item);
                         setModalMode("new");

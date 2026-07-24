@@ -4,6 +4,7 @@ dotenv.config();
 import connectDB from "../config/dbConnection.config.js";
 import adminSeed from "./admin.seed.js";
 import userSeed from "./user.seed.js";
+import menuSeed from "./menu.seed.js";
 
 const Seed = async () => {
   try {
@@ -11,6 +12,7 @@ const Seed = async () => {
 
     await adminSeed();
     await userSeed();
+    await menuSeed();
     //Call The Function which we need to Seed.
   } catch (error) {
     console.log(error.message);

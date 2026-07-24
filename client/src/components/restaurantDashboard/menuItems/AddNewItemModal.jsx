@@ -6,7 +6,8 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
     itemName: "",
     description: "",
     price: "",
-    category: "",
+    category: "Starter",
+    type: "Vegetarian",
     imageUrl: "",
   });
 
@@ -50,7 +51,8 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
       itemName: "",
       description: "",
       price: "",
-      category: "",
+      category: "Starter",
+      type: "Vegetarian",
       imageUrl: "",
     });
   };
@@ -58,7 +60,7 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 transition-opacity">
-        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col transform transition-all">
+        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[85%] overflow-hidden flex flex-col transform transition-all">
           <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-white/80 sticky top-0 z-10 backdrop-blur-md">
             <div>
               <h2 className="text-xl font-bold text-gray-800 tracking-tight">Add New Menu Item</h2>
@@ -71,14 +73,14 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
               <IoMdCloseCircleOutline size={26} />
             </button>
           </div>
-          <div className="p-6 overflow-y-auto custom-scrollbar">
+          <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
               {/* Left Column - Image (40%) */}
               <div className="md:col-span-2 flex flex-col h-full">
                 <label className="block text-sm font-semibold text-gray-700 mb-3">
                   Item Image <span className="text-red-500">*</span>
                 </label>
-                <div className="border-2 border-dashed border-gray-200 rounded-xl p-4 flex flex-col items-center justify-center text-center h-full min-h-60 relative hover:border-(--color-primary) hover:bg-(--color-primary)/5 transition-all duration-300 bg-gray-50 group cursor-pointer overflow-hidden">
+                <div className="border-2 border-dashed border-gray-200 rounded-xl p-4 flex flex-col items-center justify-center text-center h-full min-h-48 relative hover:border-(--color-primary) hover:bg-(--color-primary)/5 transition-all duration-300 bg-gray-50 group cursor-pointer overflow-hidden">
                   {!formData.imageUrl ? (
                     <div className="transform transition-transform duration-300 group-hover:scale-105 group-hover:-translate-y-1">
                       <div className="w-16 h-16 mx-auto bg-white rounded-full shadow-sm flex items-center justify-center mb-4 text-gray-400 group-hover:text-(--color-primary) transition-colors">
@@ -127,7 +129,7 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
                     placeholder="e.g. Garlic Bread"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                     Description
@@ -141,8 +143,8 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
                     placeholder="e.g. Warm, crusty bread with garlic butter."
                   />
                 </div>
-                
-                <div className="grid grid-cols-2 gap-5">
+
+                <div className="grid grid-cols-3 gap-5">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                       Price (₹) <span className="text-red-500">*</span>
@@ -165,20 +167,45 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
                     <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                       Category <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
+                    <select
                       name="category"
                       className="w-full rounded-xl border border-gray-200 shadow-sm focus:border-(--color-primary) focus:ring-2 focus:ring-(--color-primary)/20 sm:text-sm px-4 py-3 transition-all duration-200 outline-none bg-gray-50 hover:bg-white focus:bg-white"
                       value={formData.category}
                       onChange={handleChange}
-                      placeholder="e.g. Starter"
-                    />
+                    >
+                      <option value="Starter">Starter</option>
+                      <option value="Main Course">Main Course</option>
+                      <option value="Dessert">Dessert</option>
+                      <option value="Beverages">Beverages</option>
+                      <option value="Pizza">Pizza</option>
+                      <option value="Burger">Burger</option>
+                      <option value="Biryani">Biryani</option>
+                      <option value="Rice">Rice</option>
+                      <option value="Seafood">Seafood</option>
+                      <option value="Wrap">Wrap</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                      Menu Type <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      name="type"
+                      className="w-full rounded-xl border border-gray-200 shadow-sm focus:border-(--color-primary) focus:ring-2 focus:ring-(--color-primary)/20 sm:text-sm px-4 py-3 transition-all duration-200 outline-none bg-gray-50 hover:bg-white focus:bg-white"
+                      value={formData.type}
+                      onChange={handleChange}
+                    >
+                      <option value="Vegetarian">Vegetarian</option>
+                      <option value="Non-Vegetarian">Non-Vegetarian</option>
+                      <option value="Vegan">Vegan</option>
+                    </select>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          
+
           <div className="px-6 py-5 bg-gray-50/80 border-t border-gray-100 flex justify-end gap-3">
             <button
               className="px-6 py-2.5 rounded-xl font-medium text-gray-600 bg-white border border-gray-200 shadow-sm hover:bg-gray-50 hover:text-gray-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-200"

@@ -55,7 +55,7 @@ const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) =>
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg max-h-[85%]">
           <div className="text-2xl flex justify-between items-center mb-4 border-b border-(--color-secondary) pb-2 sticky top-0 bg-white z-10">
             <h1 className="text-(--color-primary)">
               {modalMode === "edit" ? "Edit Item" : "View Item"}
@@ -123,8 +123,8 @@ const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) =>
                     </div>
                   )}
                 </div>
-                <div className="flex gap-4">
-                  <div className="w-1/2">
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
                     <label className="block text-sm font-medium text-gray-700">Price (₹)</label>
                     <input
                       type="number"
@@ -135,16 +135,41 @@ const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) =>
                       disabled={modalMode === "view"}
                     />
                   </div>
-                  <div className="w-1/2">
+                  <div>
                     <label className="block text-sm font-medium text-gray-700">Category</label>
-                    <input
-                      type="text"
+                    <select
                       name="category"
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-(--color-primary) focus:ring-(--color-primary) sm:text-sm p-2 border disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
                       value={formData.category || ""}
                       onChange={handleChange}
                       disabled={modalMode === "view"}
-                    />
+                    >
+                      <option value="Starter">Starter</option>
+                      <option value="Main Course">Main Course</option>
+                      <option value="Dessert">Dessert</option>
+                      <option value="Beverages">Beverages</option>
+                      <option value="Pizza">Pizza</option>
+                      <option value="Burger">Burger</option>
+                      <option value="Biryani">Biryani</option>
+                      <option value="Rice">Rice</option>
+                      <option value="Seafood">Seafood</option>
+                      <option value="Wrap">Wrap</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Menu Type</label>
+                    <select
+                      name="type"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-(--color-primary) focus:ring-(--color-primary) sm:text-sm p-2 border disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
+                      value={formData.type || ""}
+                      onChange={handleChange}
+                      disabled={modalMode === "view"}
+                    >
+                      <option value="Vegetarian">Vegetarian</option>
+                      <option value="Non-Vegetarian">Non-Vegetarian</option>
+                      <option value="Vegan">Vegan</option>
+                    </select>
                   </div>
                 </div>
                 {modalMode === "edit" && (

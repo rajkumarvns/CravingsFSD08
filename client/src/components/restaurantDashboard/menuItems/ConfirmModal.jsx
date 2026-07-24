@@ -25,16 +25,15 @@ const ConfirmModal = ({ selectedItem, modalMode, isOpen, onClose, onConfirm }) =
             </h2>
           </div>
           <div className="flex justify-end gap-3">
-            <button 
+            <button
               className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 text-gray-700 font-medium transition-colors"
               onClick={onClose}
             >
               Cancel
             </button>
-            <button 
-              className={`px-4 py-2 rounded text-white font-medium transition-colors ${
-                modalMode === "delete" ? "bg-red-500 hover:bg-red-600" : "bg-(--color-primary) hover:bg-opacity-90"
-              }`}
+            <button
+              className={`px-4 py-2 rounded text-white font-medium transition-colors ${modalMode === "delete" ? "bg-red-500 hover:bg-red-600" : "bg-(--color-primary) hover:bg-opacity-90"
+                }`}
               onClick={onConfirm}
             >
               {modalMode === "delete" ? "Delete" : "Confirm"}
