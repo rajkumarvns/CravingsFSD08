@@ -7,7 +7,11 @@ import { IoMdAddCircleOutline, IoMdCloseCircleOutline } from "react-icons/io";
 import ConfirmModal from "./menuItems/ConfirmModal";
 import AddNewItemModal from "./menuItems/AddNewItemModal";
 import EditOrViewItem from "./menuItems/EditOrViewItem";
-import { dummyMenu, statusChipStyles, statusLabels } from "./menuItems/menuData";
+import {
+  dummyMenu,
+  statusChipStyles,
+  statusLabels,
+} from "./menuItems/menuData";
 
 const RestaurantMenu = () => {
   const [menuItems, setMenuItems] = useState(dummyMenu);
@@ -19,7 +23,11 @@ const RestaurantMenu = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  });
 
   const showToast = (message, type = "success") => {
     setToast({ show: true, message, type });
@@ -28,28 +36,58 @@ const RestaurantMenu = () => {
     }, 3000);
   };
 
-  const filteredMenuItems = menuItems.filter(item => 
-    item.itemName.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.category.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredMenuItems = menuItems.filter(
+    (item) =>
+      item.itemName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.category.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const handleConfirmAction = async () => {
     setIsProcessing(true);
     await new Promise((res) => setTimeout(res, 800));
-    if (modalMode === "delete") {
-      setMenuItems((prev) => prev.filter((m) => m.itemName !== selectedItem.itemName));
-      showToast("Item deleted successfully!");
-    } else if (modalMode === "topRated") {
-      setMenuItems((prev) => prev.map((m) => m.itemName === selectedItem.itemName ? { ...m, isTopRated: !m.isTopRated } : m));
-      showToast("Top Rated status updated!");
-    } else if (modalMode === "recommended") {
-      setMenuItems((prev) => prev.map((m) => m.itemName === selectedItem.itemName ? { ...m, isRecommended: !m.isRecommended } : m));
-      showToast("Recommended status updated!");
-    } else if (modalMode === "new") {
-      setMenuItems((prev) => prev.map((m) => m.itemName === selectedItem.itemName ? { ...m, isNew: !m.isNew } : m));
-      showToast("New status updated!");
+
+    const actions = {
+      delete: {
+        update: (prev) =>
+          prev.filter((m) => m.itemName !== selectedItem.itemName),
+        message: "Item deleted successfully!",
+      },
+      topRated: {
+        update: (prev) =>
+          prev.map((m) =>
+            m.itemName === selectedItem.itemName
+              ? { ...m, isTopRated: !m.isTopRated }
+              : m,
+          ),
+        message: "Top Rated status updated!",
+      },
+      recommended: {
+        update: (prev) =>
+          prev.map((m) =>
+            m.itemName === selectedItem.itemName
+              ? { ...m, isRecommended: !m.isRecommended }
+              : m,
+          ),
+        message: "Recommended status updated!",
+      },
+      new: {
+        update: (prev) =>
+          prev.map((m) =>
+            m.itemName === selectedItem.itemName
+              ? { ...m, isNew: !m.isNew }
+              : m,
+          ),
+        message: "New status updated!",
+      },
+    };
+
+    const action = actions[modalMode];
+    if (action) {
+      setMenuItems((prev) => action.update(prev));
+      showToast(action.message);
     }
+
     setIsControlsModalOpen(false);
     setIsProcessing(false);
   };
@@ -57,7 +95,11 @@ const RestaurantMenu = () => {
   const handleEditItem = async (updatedItem) => {
     setIsProcessing(true);
     await new Promise((res) => setTimeout(res, 800));
-    setMenuItems((prev) => prev.map((m) => m.itemName === selectedItem.itemName ? { ...m, ...updatedItem } : m));
+    setMenuItems((prev) =>
+      prev.map((m) =>
+        m.itemName === selectedItem.itemName ? { ...m, ...updatedItem } : m,
+      ),
+    );
     setIsEditViewItemModalOpen(false);
     setIsProcessing(false);
     showToast("Item updated successfully!");
@@ -131,7 +173,9 @@ const RestaurantMenu = () => {
                     className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded shadow-sm"
                   />
                   <div className="flex-1">
-                    <div className="font-bold text-lg leading-tight mb-1">{item.itemName}</div>
+                    <div className="font-bold text-lg leading-tight mb-1">
+                      {item.itemName}
+                    </div>
                     <div className="text-xs sm:text-sm text-gray-500 leading-snug">
                       {item.description}
                     </div>
@@ -139,19 +183,29 @@ const RestaurantMenu = () => {
                 </div>
 
                 <div className="flex justify-between w-full lg:w-auto lg:block lg:text-center mt-2 lg:mt-0">
-                  <span className="lg:hidden font-semibold text-gray-600 text-sm">Price:</span>
-                  <span className="font-bold text-gray-800">₹ {item.price.toFixed(2)}</span>
+                  <span className="lg:hidden font-semibold text-gray-600 text-sm">
+                    Price:
+                  </span>
+                  <span className="font-bold text-gray-800">
+                    ₹ {item.price.toFixed(2)}
+                  </span>
                 </div>
 
                 <div className="flex justify-between w-full lg:w-auto lg:block border-t border-dashed border-gray-200 lg:border-0 pt-2 lg:pt-0">
-                  <span className="lg:hidden font-semibold text-gray-600 text-sm">Category:</span>
+                  <span className="lg:hidden font-semibold text-gray-600 text-sm">
+                    Category:
+                  </span>
                   <div className="text-right lg:text-left">
-                    <div className="font-semibold text-gray-800">{item.category}</div>
+                    <div className="font-semibold text-gray-800">
+                      {item.category}
+                    </div>
                     <div className="text-xs text-gray-500">{item.type}</div>
                   </div>
                 </div>
                 <div className="flex justify-between items-center w-full lg:w-auto lg:block border-t border-dashed border-gray-200 lg:border-0 pt-2 lg:pt-0">
-                  <span className="lg:hidden font-semibold text-gray-600 text-sm">Status:</span>
+                  <span className="lg:hidden font-semibold text-gray-600 text-sm">
+                    Status:
+                  </span>
                   <div className="relative inline-flex items-center">
                     <select
                       value={item.status}
@@ -162,7 +216,13 @@ const RestaurantMenu = () => {
                         const newStatus = e.target.value;
                         setIsProcessing(true);
                         await new Promise((res) => setTimeout(res, 800));
-                        setMenuItems((prev) => prev.map((m) => m.itemName === item.itemName ? { ...m, status: newStatus } : m));
+                        setMenuItems((prev) =>
+                          prev.map((m) =>
+                            m.itemName === item.itemName
+                              ? { ...m, status: newStatus }
+                              : m,
+                          ),
+                        );
                         setIsProcessing(false);
                         showToast(`Status updated to ${newStatus}!`);
                       }}
@@ -182,7 +242,9 @@ const RestaurantMenu = () => {
                 </div>
 
                 <div className="flex justify-between items-center w-full lg:w-auto lg:block border-t border-dashed border-gray-200 lg:border-0 pt-2 lg:pt-0">
-                  <span className="lg:hidden font-semibold text-gray-600 text-sm">Controls:</span>
+                  <span className="lg:hidden font-semibold text-gray-600 text-sm">
+                    Controls:
+                  </span>
                   <div className="flex gap-2">
                     <button
                       className={`rounded flex items-center justify-center p-1 hover:bg-gray-100 transition-colors ${
@@ -190,7 +252,9 @@ const RestaurantMenu = () => {
                           ? " text-(--color-primary)"
                           : "text-(--color-secondary)"
                       }`}
-                      title={item.isTopRated ? "Top Rated" : "Mark as Top Rated"}
+                      title={
+                        item.isTopRated ? "Top Rated" : "Mark as Top Rated"
+                      }
                       onClick={() => {
                         setSelectedItem(item);
                         setModalMode("topRated");
@@ -211,7 +275,9 @@ const RestaurantMenu = () => {
                         setIsControlsModalOpen(true);
                       }}
                       title={
-                        item.isRecommended ? "Recommended" : "Mark as Recommended"
+                        item.isRecommended
+                          ? "Recommended"
+                          : "Mark as Recommended"
                       }
                     >
                       <AiTwotoneLike size={18} />
@@ -234,7 +300,9 @@ const RestaurantMenu = () => {
                   </div>
                 </div>
                 <div className="flex justify-between items-center w-full lg:w-auto lg:block border-t border-dashed border-gray-200 lg:border-0 pt-2 lg:pt-0 pb-1 lg:pb-0">
-                  <span className="lg:hidden font-semibold text-gray-600 text-sm">Actions:</span>
+                  <span className="lg:hidden font-semibold text-gray-600 text-sm">
+                    Actions:
+                  </span>
                   <div className="flex gap-2">
                     <button
                       className="px-2 py-1.5 border border-(--color-primary) text-(--color-primary) hover:bg-(--color-primary) hover:text-white rounded transition-colors"
@@ -286,9 +354,9 @@ const RestaurantMenu = () => {
           onConfirm={handleConfirmAction}
         />
       )}
-      
+
       {isAddNewItemModalOpen && (
-        <AddNewItemModal 
+        <AddNewItemModal
           isOpen={isAddNewItemModalOpen}
           onClose={() => setIsAddNewItemModalOpen(false)}
           onAdd={handleAddItem}
@@ -306,14 +374,18 @@ const RestaurantMenu = () => {
       )}
 
       {isProcessing && (
-        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity">
+        <div className="fixed inset-0 z-100 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity">
           <div className="w-12 h-12 border-4 border-t-(--color-primary) border-white rounded-full animate-spin shadow-lg mb-4"></div>
-          <p className="text-white font-semibold text-lg drop-shadow-md animate-pulse">Processing...</p>
+          <p className="text-white font-semibold text-lg drop-shadow-md animate-pulse">
+            Processing...
+          </p>
         </div>
       )}
 
       {toast.show && (
-        <div className={`fixed top-8 left-1/2 -translate-x-1/2 z-[200] px-6 py-3 rounded-lg shadow-xl text-white font-semibold transition-all duration-300 animate-bounce ${toast.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}>
+        <div
+          className={`fixed top-8 left-1/2 -translate-x-1/2 z-200 px-6 py-3 rounded-lg shadow-xl text-white font-semibold transition-all duration-300 animate-bounce ${toast.type === "success" ? "bg-green-500" : "bg-red-500"}`}
+        >
           {toast.message}
         </div>
       )}
