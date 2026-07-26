@@ -1,7 +1,7 @@
 import Contact from "../models/contact.model.js";
 import Feedback from "../models/feedback.model.js";
 import Restaurant from "../models/restaurant.model.js";
-
+import Menu from "../models/menu.model.js";
 export const validateFeedbackPayload = (data = {}) => {
   const errors = {};
 
@@ -85,6 +85,89 @@ export const getRestaurants = async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: restaurants
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getDishFeed = async (req, res, next) => {
+  try {
+    const limit = parseInt(req.query.limit) || 20;
+    const page = parseInt(req.query.page) || 1;
+    const skip = (page - 1) * limit;
+
+    const maxCalories = parseInt(req.query.maxCalories);
+    const minProtein = parseInt(req.query.minProtein);
+    const maxCarbs = parseInt(req.query.maxCarbs);
+    const maxFats = parseInt(req.query.maxFats);
+
+    const matchStage = { "menuItems.status": "available" };
+    if (maxCalories) matchStage["menuItems.macros.calories"] = { $lte: maxCalories };
+    if (minProtein) matchStage["menuItems.macros.protein"] = { $gte: minProtein };
+    if (maxCarbs) matchStage["menuItems.macros.carbs"] = { $lte: maxCarbs };
+    if (maxFats) matchStage["menuItems.macros.fats"] = { $lte: maxFats };
+
+    // Use aggregation to get a flat list of menu items from all restaurants
+    const feed = await Menu.aggregate([
+      { $unwind: "$menuItems" },
+      { $match: matchStage },
+      // Optional: join with restaurant to get restaurant name
+      {
+        $lookup: {
+          from: "restaurants", // Make sure this matches the collection name
+          localField: "restaurantId",
+          foreignField: "_id",
+          as: "restaurantDetails"
+        }
+      },
+      { $unwind: "$restaurantDetails" },
+      {
+        $project: {
+          _id: "$menuItems._id",
+          restaurantId: "$restaurantId",
+          restaurantName: "$restaurantDetails.restaurantName",
+          itemName: "$menuItems.itemName",
+          description: "$menuItems.description",
+          price: "$menuItems.price",
+          category: "$menuItems.category",
+          type: "$menuItems.type",
+          image: "$menuItems.image",
+          rating: "$menuItems.rating",
+          reviewCount: "$menuItems.reviewCount",
+          tags: "$menuItems.tags",
+          macros: "$menuItems.macros",
+          isTopRated: "$menuItems.isTopRated",
+          isRecommended: "$menuItems.isRecommended",
+          isNew: "$menuItems.isNew"
+        }
+      },
+      // Randomize or sort by some algorithm for the feed. Let's just sort by newest/recommended for now
+      { $sort: { isRecommended: -1, isNew: -1, _id: -1 } },
+      { $skip: skip },
+      { $limit: limit }
+    ]);
+
+    res.status(200).json({
+      success: true,
+      data: feed,
+      page,
+      limit
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getDishReviews = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    // For Phase 1, we just return mock reviews or empty array if we don't have a Review model yet
+    // Since we didn't create a Review model in Phase 1 plan, returning empty array to avoid breaking UI
+    res.status(200).json({
+      success: true,
+      data: [],
+      message: "Reviews will be populated once Review schema is fully active."
     });
   } catch (error) {
     next(error);

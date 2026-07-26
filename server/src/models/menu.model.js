@@ -19,6 +19,15 @@ const MenuItemSchema = new mongoose.Schema(
     isTopRated: { type: Boolean, default: false },
     isRecommended: { type: Boolean, default: false },
     isNew: { type: Boolean, default: false },
+    tags: [{ type: String }],
+    rating: { type: Number, default: 0, min: 0, max: 5 },
+    reviewCount: { type: Number, default: 0 },
+    macros: {
+      calories: { type: Number, default: 0 },
+      protein: { type: Number, default: 0 },
+      carbs: { type: Number, default: 0 },
+      fats: { type: Number, default: 0 }
+    }
   },
   { suppressReservedKeysWarning: true }
 );

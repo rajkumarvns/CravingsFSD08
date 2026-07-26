@@ -64,6 +64,8 @@ const Sidebar = ({ activeTab, setActiveTab, mainTabs, settingsTab, title = "Crav
 
   return (
     <div
+      onMouseEnter={() => setIsCollapsed(false)}
+      onMouseLeave={() => setIsCollapsed(true)}
       className={`relative h-full flex-col bg-white/40 dark:bg-black/40 backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] border border-white/40 dark:border-white/10 transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) flex ${
         isCollapsed ? "w-24 items-center py-8" : "w-72 p-6 z-50 absolute md:relative md:z-auto"
       }`}
@@ -71,16 +73,7 @@ const Sidebar = ({ activeTab, setActiveTab, mainTabs, settingsTab, title = "Crav
       {/* Decorative Top Accent */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 bg-(--color-primary) rounded-b-full opacity-50"></div>
 
-      {/* Floating Toggle Button */}
-      <button
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-5 top-12 w-10 h-10 flex items-center justify-center bg-white dark:bg-gray-800 text-(--color-primary) rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.1)] border border-gray-100 dark:border-gray-700 hover:scale-110 hover:shadow-[0_6px_20px_rgba(0,0,0,0.15)] transition-all duration-300 z-50 cursor-pointer group"
-        aria-label="Toggle Sidebar"
-      >
-        <div className="group-hover:drop-shadow-md transition-all">
-          {isCollapsed ? <FiChevronRight size={20} strokeWidth={3} /> : <FiChevronLeft size={20} strokeWidth={3} />}
-        </div>
-      </button>
+      {/* Floating Toggle Button Removed for Hover Behavior */}
 
       {/* Sidebar Header / Logo Area */}
       <div className={`w-full flex items-center mb-8 ${isCollapsed ? "justify-center" : "px-2"}`}>

@@ -9,6 +9,7 @@ import {
   MdLunchDining,
 } from "react-icons/md";
 import CarouselComponent from "../components/CarouselComponent";
+import CravingFeed from "../components/CravingFeed";
 import { useAuth } from "../context/AuthContext";
 import api from "../config/ApiConfig";
 
@@ -39,6 +40,7 @@ const Home = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState("feed"); // 'feed' or 'restaurants'
 
   const categories = [
     { id: "all", label: "All", icon: MdRestaurant },
@@ -184,7 +186,39 @@ const Home = () => {
       {/* Main Content */}
       <section className="py-4 md:py-8 bg-linear-to-b from-(--color-primary) to-(--color-primary-content)">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Results Header */}
+          {/* View Toggle */}
+          <div className="flex justify-center mb-8">
+            <div className="bg-gray-100 dark:bg-gray-800 p-1 rounded-xl inline-flex shadow-inner">
+              <button
+                onClick={() => setViewMode("feed")}
+                className={`px-6 py-2 rounded-lg font-bold transition-all ${
+                  viewMode === "feed" 
+                    ? "bg-(--color-primary) text-white shadow-md" 
+                    : "text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                }`}
+              >
+                🔥 Craving Feed
+              </button>
+              <button
+                onClick={() => setViewMode("restaurants")}
+                className={`px-6 py-2 rounded-lg font-bold transition-all ${
+                  viewMode === "restaurants" 
+                    ? "bg-(--color-primary) text-white shadow-md" 
+                    : "text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                }`}
+              >
+                🏢 Restaurants
+              </button>
+            </div>
+          </div>
+
+          {viewMode === "feed" ? (
+            <div className="mb-16">
+              <CravingFeed />
+            </div>
+          ) : (
+            <div className="mb-12">
+              {/* Results Header */}
           <div className="mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-(--color-primary-content) mb-2">
               {selectedCategory === "all"
@@ -290,6 +324,8 @@ const Home = () => {
               >
                 Clear Filters
               </button>
+            </div>
+          )}
             </div>
           )}
         </div>
