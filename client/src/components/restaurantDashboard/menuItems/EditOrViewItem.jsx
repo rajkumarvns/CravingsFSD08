@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { IoMdCloseCircleOutline } from "react-icons/io";
+import { IoMdCloseCircleOutline, IoMdImage } from "react-icons/io";
+import { FaTag, FaInfoCircle, FaRupeeSign, FaUtensils, FaLeaf } from "react-icons/fa";
 
 const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({});
+  const isView = modalMode === "view";
 
   useEffect(() => {
     if (selectedItem) {
@@ -54,137 +56,194 @@ const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) =>
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg max-h-[85%]">
-          <div className="text-2xl flex justify-between items-center mb-4 border-b border-(--color-secondary) pb-2 sticky top-0 bg-white z-10">
-            <h1 className="text-(--color-primary)">
-              {modalMode === "edit" ? "Edit Item" : "View Item"}
-            </h1>
+      {/* Backdrop */}
+      <div 
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+        onClick={onClose}
+      >
+        {/* Modal Container */}
+        <div 
+          className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200"
+          onClick={e => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="bg-gradient-to-r from-(--color-primary) to-orange-400 p-6 text-white flex justify-between items-center shadow-md z-10 relative">
+            <div>
+              <h1 className="text-2xl font-extrabold tracking-tight">
+                {isView ? "Dish Details" : "Edit Dish"}
+              </h1>
+              <p className="text-orange-100 text-sm mt-1 opacity-90 font-medium">
+                {isView ? "View the details of your menu item." : "Update the details and image of this dish."}
+              </p>
+            </div>
             <button
-              className="text-red-300 hover:text-red-500"
+              className="text-white/80 hover:text-white transition-transform hover:scale-110 hover:rotate-90 duration-300"
               onClick={onClose}
             >
-              <IoMdCloseCircleOutline size={24} />
+              <IoMdCloseCircleOutline size={32} />
             </button>
           </div>
-          <div>
+
+          {/* Body */}
+          <div className="overflow-y-auto p-6 lg:p-8 flex-1">
             {selectedItem && (
-              <div className="flex flex-col gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Item Name</label>
-                  <input
-                    type="text"
-                    name="itemName"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-(--color-primary) focus:ring-(--color-primary) sm:text-sm p-2 border disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
-                    value={formData.itemName || ""}
-                    onChange={handleChange}
-                    disabled={modalMode === "view"}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Description</label>
-                  <textarea
-                    name="description"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-(--color-primary) focus:ring-(--color-primary) sm:text-sm p-2 border disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
-                    value={formData.description || ""}
-                    onChange={handleChange}
-                    disabled={modalMode === "view"}
-                    rows={2}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Item Image</label>
-                  {modalMode === "edit" ? (
-                    <input
-                      type="file"
-                      name="image"
-                      accept="image/*"
-                      className="mt-1 block w-full text-sm text-gray-500
-                        file:mr-4 file:py-2 file:px-4
-                        file:rounded-md file:border-0
-                        file:text-sm file:font-semibold
-                        file:bg-(--color-primary) file:text-white
-                        hover:file:bg-opacity-90"
-                      onChange={handleFileChange}
-                    />
-                  ) : null}
-                  {formData.imageUrl && (
-                    <div className="mt-2 relative inline-block">
-                      <img src={formData.imageUrl} alt="Preview" className="h-20 w-20 object-cover rounded shadow-sm border border-gray-200" />
-                      {modalMode === "edit" && (
-                        <button
-                          className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full hover:text-red-700 shadow-md"
-                          onClick={removeImage}
-                          title="Remove image"
-                        >
-                          <IoMdCloseCircleOutline size={20} />
-                        </button>
-                      )}
+              <div className="flex flex-col md:flex-row gap-8">
+                
+                {/* Left Column: Image */}
+                <div className="w-full md:w-1/3 flex flex-col gap-4">
+                  <div className="relative group rounded-2xl overflow-hidden shadow-lg border border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 aspect-square flex items-center justify-center">
+                    {formData.imageUrl ? (
+                      <img 
+                        src={formData.imageUrl} 
+                        alt="Preview" 
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                      />
+                    ) : (
+                      <div className="text-gray-400 flex flex-col items-center gap-2">
+                        <IoMdImage size={48} className="opacity-50" />
+                        <span className="text-sm font-medium">No Image</span>
+                      </div>
+                    )}
+
+                    {!isView && formData.imageUrl && (
+                      <button
+                        className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-full hover:bg-red-600 shadow-lg transition-transform hover:scale-110"
+                        onClick={removeImage}
+                        title="Remove image"
+                      >
+                        <IoMdCloseCircleOutline size={20} />
+                      </button>
+                    )}
+                  </div>
+                  
+                  {!isView && (
+                    <div>
+                      <label className="cursor-pointer flex items-center justify-center w-full px-4 py-2 bg-orange-50 text-(--color-primary) border border-orange-200 rounded-xl font-bold text-sm hover:bg-orange-100 transition-colors shadow-sm">
+                        <span>Change Image</span>
+                        <input
+                          type="file"
+                          name="image"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleFileChange}
+                        />
+                      </label>
                     </div>
                   )}
                 </div>
-                <div className="grid grid-cols-3 gap-4">
+
+                {/* Right Column: Details */}
+                <div className="w-full md:w-2/3 flex flex-col gap-5">
+                  {/* Item Name */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Price (₹)</label>
+                    <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                      <FaTag className="text-(--color-primary) opacity-80" /> Item Name
+                    </label>
                     <input
-                      type="number"
-                      name="price"
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-(--color-primary) focus:ring-(--color-primary) sm:text-sm p-2 border disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
-                      value={formData.price || ""}
+                      type="text"
+                      name="itemName"
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-4 py-3 font-medium transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                      value={formData.itemName || ""}
                       onChange={handleChange}
-                      disabled={modalMode === "view"}
+                      disabled={isView}
                     />
                   </div>
+                  
+                  {/* Description */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Category</label>
-                    <select
-                      name="category"
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-(--color-primary) focus:ring-(--color-primary) sm:text-sm p-2 border disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
-                      value={formData.category || ""}
+                    <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                      <FaInfoCircle className="text-(--color-primary) opacity-80" /> Description
+                    </label>
+                    <textarea
+                      name="description"
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-4 py-3 text-sm transition-all disabled:opacity-70 disabled:cursor-not-allowed resize-none"
+                      value={formData.description || ""}
                       onChange={handleChange}
-                      disabled={modalMode === "view"}
-                    >
-                      <option value="Starter">Starter</option>
-                      <option value="Main Course">Main Course</option>
-                      <option value="Dessert">Dessert</option>
-                      <option value="Beverages">Beverages</option>
-                      <option value="Pizza">Pizza</option>
-                      <option value="Burger">Burger</option>
-                      <option value="Biryani">Biryani</option>
-                      <option value="Rice">Rice</option>
-                      <option value="Seafood">Seafood</option>
-                      <option value="Wrap">Wrap</option>
-                      <option value="Other">Other</option>
-                    </select>
+                      disabled={isView}
+                      rows={3}
+                    />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Menu Type</label>
-                    <select
-                      name="type"
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-(--color-primary) focus:ring-(--color-primary) sm:text-sm p-2 border disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
-                      value={formData.type || ""}
-                      onChange={handleChange}
-                      disabled={modalMode === "view"}
-                    >
-                      <option value="Vegetarian">Vegetarian</option>
-                      <option value="Non-Vegetarian">Non-Vegetarian</option>
-                      <option value="Vegan">Vegan</option>
-                    </select>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {/* Price */}
+                    <div>
+                      <label className="flex items-center gap-1.5 text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                        <FaRupeeSign className="text-(--color-primary) opacity-80" /> Price
+                      </label>
+                      <input
+                        type="number"
+                        name="price"
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-4 py-2.5 font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                        value={formData.price || ""}
+                        onChange={handleChange}
+                        disabled={isView}
+                      />
+                    </div>
+                    {/* Category */}
+                    <div>
+                      <label className="flex items-center gap-1.5 text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                        <FaUtensils className="text-(--color-primary) opacity-80" /> Category
+                      </label>
+                      <select
+                        name="category"
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-4 py-2.5 font-medium transition-all disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                        value={formData.category || ""}
+                        onChange={handleChange}
+                        disabled={isView}
+                      >
+                        <option value="Starter">Starter</option>
+                        <option value="Main Course">Main Course</option>
+                        <option value="Dessert">Dessert</option>
+                        <option value="Beverages">Beverages</option>
+                        <option value="Pizza">Pizza</option>
+                        <option value="Burger">Burger</option>
+                        <option value="Biryani">Biryani</option>
+                        <option value="Rice">Rice</option>
+                        <option value="Seafood">Seafood</option>
+                        <option value="Wrap">Wrap</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    {/* Menu Type */}
+                    <div className="sm:col-span-2 lg:col-span-1">
+                      <label className="flex items-center gap-1.5 text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                        <FaLeaf className="text-(--color-primary) opacity-80" /> Menu Type
+                      </label>
+                      <select
+                        name="type"
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-4 py-2.5 font-medium transition-all disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                        value={formData.type || ""}
+                        onChange={handleChange}
+                        disabled={isView}
+                      >
+                        <option value="Vegetarian">Vegetarian</option>
+                        <option value="Non-Vegetarian">Non-Vegetarian</option>
+                        <option value="Vegan">Vegan</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
-                {modalMode === "edit" && (
-                  <div className="mt-4 flex justify-end">
-                    <button
-                      className="px-4 py-2 bg-(--color-primary) text-white rounded-md hover:bg-opacity-90"
-                      onClick={handleSave}
-                    >
-                      Save Changes
-                    </button>
-                  </div>
-                )}
               </div>
             )}
           </div>
+
+          {/* Footer Action */}
+          {!isView && (
+            <div className="bg-gray-50 dark:bg-gray-900/50 p-6 border-t border-gray-100 dark:border-gray-700 flex justify-end gap-4 rounded-b-3xl">
+              <button
+                className="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-xl font-bold shadow-sm hover:bg-gray-50 transition-colors"
+                onClick={onClose}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-8 py-2.5 bg-gradient-to-r from-(--color-primary) to-orange-500 text-white rounded-xl font-bold shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-0.5 transition-all"
+                onClick={handleSave}
+              >
+                Save Changes
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </>

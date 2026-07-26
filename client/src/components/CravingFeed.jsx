@@ -133,7 +133,7 @@ const CravingFeed = () => {
                 </span>
               )}
             </div>
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-12">
+            <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6 pt-12">
               <h2 className="text-3xl font-extrabold text-white mb-1">{dishes[currentIndex].itemName}</h2>
               <p className="text-white/80 font-medium">{dishes[currentIndex].restaurantName || "Unknown Restaurant"}</p>
             </div>

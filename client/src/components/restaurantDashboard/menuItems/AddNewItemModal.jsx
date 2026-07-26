@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { IoMdCloseCircleOutline } from "react-icons/io";
+import { IoMdCloseCircleOutline, IoMdImage } from "react-icons/io";
+import { FaTag, FaInfoCircle, FaRupeeSign, FaUtensils, FaLeaf } from "react-icons/fa";
 
 const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
   const [formData, setFormData] = useState({
@@ -59,117 +60,146 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 transition-opacity">
-        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[85%] overflow-hidden flex flex-col transform transition-all">
-          <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-white/80 sticky top-0 z-10 backdrop-blur-md">
+      {/* Backdrop */}
+      <div 
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+        onClick={onClose}
+      >
+        {/* Modal Container */}
+        <div 
+          className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200"
+          onClick={e => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="bg-gradient-to-r from-(--color-primary) to-orange-400 p-6 text-white flex justify-between items-center shadow-md z-10 relative">
             <div>
-              <h2 className="text-xl font-bold text-gray-800 tracking-tight">Add New Menu Item</h2>
-              <p className="text-sm text-gray-500 mt-1">Fill in the details to add a new dish to your menu.</p>
+              <h1 className="text-2xl font-extrabold tracking-tight">
+                Add New Dish
+              </h1>
+              <p className="text-orange-100 text-sm mt-1 opacity-90 font-medium">
+                Create a new, delicious addition to your menu.
+              </p>
             </div>
             <button
-              className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-all duration-200"
+              className="text-white/80 hover:text-white transition-transform hover:scale-110 hover:rotate-90 duration-300"
               onClick={onClose}
             >
-              <IoMdCloseCircleOutline size={26} />
+              <IoMdCloseCircleOutline size={32} />
             </button>
           </div>
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
-              {/* Left Column - Image (40%) */}
-              <div className="md:col-span-2 flex flex-col h-full">
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Item Image <span className="text-red-500">*</span>
-                </label>
-                <div className="border-2 border-dashed border-gray-200 rounded-xl p-4 flex flex-col items-center justify-center text-center h-full min-h-48 relative hover:border-(--color-primary) hover:bg-(--color-primary)/5 transition-all duration-300 bg-gray-50 group cursor-pointer overflow-hidden">
-                  {!formData.imageUrl ? (
-                    <div className="transform transition-transform duration-300 group-hover:scale-105 group-hover:-translate-y-1">
-                      <div className="w-16 h-16 mx-auto bg-white rounded-full shadow-sm flex items-center justify-center mb-4 text-gray-400 group-hover:text-(--color-primary) transition-colors">
-                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                      </div>
-                      <p className="text-sm text-gray-600 font-medium">Click to upload image</p>
-                      <p className="text-xs text-gray-400 mt-2 font-medium">PNG, JPG up to 5MB</p>
-                    </div>
-                  ) : null}
-                  <input
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                    onChange={handleFileChange}
-                  />
-                  {formData.imageUrl && (
-                    <div className="absolute inset-0 bg-white p-1">
-                      <img src={formData.imageUrl} alt="Preview" className="w-full h-full object-cover rounded-lg shadow-inner" />
-                      <button
-                        className="absolute top-3 right-3 bg-white/90 backdrop-blur text-red-500 rounded-full p-1.5 hover:bg-red-500 hover:text-white shadow-md z-20 transition-all duration-200 transform hover:scale-110"
-                        onClick={(e) => { e.preventDefault(); removeImage(); }}
-                        title="Remove image"
-                      >
-                        <IoMdCloseCircleOutline size={22} />
-                      </button>
+
+          {/* Body */}
+          <div className="overflow-y-auto p-6 lg:p-8 flex-1">
+            <div className="flex flex-col md:flex-row gap-8">
+              
+              {/* Left Column: Image */}
+              <div className="w-full md:w-1/3 flex flex-col gap-4">
+                <div className="relative group rounded-2xl overflow-hidden shadow-lg border border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 aspect-square flex items-center justify-center">
+                  {formData.imageUrl ? (
+                    <img 
+                      src={formData.imageUrl} 
+                      alt="Preview" 
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                    />
+                  ) : (
+                    <div className="text-gray-400 flex flex-col items-center gap-2 pointer-events-none">
+                      <IoMdImage size={48} className="opacity-50 group-hover:text-(--color-primary) transition-colors duration-300" />
+                      <span className="text-sm font-medium group-hover:text-(--color-primary) transition-colors duration-300">Upload Image</span>
                     </div>
                   )}
+
+                  {!formData.imageUrl && (
+                    <input
+                      type="file"
+                      name="image"
+                      accept="image/*"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                      onChange={handleFileChange}
+                    />
+                  )}
+
+                  {formData.imageUrl && (
+                    <button
+                      className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-full hover:bg-red-600 shadow-lg transition-transform hover:scale-110 z-20"
+                      onClick={(e) => { e.preventDefault(); removeImage(); }}
+                      title="Remove image"
+                    >
+                      <IoMdCloseCircleOutline size={20} />
+                    </button>
+                  )}
                 </div>
+                
+                {formData.imageUrl && (
+                  <div>
+                    <label className="cursor-pointer flex items-center justify-center w-full px-4 py-2 bg-orange-50 text-(--color-primary) border border-orange-200 rounded-xl font-bold text-sm hover:bg-orange-100 transition-colors shadow-sm">
+                      <span>Change Image</span>
+                      <input
+                        type="file"
+                        name="image"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleFileChange}
+                      />
+                    </label>
+                  </div>
+                )}
               </div>
 
-              {/* Right Column - Text Data (60%) */}
-              <div className="md:col-span-3 flex flex-col gap-5">
+              {/* Right Column: Details */}
+              <div className="w-full md:w-2/3 flex flex-col gap-5">
+                {/* Item Name */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                    Item Name <span className="text-red-500">*</span>
+                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                    <FaTag className="text-(--color-primary) opacity-80" /> Item Name <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     name="itemName"
-                    className="w-full rounded-xl border border-gray-200 shadow-sm focus:border-(--color-primary) focus:ring-2 focus:ring-(--color-primary)/20 sm:text-sm px-4 py-3 transition-all duration-200 outline-none bg-gray-50 hover:bg-white focus:bg-white"
+                    className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-4 py-3 font-medium transition-all outline-none"
                     value={formData.itemName}
                     onChange={handleChange}
-                    placeholder="e.g. Garlic Bread"
+                    placeholder="e.g. Signature Garlic Bread"
                   />
                 </div>
-
+                
+                {/* Description */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                    Description
+                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                    <FaInfoCircle className="text-(--color-primary) opacity-80" /> Description
                   </label>
                   <textarea
                     name="description"
-                    className="w-full rounded-xl border border-gray-200 shadow-sm focus:border-(--color-primary) focus:ring-2 focus:ring-(--color-primary)/20 sm:text-sm px-4 py-3 transition-all duration-200 outline-none bg-gray-50 hover:bg-white focus:bg-white resize-none"
+                    className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-4 py-3 text-sm transition-all resize-none outline-none"
                     value={formData.description}
                     onChange={handleChange}
                     rows={3}
-                    placeholder="e.g. Warm, crusty bread with garlic butter."
+                    placeholder="e.g. Warm, crusty bread topped with our special garlic butter blend."
                   />
                 </div>
 
-                <div className="grid grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {/* Price */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                      Price (₹) <span className="text-red-500">*</span>
+                    <label className="flex items-center gap-1.5 text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                      <FaRupeeSign className="text-(--color-primary) opacity-80" /> Price <span className="text-red-500">*</span>
                     </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <span className="text-gray-500 font-medium">₹</span>
-                      </div>
-                      <input
-                        type="number"
-                        name="price"
-                        className="w-full rounded-xl border border-gray-200 shadow-sm focus:border-(--color-primary) focus:ring-2 focus:ring-(--color-primary)/20 sm:text-sm pl-8 pr-4 py-3 transition-all duration-200 outline-none bg-gray-50 hover:bg-white focus:bg-white"
-                        value={formData.price}
-                        onChange={handleChange}
-                        placeholder="150"
-                      />
-                    </div>
+                    <input
+                      type="number"
+                      name="price"
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-4 py-2.5 font-bold transition-all outline-none"
+                      value={formData.price}
+                      onChange={handleChange}
+                      placeholder="150"
+                    />
                   </div>
+                  {/* Category */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                      Category <span className="text-red-500">*</span>
+                    <label className="flex items-center gap-1.5 text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                      <FaUtensils className="text-(--color-primary) opacity-80" /> Category <span className="text-red-500">*</span>
                     </label>
                     <select
                       name="category"
-                      className="w-full rounded-xl border border-gray-200 shadow-sm focus:border-(--color-primary) focus:ring-2 focus:ring-(--color-primary)/20 sm:text-sm px-4 py-3 transition-all duration-200 outline-none bg-gray-50 hover:bg-white focus:bg-white"
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-4 py-2.5 font-medium transition-all cursor-pointer outline-none"
                       value={formData.category}
                       onChange={handleChange}
                     >
@@ -186,13 +216,14 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
                       <option value="Other">Other</option>
                     </select>
                   </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                      Menu Type <span className="text-red-500">*</span>
+                  {/* Menu Type */}
+                  <div className="sm:col-span-2 lg:col-span-1">
+                    <label className="flex items-center gap-1.5 text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                      <FaLeaf className="text-(--color-primary) opacity-80" /> Menu Type <span className="text-red-500">*</span>
                     </label>
                     <select
                       name="type"
-                      className="w-full rounded-xl border border-gray-200 shadow-sm focus:border-(--color-primary) focus:ring-2 focus:ring-(--color-primary)/20 sm:text-sm px-4 py-3 transition-all duration-200 outline-none bg-gray-50 hover:bg-white focus:bg-white"
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-4 py-2.5 font-medium transition-all cursor-pointer outline-none"
                       value={formData.type}
                       onChange={handleChange}
                     >
@@ -206,18 +237,19 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
             </div>
           </div>
 
-          <div className="px-6 py-5 bg-gray-50/80 border-t border-gray-100 flex justify-end gap-3">
+          {/* Footer Action */}
+          <div className="bg-gray-50 dark:bg-gray-900/50 p-6 border-t border-gray-100 dark:border-gray-700 flex justify-end gap-4 rounded-b-3xl">
             <button
-              className="px-6 py-2.5 rounded-xl font-medium text-gray-600 bg-white border border-gray-200 shadow-sm hover:bg-gray-50 hover:text-gray-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-200"
+              className="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-xl font-bold shadow-sm hover:bg-gray-50 transition-colors outline-none"
               onClick={onClose}
             >
               Cancel
             </button>
             <button
-              className="px-6 py-2.5 bg-(--color-primary) text-white font-medium rounded-xl shadow-md shadow-(--color-primary)/30 hover:bg-opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-(--color-primary)/50 flex items-center gap-2"
+              className="px-8 py-2.5 bg-gradient-to-r from-(--color-primary) to-orange-500 text-white rounded-xl font-bold shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-0.5 transition-all outline-none"
               onClick={handleAdd}
             >
-              Add Menu Item
+              Create Item
             </button>
           </div>
         </div>
