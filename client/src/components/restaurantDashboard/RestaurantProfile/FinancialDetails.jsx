@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import api from "../../../config/ApiConfig";
 import runningLoader from "../../../assets/runningLoader.gif";
 
-const FinancialDetails = ({ initialData, onSuccess }) => {
+const FinancialDetails = ({ initialData, onSuccess, activeRestaurantId }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -32,6 +32,9 @@ const FinancialDetails = ({ initialData, onSuccess }) => {
     try {
       setIsLoading(true);
       const payload = new FormData();
+      if (activeRestaurantId) {
+        payload.append("restaurantId", activeRestaurantId);
+      }
       payload.append("financialDetails.bankName", formData.bankName);
       payload.append("financialDetails.accountNumber", formData.accountNumber);
       payload.append("financialDetails.ifscCode", formData.ifscCode);

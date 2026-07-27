@@ -9,36 +9,19 @@ import RestaurantDocuments from "./RestaurantDocuments";
 import ContactAndHours from "./ContactAndHours";
 import CreateRestaurantProfile from "./CreateRestaurantProfile";
 
-const RestaurantProfileContainer = () => {
-  const [profileData, setProfileData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isProfileCreated, setIsProfileCreated] = useState(false);
+const RestaurantProfileContainer = ({ activeRestaurantId, refreshRestaurants, restaurants }) => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [activeTab, setActiveTab] = useState("basic");
 
-  const fetchProfile = async () => {
-    try {
-      setIsLoading(true);
-      const response = await api.get("/restaurant/get-profile");
-      if (response.data?.data) {
-        setProfileData(response.data.data);
-        setIsProfileCreated(true);
-      } else {
-        setIsProfileCreated(false);
-      }
-    } catch (error) {
-      console.error("Error fetching restaurant profile:", error);
-      setIsProfileCreated(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const profileData = restaurants?.find(r => r._id === activeRestaurantId);
+  const isProfileCreated = !!profileData;
 
   const handleToggleStatus = async () => {
+    if (!profileData) return;
     try {
-      const response = await api.patch("/restaurant/toggle-status");
+      const response = await api.patch("/restaurant/toggle-status", { restaurantId: profileData._id });
       if (response.data?.data) {
-        setProfileData(response.data.data);
+        refreshRestaurants();
         toast.success(response.data.message || "Status updated!");
       }
     } catch (error) {
@@ -47,28 +30,35 @@ const RestaurantProfileContainer = () => {
     }
   };
 
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="p-6 text-center text-gray-500 font-semibold">
-        Loading profile...
-      </div>
-    );
-  }
+  const handleSuccess = async () => {
+    await refreshRestaurants();
+    setShowCreateForm(false);
+  };
 
   return (
     <div className="space-y-6 pb-10">
-      {isProfileCreated ? (
+      {showCreateForm ? (
+        <CreateRestaurantProfile
+          onSuccess={handleSuccess}
+          onCancel={() => setShowCreateForm(false)}
+        />
+      ) : isProfileCreated ? (
         <>
           <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100">
             <div>
               <h2 className="text-xl font-bold text-gray-800">{profileData?.restaurantName || "Restaurant Profile"}</h2>
               <p className="text-sm text-gray-500">Manage your restaurant details and settings</p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setShowCreateForm(true)}
+                className="flex items-center gap-2 bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg font-semibold text-sm transition-all"
+              >
+                <MdAddCircleOutline className="text-lg" /> Add Another Restaurant
+              </button>
+              
+              <div className="h-8 w-px bg-gray-300"></div>
+
               <span className={`font-semibold ${profileData?.isOpen ? "text-green-600" : "text-red-500"}`}>
                 {profileData?.isOpen ? "Currently Open" : "Currently Closed"}
               </span>
@@ -116,41 +106,41 @@ const RestaurantProfileContainer = () => {
             {activeTab === "basic" && (
               <RestaurantInformation
                 initialData={profileData}
-                onSuccess={fetchProfile}
+                onSuccess={refreshRestaurants}
                 isProfileCreated={isProfileCreated}
+                activeRestaurantId={activeRestaurantId}
               />
             )}
             {activeTab === "photos" && (
               <RestaurantPhotos
                 initialData={profileData}
-                onSuccess={fetchProfile}
+                onSuccess={refreshRestaurants}
+                activeRestaurantId={activeRestaurantId}
               />
             )}
             {activeTab === "documents" && (
               <RestaurantDocuments
                 initialData={profileData}
-                onSuccess={fetchProfile}
+                onSuccess={refreshRestaurants}
+                activeRestaurantId={activeRestaurantId}
               />
             )}
             {activeTab === "financial" && (
               <FinancialDetails
                 initialData={profileData}
-                onSuccess={fetchProfile}
+                onSuccess={refreshRestaurants}
+                activeRestaurantId={activeRestaurantId}
               />
             )}
             {activeTab === "contact" && (
               <ContactAndHours
                 initialData={profileData}
-                onSuccess={fetchProfile}
+                onSuccess={refreshRestaurants}
+                activeRestaurantId={activeRestaurantId}
               />
             )}
           </div>
         </>
-      ) : showCreateForm ? (
-        <CreateRestaurantProfile
-          onSuccess={fetchProfile}
-          onCancel={() => setShowCreateForm(false)}
-        />
       ) : (
         <div className="flex flex-col items-center justify-center py-20 px-4 bg-white rounded-3xl shadow-xl border border-gray-100 text-center">
           <div className="w-24 h-24 bg-orange-50 rounded-full flex items-center justify-center mb-6">

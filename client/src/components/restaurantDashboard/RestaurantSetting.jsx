@@ -8,7 +8,7 @@ import PasswordChangeModal from "../commonModals/PasswordChangeModal";
 import RestaurantProfileContainer from "./RestaurantProfile";
 import runningLoader from "../../assets/runningLoader.gif";
 
-const RestaurantSetting = () => {
+const RestaurantSetting = ({ activeRestaurantId, refreshRestaurants, restaurants }) => {
   const { user, setUser } = useAuth();
   const [activeTab, setActiveTab] = useState("user");
   const [editingProfile, setEditingProfile] = useState(false);
@@ -262,7 +262,7 @@ const RestaurantSetting = () => {
 
         {activeTab === "restaurant" && (
           <div className="animate-in fade-in duration-300">
-            <RestaurantProfileContainer />
+            <RestaurantProfileContainer activeRestaurantId={activeRestaurantId} refreshRestaurants={refreshRestaurants} restaurants={restaurants} />
           </div>
         )}
       </div>

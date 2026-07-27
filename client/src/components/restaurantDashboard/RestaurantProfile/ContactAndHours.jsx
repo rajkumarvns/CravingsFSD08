@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import api from "../../../config/ApiConfig";
 import runningLoader from "../../../assets/runningLoader.gif";
 
-const ContactAndHours = ({ initialData, onSuccess }) => {
+const ContactAndHours = ({ initialData, onSuccess, activeRestaurantId }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,6 +40,9 @@ const ContactAndHours = ({ initialData, onSuccess }) => {
     try {
       setIsLoading(true);
       const payload = new FormData();
+      if (activeRestaurantId) {
+        payload.append("restaurantId", activeRestaurantId);
+      }
       payload.append("contactDetails.email", formData.contactEmail);
       payload.append("contactDetails.phone", formData.contactPhone);
       payload.append("servingHours.openingTime", formData.openingTime);

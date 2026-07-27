@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import api from "../../../config/ApiConfig";
 import runningLoader from "../../../assets/runningLoader.gif";
 
-const RestaurantDocuments = ({ initialData, onSuccess }) => {
+const RestaurantDocuments = ({ initialData, onSuccess, activeRestaurantId }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -91,6 +91,9 @@ const RestaurantDocuments = ({ initialData, onSuccess }) => {
     try {
       setIsLoading(true);
       const payload = new FormData();
+      if (activeRestaurantId) {
+        payload.append("restaurantId", activeRestaurantId);
+      }
       payload.append("documents.legalName", formData.legalName);
       payload.append("documents.companyType", formData.companyType);
       payload.append("documents.gstCertificate", formData.gstCertificate);

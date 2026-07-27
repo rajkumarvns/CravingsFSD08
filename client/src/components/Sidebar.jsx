@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { SiCaterpillar } from "react-icons/si"; // Just a placeholder luxury icon, but let's use a generic elegant shape if possible. Let's just use standard HTML/CSS shapes.
 
-const Sidebar = ({ activeTab, setActiveTab, mainTabs, settingsTab, title = "Cravings", subtitle = "Dashboard" }) => {
+const Sidebar = ({ activeTab, setActiveTab, mainTabs, settingsTab, title = "Cravings", subtitle = "Dashboard", dropdownOptions, selectedDropdownValue, onDropdownChange }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   React.useEffect(() => {
@@ -91,6 +91,20 @@ const Sidebar = ({ activeTab, setActiveTab, mainTabs, settingsTab, title = "Crav
           </div>
         )}
       </div>
+
+      {dropdownOptions && dropdownOptions.length > 0 && (
+        <div className={`mb-6 px-4 ${isCollapsed ? "hidden" : "block"}`}>
+          <select 
+            value={selectedDropdownValue} 
+            onChange={(e) => onDropdownChange(e.target.value)}
+            className="w-full bg-white/60 dark:bg-black/60 border border-gray-200 dark:border-gray-700 text-sm rounded-lg px-3 py-2 shadow-sm focus:ring-2 focus:ring-(--color-primary) outline-none transition-all"
+          >
+            {dropdownOptions.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Tabs Container */}
       <div className="flex-1 w-full mt-4 overflow-y-auto overflow-x-hidden scrollbar-hide">

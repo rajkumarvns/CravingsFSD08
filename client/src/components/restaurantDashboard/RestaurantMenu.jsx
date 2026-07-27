@@ -12,9 +12,9 @@ import api from "../../config/ApiConfig.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import runningLoader from "../../assets/runningLoader.gif";
 
-const RestaurantMenu = () => {
+const RestaurantMenu = ({ activeRestaurantId }) => {
   const { user } = useAuth();
-  const restaurantId = user?._id;
+  const restaurantId = activeRestaurantId || user?._id;
   const [menuItems, setMenuItems] = useState([]);
 
   const [isAddNewItemModalOpen, setIsAddNewItemModalOpen] = useState(false);

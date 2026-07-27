@@ -9,20 +9,13 @@ import {
 export const getRestaurantProfile = async (req, res, next) => {
   try {
     const currentUser = req.user;
-    const existingRestaurant = await Restaurant.findOne({
+    const existingRestaurants = await Restaurant.find({
       managerId: currentUser._id,
     });
 
-    if (!existingRestaurant) {
-      return res.status(404).json({
-        message: "Restaurant profile not found",
-        data: null,
-      });
-    }
-
     return res.status(200).json({
-      message: "Restaurant profile fetched successfully",
-      data: existingRestaurant,
+      message: "Restaurants fetched successfully",
+      data: existingRestaurants, // This is now an array
     });
   } catch (error) {
     console.log(error.message);
@@ -36,12 +29,17 @@ export const restaurantUpdateProfile = async (req, res, next) => {
     const restaurantDataFromFE = req.body;
     const coverImageFromFE = req.files?.coverImage?.[0];
     const restaurantImageFromFE = req.files?.restaurantImage;
+    const { restaurantId } = req.body;
 
-    const dataKeys = Object.keys(restaurantDataFromFE);
+    const dataKeys = Object.keys(restaurantDataFromFE).filter(k => k !== 'restaurantId');
 
-    const existingRestaurant = await Restaurant.findOne({
-      managerId: currentUser._id,
-    });
+    let existingRestaurant = null;
+    if (restaurantId) {
+      existingRestaurant = await Restaurant.findOne({
+        _id: restaurantId,
+        managerId: currentUser._id,
+      });
+    }
 
     if (restaurantDataFromFE.socialMediaLinks) {
       try {
@@ -145,7 +143,14 @@ export const restaurantUpdateProfile = async (req, res, next) => {
 export const toggleRestaurantStatus = async (req, res, next) => {
   try {
     const currentUser = req.user;
+    const { restaurantId } = req.body;
+    
+    if (!restaurantId) {
+      return res.status(400).json({ message: "restaurantId is required" });
+    }
+
     const existingRestaurant = await Restaurant.findOne({
+      _id: restaurantId,
       managerId: currentUser._id,
     });
 

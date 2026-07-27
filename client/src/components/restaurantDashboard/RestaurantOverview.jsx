@@ -1,6 +1,6 @@
 import React from "react";
 
-const RestaurantOverview = () => {
+const RestaurantOverview = ({ activeRestaurantId }) => {
   const recentOrders = [
     { id: "#ORD-1001", customer: "Rahul Sharma", amount: "₹450.00", status: "Delivered" },
     { id: "#ORD-1002", customer: "Priya Patel", amount: "₹320.50", status: "Preparing" },

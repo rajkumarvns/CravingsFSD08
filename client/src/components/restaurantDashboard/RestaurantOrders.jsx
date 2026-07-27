@@ -1,6 +1,6 @@
 import React from "react";
 
-const RestaurantOrders = () => {
+const RestaurantOrders = ({ activeRestaurantId }) => {
   const mockOrders = [
     { id: "#ORD-1001", customer: "John Doe", amount: "$45.00", status: "Delivered", date: "2026-07-10" },
     { id: "#ORD-1002", customer: "Jane Smith", amount: "$32.50", status: "Preparing", date: "2026-07-10" },

@@ -7,7 +7,7 @@ import runningLoader from "../../../assets/runningLoader.gif";
 const MAX_IMAGE_SIZE_BYTES = 1048576;//1MB
 const MAX_GALLERY_IMAGES = 8;
 
-const RestaurantPhotos = ({ initialData, onSuccess }) => {
+const RestaurantPhotos = ({ initialData, onSuccess, activeRestaurantId }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -116,6 +116,9 @@ const RestaurantPhotos = ({ initialData, onSuccess }) => {
       setIsLoading(true);
       setUploadProgress(0);
       const payload = new FormData();
+      if (activeRestaurantId) {
+        payload.append("restaurantId", activeRestaurantId);
+      }
 
       if (coverImage) {
         payload.append("coverImage", coverImage);

@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import api from "../../../config/ApiConfig";
 import runningLoader from "../../../assets/runningLoader.gif";
 
-const RestaurantInformation = ({ initialData, onSuccess, isProfileCreated }) => {
+const RestaurantInformation = ({ initialData, onSuccess, isProfileCreated, activeRestaurantId }) => {
   // If profile is not created yet, default to editing mode.
   const [isEditing, setIsEditing] = useState(!isProfileCreated);
   const [isLoading, setIsLoading] = useState(false);
@@ -72,6 +72,9 @@ const RestaurantInformation = ({ initialData, onSuccess, isProfileCreated }) => 
     try {
       setIsLoading(true);
       const payload = new FormData();
+      if (activeRestaurantId) {
+        payload.append("restaurantId", activeRestaurantId);
+      }
       
       payload.append("restaurantName", formData.restaurantName);
       payload.append("address", formData.address);
