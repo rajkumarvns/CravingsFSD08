@@ -12,6 +12,7 @@ import riderRouter from "./src/router/rider.route.js";
 import cookieParser from "cookie-parser";
 import customerRouter from "./src/router/customer.route.js";
 import adminRouter from "./src/router/admin.route.js";
+import PoolRouter from "./src/router/pool.route.js";
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use("/restaurant", restaurantRouter);
 app.use("/admin", adminRouter);
 app.use("/customer", customerRouter);
 app.use("/rider", riderRouter);
+app.use("/pools", PoolRouter);
 
 //Default API
 app.get("/", (req, res) => {

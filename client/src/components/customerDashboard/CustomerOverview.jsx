@@ -1,4 +1,5 @@
 import React from "react";
+import ActivePoolsWidget from "./ActivePoolsWidget";
 
 const CustomerOverview = () => {
   const recentOrders = [
@@ -8,8 +9,12 @@ const CustomerOverview = () => {
   ];
 
   return (
-    <div className="overflow-y-auto h-full">
+    <div className="overflow-y-auto h-full pr-2">
       <h2 className="text-2xl font-bold mb-6">Customer Overview</h2>
+      
+      {/* Neighborhood Pooling Widget */}
+      <ActivePoolsWidget />
+
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div className="bg-(--color-base-200) p-4 rounded-lg">
           <p className="text-(--color-neutral) text-sm">Total Orders</p>

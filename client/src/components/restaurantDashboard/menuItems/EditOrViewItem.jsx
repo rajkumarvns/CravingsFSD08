@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { IoMdCloseCircleOutline, IoMdImage } from "react-icons/io";
-import { FaTag, FaInfoCircle, FaRupeeSign, FaUtensils, FaLeaf } from "react-icons/fa";
+import { FaTag, FaInfoCircle, FaRupeeSign, FaUtensils, FaLeaf, FaMotorcycle } from "react-icons/fa";
 
 const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({});
@@ -11,6 +11,7 @@ const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) =>
       setFormData({
         ...selectedItem,
         imageUrl: selectedItem.image?.url || "",
+        travelScore: selectedItem.travelScore !== undefined ? selectedItem.travelScore : 100,
       });
     }
   }, [selectedItem]);
@@ -67,17 +68,17 @@ const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) =>
           onClick={e => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="bg-gradient-to-r from-(--color-primary) to-orange-400 p-6 text-white flex justify-between items-center shadow-md z-10 relative">
-            <div>
+          <div className="bg-gradient-to-r from-(--color-primary) to-orange-400 p-4 text-white flex justify-center items-center shadow-md z-10 relative">
+            <div className="text-center">
               <h1 className="text-2xl font-extrabold tracking-tight">
-                {isView ? "Dish Details" : "Edit Dish"}
+                {modalMode === 'edit' ? 'Edit Dish Details' : 'Dish Details'}
               </h1>
-              <p className="text-orange-100 text-sm mt-1 opacity-90 font-medium">
-                {isView ? "View the details of your menu item." : "Update the details and image of this dish."}
+              <p className="text-orange-100 text-sm mt-0.5 opacity-90 font-medium">
+                {modalMode === 'edit' ? 'Update the details of your menu item.' : 'Review the details of this dish.'}
               </p>
             </div>
             <button
-              className="text-white/80 hover:text-white transition-transform hover:scale-110 hover:rotate-90 duration-300"
+              className="absolute right-6 top-1/2 -translate-y-1/2 text-white/80 hover:text-white transition-transform hover:scale-110 hover:rotate-90 duration-300"
               onClick={onClose}
             >
               <IoMdCloseCircleOutline size={32} />
@@ -85,12 +86,12 @@ const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) =>
           </div>
 
           {/* Body */}
-          <div className="overflow-y-auto p-6 lg:p-8 flex-1">
+          <div className="overflow-y-auto p-4 lg:p-6 flex-1">
             {selectedItem && (
-              <div className="flex flex-col md:flex-row gap-8">
+              <div className="flex flex-col md:flex-row gap-6">
                 
                 {/* Left Column: Image */}
-                <div className="w-full md:w-1/3 flex flex-col gap-4">
+                <div className="w-full md:w-1/3 flex flex-col gap-3">
                   <div className="relative group rounded-2xl overflow-hidden shadow-lg border border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 aspect-square flex items-center justify-center">
                     {formData.imageUrl ? (
                       <img 
@@ -133,7 +134,7 @@ const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) =>
                 </div>
 
                 {/* Right Column: Details */}
-                <div className="w-full md:w-2/3 flex flex-col gap-5">
+                <div className="w-full md:w-2/3 flex flex-col gap-3">
                   {/* Item Name */}
                   <div>
                     <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">
@@ -142,7 +143,7 @@ const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) =>
                     <input
                       type="text"
                       name="itemName"
-                      className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-4 py-3 font-medium transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-3 py-2 font-medium transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                       value={formData.itemName || ""}
                       onChange={handleChange}
                       disabled={isView}
@@ -156,7 +157,7 @@ const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) =>
                     </label>
                     <textarea
                       name="description"
-                      className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-4 py-3 text-sm transition-all disabled:opacity-70 disabled:cursor-not-allowed resize-none"
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-3 py-2 text-sm transition-all resize-none outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                       value={formData.description || ""}
                       onChange={handleChange}
                       disabled={isView}
@@ -164,7 +165,7 @@ const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) =>
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {/* Price */}
                     <div>
                       <label className="flex items-center gap-1.5 text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">
@@ -173,7 +174,7 @@ const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) =>
                       <input
                         type="number"
                         name="price"
-                        className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-4 py-2.5 font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-3 py-2 font-bold transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                         value={formData.price || ""}
                         onChange={handleChange}
                         disabled={isView}
@@ -186,7 +187,7 @@ const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) =>
                       </label>
                       <select
                         name="category"
-                        className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-4 py-2.5 font-medium transition-all disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-3 py-2 font-medium transition-all cursor-pointer outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                         value={formData.category || ""}
                         onChange={handleChange}
                         disabled={isView}
@@ -211,7 +212,7 @@ const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) =>
                       </label>
                       <select
                         name="type"
-                        className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-4 py-2.5 font-medium transition-all disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800 shadow-inner focus:border-(--color-primary) focus:ring-2 focus:ring-orange-200 text-gray-900 dark:text-white px-3 py-2 font-medium transition-all cursor-pointer outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                         value={formData.type || ""}
                         onChange={handleChange}
                         disabled={isView}
@@ -222,6 +223,30 @@ const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) =>
                       </select>
                     </div>
                   </div>
+
+                  {/* Travel-Ability Score */}
+                  <div>
+                    <label className="flex justify-between items-center text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                      <span className="flex items-center gap-1.5"><FaMotorcycle className="text-(--color-primary) opacity-80" /> Travel-Ability Score</span>
+                      <span className={`px-2 py-0.5 rounded-md text-xs text-white ${formData.travelScore >= 80 ? 'bg-green-500' : formData.travelScore >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`}>
+                        {formData.travelScore}/100
+                      </span>
+                    </label>
+                    <input
+                      type="range"
+                      name="travelScore"
+                      min="1"
+                      max="100"
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-(--color-primary) dark:bg-gray-700 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                      value={formData.travelScore || 100}
+                      onChange={handleChange}
+                      disabled={isView}
+                    />
+                    <p className="text-xs text-gray-500 mt-1 flex justify-between">
+                      <span>Low (Melts/Spoils)</span>
+                      <span>High (Travels Well)</span>
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
@@ -229,7 +254,7 @@ const EditOrViewItem = ({ selectedItem, modalMode, isOpen, onClose, onSave }) =>
 
           {/* Footer Action */}
           {!isView && (
-            <div className="bg-gray-50 dark:bg-gray-900/50 p-6 border-t border-gray-100 dark:border-gray-700 flex justify-end gap-4 rounded-b-3xl">
+            <div className="bg-gray-50 dark:bg-gray-900/50 p-4 border-t border-gray-100 dark:border-gray-700 flex justify-end gap-3 rounded-b-3xl">
               <button
                 className="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-xl font-bold shadow-sm hover:bg-gray-50 transition-colors"
                 onClick={onClose}

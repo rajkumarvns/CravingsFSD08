@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../config/ApiConfig';
-import { FaHeart, FaTimes, FaShoppingCart, FaFire, FaLeaf, FaDumbbell, FaSlidersH } from 'react-icons/fa';
+import { FaHeart, FaTimes, FaShoppingCart, FaFire, FaLeaf, FaDumbbell, FaSlidersH, FaMotorcycle, FaExclamationTriangle } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
 const CravingFeed = () => {
@@ -58,6 +58,10 @@ const CravingFeed = () => {
   };
 
   const addToCart = () => {
+    const currentDish = dishes[currentIndex];
+    if (currentDish?.travelScore !== undefined && currentDish.travelScore < 60) {
+      toast.error(`Warning: This item may not travel well! (${currentDish.travelScore}/100)`, { duration: 4000 });
+    }
     toast.success('Added to Cart!');
   };
 
@@ -148,14 +152,24 @@ const CravingFeed = () => {
               </div>
             </div>
 
-            {/* Macro Tags */}
-            <div className="flex gap-2 mb-4">
+            {/* Macro & Travel Tags */}
+            <div className="flex flex-wrap gap-2 mb-4">
               <span className="bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 border border-orange-100 dark:border-orange-800/50 text-xs font-bold px-2.5 py-1 rounded-md shadow-sm flex items-center gap-1">
                 🔥 {dishes[currentIndex].macros?.calories || 0} Cal
               </span>
               <span className="bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 text-xs font-bold px-2.5 py-1 rounded-md shadow-sm flex items-center gap-1">
                 💪 {dishes[currentIndex].macros?.protein || 0}g Protein
               </span>
+              {dishes[currentIndex].travelScore !== undefined && (
+                <span className={`border text-xs font-bold px-2.5 py-1 rounded-md shadow-sm flex items-center gap-1 ${
+                  dishes[currentIndex].travelScore >= 80 ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-800/50' : 
+                  dishes[currentIndex].travelScore >= 60 ? 'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 border-yellow-100 dark:border-yellow-800/50' : 
+                  'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-red-100 dark:border-red-800/50'
+                }`}>
+                  <FaMotorcycle /> Travel: {dishes[currentIndex].travelScore}/100
+                  {dishes[currentIndex].travelScore < 60 && <FaExclamationTriangle className="ml-0.5" title="Melts or spills easily" />}
+                </span>
+              )}
             </div>
             
             <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 mb-4">

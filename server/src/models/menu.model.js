@@ -27,7 +27,8 @@ const MenuItemSchema = new mongoose.Schema(
       protein: { type: Number, default: 0 },
       carbs: { type: Number, default: 0 },
       fats: { type: Number, default: 0 }
-    }
+    },
+    travelScore: { type: Number, default: 100, min: 0, max: 100 }
   },
   { suppressReservedKeysWarning: true }
 );

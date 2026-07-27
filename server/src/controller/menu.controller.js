@@ -12,7 +12,7 @@ export const getMenuItems = async (req, res, next) => {
 
 export const createMenuItem = async (req, res, next) => {
   try {
-    const { itemName, description, price, category, type } = req.body;
+    const { itemName, description, price, category, type, travelScore } = req.body;
     
     // In a real app, restaurantId comes from req.user (authenticated manager)
     // For now, if passed in body, use it, else wait for auth middleware integration
@@ -42,6 +42,7 @@ export const createMenuItem = async (req, res, next) => {
       image: uploadedImage,
       isTopRated: req.body.isTopRated === 'true' || req.body.isTopRated === true,
       isRecommended: req.body.isRecommended === 'true' || req.body.isRecommended === true,
+      travelScore: travelScore !== undefined ? Number(travelScore) : 100,
     };
 
     const updatedMenu = await Menu.findOneAndUpdate(
@@ -61,7 +62,7 @@ export const createMenuItem = async (req, res, next) => {
 export const updateMenuItem = async (req, res, next) => {
   try {
     const { itemId } = req.params;
-    const { itemName, description, price, category, type, status } = req.body;
+    const { itemName, description, price, category, type, status, travelScore } = req.body;
     const restaurantId = req.body.restaurantId || req.user?._id;
 
     if (!restaurantId) {
@@ -92,6 +93,7 @@ export const updateMenuItem = async (req, res, next) => {
     if (category !== undefined) setFields["menuItems.$.category"] = category;
     if (type !== undefined) setFields["menuItems.$.type"] = type;
     if (status !== undefined) setFields["menuItems.$.status"] = status;
+    if (travelScore !== undefined) setFields["menuItems.$.travelScore"] = Number(travelScore);
     if (req.body.isTopRated !== undefined) setFields["menuItems.$.isTopRated"] = req.body.isTopRated === 'true' || req.body.isTopRated === true;
     if (req.body.isRecommended !== undefined) setFields["menuItems.$.isRecommended"] = req.body.isRecommended === 'true' || req.body.isRecommended === true;
 
