@@ -173,3 +173,37 @@ export const getDishReviews = async (req, res, next) => {
     next(error);
   }
 };
+
+export const GetAllRestaurants = async (req, res, next) => {
+  try {
+    const restaurants = await Restaurant.find();
+    res.status(200).json({ data: restaurants });
+  } catch (error) {
+    console.log(error.message);
+    next();
+  }
+};
+
+export const GetRestaurantDetails = async (req, res, next) => {
+  try {
+    const { restaurantId } = req.params;
+
+    const restaurantDetails = await Menu.findOne({ restaurantId }).populate({
+      path: "restaurantId",
+      populate: {
+        path: "managerId",
+      },
+    })
+
+    if (!restaurantDetails) {
+      const error = new Error("Restaurant not found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    res.status(200).json({ data: restaurantDetails });
+  } catch (error) {
+    console.log(error.message);
+    next();
+  }
+};

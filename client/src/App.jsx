@@ -15,6 +15,9 @@ import RestaurantDashboard from "./pages/dashboard/RestaurantDashboard";
 import RiderDashboard from "./pages/dashboard/RiderDashboard";
 import AdminDashboard from "./pages/dashboard/AdminDashboard";
 import Test from "./pages/Test";
+import OrderNow from "./pages/OrderNow";
+import RestaurantDetailsPage from "./pages/RestaurantDetailsPage";
+
 
 const App = () => {
   const location = useLocation();
@@ -45,6 +48,11 @@ const App = () => {
         <Route path="/rider-dashboard" element={<RiderDashboard />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/test" element={<Test/>}/>
+        <Route path="/order-now" element={<OrderNow />} />
+        <Route
+          path="/restaurant-details/:restaurantId"
+          element={<RestaurantDetailsPage />}
+        />
       </Routes>
 
       {shouldShowFooter && <Footer />}
