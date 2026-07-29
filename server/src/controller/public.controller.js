@@ -188,22 +188,24 @@ export const GetRestaurantDetails = async (req, res, next) => {
   try {
     const { restaurantId } = req.params;
 
-    const restaurantDetails = await Menu.findOne({ restaurantId }).populate({
-      path: "restaurantId",
-      populate: {
-        path: "managerId",
-      },
-    })
-
-    if (!restaurantDetails) {
+    const restaurant = await Restaurant.findById(restaurantId).populate("managerId");
+    
+    if (!restaurant) {
       const error = new Error("Restaurant not found");
       error.statusCode = 404;
       return next(error);
     }
 
+    const menu = await Menu.findOne({ restaurantId });
+
+    const restaurantDetails = {
+      restaurantId: restaurant,
+      menuItems: menu ? menu.menuItems : []
+    };
+
     res.status(200).json({ data: restaurantDetails });
   } catch (error) {
     console.log(error.message);
-    next();
+    next(error);
   }
 };

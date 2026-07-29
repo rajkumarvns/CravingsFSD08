@@ -40,7 +40,7 @@ const Home = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState("feed"); // 'feed' or 'restaurants'
+  const [viewMode, setViewMode] = useState("restaurants"); // 'feed' or 'restaurants'
 
   const categories = [
     { id: "all", label: "All", icon: MdRestaurant },
@@ -150,22 +150,25 @@ const Home = () => {
               Order from thousands of restaurants and get it delivered to your
               doorstep
             </p>
-            {!user && (
-              <div className="flex gap-4 justify-center pointer-events-auto">
+            <div className="flex gap-4 justify-center pointer-events-auto">
+              {!user && (
                 <button
                   onClick={() => navigate("/register/customer")}
                   className="bg-(--color-primary) text-(--color-primary-content) px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition"
                 >
                   Sign Up
                 </button>
-                <button
-                  onClick={() => navigate("/order-now")}
-                  className="bg-(--color-base-100) text-(--color-base-content) px-8 py-3 rounded-lg font-semibold hover:bg-(--color-base-200) transition"
-                >
-                  Order Now
-                </button>
-              </div>
-            )}
+              )}
+              <button
+                onClick={() => {
+                  setViewMode("restaurants");
+                  document.getElementById("restaurants-section")?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="bg-(--color-base-100) text-(--color-base-content) px-8 py-3 rounded-lg font-semibold hover:bg-(--color-base-200) transition"
+              >
+                Order Now
+              </button>
+            </div>
           </div>
 
           {/* Search and Location Bar */}
@@ -184,7 +187,7 @@ const Home = () => {
       </section>
 
       {/* Main Content */}
-      <section className="py-4 md:py-8 bg-linear-to-b from-(--color-primary) to-(--color-primary-content)">
+      <section id="restaurants-section" className="py-4 md:py-8 bg-linear-to-b from-(--color-primary) to-(--color-primary-content)">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* View Toggle */}
           <div className="flex justify-center mb-8">
