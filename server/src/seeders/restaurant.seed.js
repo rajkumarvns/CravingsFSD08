@@ -71,20 +71,11 @@ const restaurantSeed = async () => {
     await Restaurant.deleteMany({});
     await Menu.deleteMany({});
 
-    // Create a dummy manager if doesn't exist
-    let manager = await User.findOne({ email: "manager@test.com" });
+    // Get the standard manager from user.seed.js
+    let manager = await User.findOne({ email: "manager1@gmail.com" });
     if (!manager) {
-      manager = await User.create({
-        fullName: "Test Manager",
-        username: "testmanager",
-        email: "manager@test.com",
-        password: "password123",
-        role: "restaurant_manager",
-        phone: "9876543210",
-        gender: "male",
-        dob: "1990-01-01",
-        photo: { url: "https://placehold.co/100x100?text=Manager", publicId: "dummy-id" }
-      });
+      console.log("Manager1 not found! Make sure userSeed runs before restaurantSeed.");
+      return;
     }
 
     console.log("Seeding real Bhopal restaurants...");
@@ -121,7 +112,7 @@ const restaurantSeed = async () => {
         cuisineTypes: rest.cuisineTypes,
         status: "active",
         isOpen: true,
-        rating: rest.rating,
+        averageRating: rest.rating,
         numReviews: rest.numReviews,
         servingHours: rest.servingHours,
         restaurantImage: [{ url: imageUrl, publicId: "mock_id" }],

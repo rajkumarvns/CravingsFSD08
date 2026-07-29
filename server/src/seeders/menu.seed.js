@@ -6,11 +6,13 @@ const getMenuItemsForRestaurant = (restaurantName) => {
     return [
       {
         itemName: "Chole Bhature",
-        description: "Spicy chickpea curry served with two fluffy bhaturas.",
-        price: 180,
-        category: "Indian",
-        type: "Vegetarian",
-        image: { url: "https://images.unsplash.com/photo-1585937421606-afa9a38ca0b1?auto=format&fit=crop&q=80&w=400" },
+      description: "Spicy chickpea curry served with two fluffy bhaturas.",
+      price: 150,
+      category: "Main Course",
+      type: "Vegetarian",
+      image: {
+        url: "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 521, protein: 23 },
         status: "available",
         isTopRated: true,
       },
@@ -21,6 +23,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Snacks",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1606491956689-2ea866880c84?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 272, protein: 32 },
         status: "available",
       },
       {
@@ -30,16 +33,19 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Starters",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 469, protein: 14 },
         status: "available",
         isRecommended: true,
       },
       {
         itemName: "Masala Dosa",
-        description: "Crispy rice crepe filled with spiced potato mash, served with sambar and chutney.",
-        price: 150,
-        category: "South Indian",
-        type: "Vegetarian",
-        image: { url: "https://images.unsplash.com/photo-1589301760014-d929f39ce9b1?auto=format&fit=crop&q=80&w=400" },
+      description: "Crispy rice crepe filled with spiced potato mash, served with sambar and chutney.",
+      price: 130,
+      category: "Main Course",
+      type: "Vegetarian",
+      image: {
+        url: "https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 582, protein: 18 },
         status: "available",
         isTopRated: true,
       },
@@ -50,6 +56,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Dessert",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 519, protein: 27 },
         status: "available",
       },
       {
@@ -59,6 +66,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Thali",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 248, protein: 22 },
         status: "available",
         isRecommended: true,
       }
@@ -72,6 +80,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Burger",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 323, protein: 30 },
         status: "available",
         isTopRated: true,
       },
@@ -82,6 +91,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Italian",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 281, protein: 18 },
         status: "available",
       },
       {
@@ -90,7 +100,8 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         price: 80,
         category: "Beverages",
         type: "Vegetarian",
-        image: { url: "https://images.unsplash.com/photo-1461023058943-0708e52235eb?auto=format&fit=crop&q=80&w=400" },
+        image: { url: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 307, protein: 13 },
         status: "available",
         isRecommended: true,
       },
@@ -101,6 +112,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Snacks",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 534, protein: 18 },
         status: "available",
       },
       {
@@ -110,6 +122,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Wrap",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 205, protein: 27 },
         status: "available",
         isTopRated: true,
       },
@@ -120,6 +133,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Italian",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 202, protein: 33 },
         status: "available",
       }
     ];
@@ -132,6 +146,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Biryani",
         type: "Non-Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1631515243349-e0cb75fb8d3a?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 556, protein: 23 },
         status: "available",
         isTopRated: true,
       },
@@ -142,6 +157,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Main Course",
         type: "Non-Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 244, protein: 20 },
         status: "available",
       },
       {
@@ -151,16 +167,19 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Wrap",
         type: "Non-Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 279, protein: 24 },
         status: "available",
         isRecommended: true,
       },
       {
         itemName: "Tandoori Chicken (Half)",
-        description: "Chicken marinated in yogurt and spices, roasted in a tandoor.",
-        price: 280,
-        category: "Starters",
-        type: "Non-Vegetarian",
-        image: { url: "https://images.unsplash.com/photo-1599487405270-8e1215bc0f70?auto=format&fit=crop&q=80&w=400" },
+      description: "Chicken marinated in yogurt and spices, roasted in a tandoor.",
+      price: 280,
+      category: "Main Course",
+      type: "Non-Vegetarian",
+      image: {
+        url: "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 318, protein: 21 },
         status: "available",
         isTopRated: true,
       },
@@ -171,6 +190,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Main Course",
         type: "Non-Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 260, protein: 6 },
         status: "available",
       },
       {
@@ -180,6 +200,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Breads",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 324, protein: 5 },
         status: "available",
       }
     ];
@@ -192,6 +213,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Chinese",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 324, protein: 16 },
         status: "available",
         isTopRated: true,
       },
@@ -202,6 +224,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Chinese",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 597, protein: 31 },
         status: "available",
       },
       {
@@ -211,6 +234,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Starters",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 298, protein: 20 },
         status: "available",
       },
       {
@@ -220,6 +244,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Chinese",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 346, protein: 10 },
         status: "available",
       },
       {
@@ -229,6 +254,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Snacks",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 539, protein: 33 },
         status: "available",
         isRecommended: true,
       },
@@ -239,6 +265,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Starters",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 314, protein: 7 },
         status: "available",
       }
     ];
@@ -251,6 +278,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Bakery",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 559, protein: 12 },
         status: "available",
         isTopRated: true,
       },
@@ -261,6 +289,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Beverages",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 531, protein: 34 },
         status: "available",
       },
       {
@@ -270,6 +299,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Snacks",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1576107232684-1279f390859f?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 314, protein: 31 },
         status: "available",
       },
       {
@@ -279,6 +309,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Bakery",
         type: "Non-Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 460, protein: 27 },
         status: "available",
         isTopRated: true,
       },
@@ -288,7 +319,8 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         price: 120,
         category: "Beverages",
         type: "Vegetarian",
-        image: { url: "https://images.unsplash.com/photo-1461023058943-0708e52235eb?auto=format&fit=crop&q=80&w=400" },
+        image: { url: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 543, protein: 15 },
         status: "available",
         isRecommended: true,
       },
@@ -299,6 +331,7 @@ const getMenuItemsForRestaurant = (restaurantName) => {
         category: "Snacks",
         type: "Vegetarian",
         image: { url: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&q=80&w=400" },
+        macros: { calories: 332, protein: 23 },
         status: "available",
       }
     ];
@@ -313,7 +346,8 @@ const getMenuItemsForRestaurant = (restaurantName) => {
       category: "Pizza",
       type: "Vegetarian",
       image: { url: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&q=80&w=400" },
-      status: "available",
+      macros: { calories: 554, protein: 24 },
+        status: "available",
     }
   ];
 };

@@ -97,10 +97,10 @@ const Sidebar = ({ activeTab, setActiveTab, mainTabs, settingsTab, title = "Crav
           <select 
             value={selectedDropdownValue} 
             onChange={(e) => onDropdownChange(e.target.value)}
-            className="w-full bg-white/60 dark:bg-black/60 border border-gray-200 dark:border-gray-700 text-sm rounded-lg px-3 py-2 shadow-sm focus:ring-2 focus:ring-(--color-primary) outline-none transition-all"
+            className="w-full bg-white/60 dark:bg-black/60 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 text-sm rounded-lg px-3 py-2 shadow-sm focus:ring-2 focus:ring-(--color-primary) outline-none transition-all"
           >
             {dropdownOptions.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
+              <option key={opt.value} value={opt.value} className="bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100">{opt.label}</option>
             ))}
           </select>
         </div>

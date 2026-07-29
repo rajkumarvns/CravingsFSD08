@@ -7,6 +7,7 @@ const CravingFeed = () => {
   const [dishes, setDishes] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [cart, setCart] = useState([]);
   
   // Macro filter state
   const [showFilters, setShowFilters] = useState(false);
@@ -47,23 +48,30 @@ const CravingFeed = () => {
 
   const handleSwipe = (direction) => {
     if (direction === 'right') {
+      setCart(prev => [...prev, dishes[currentIndex]]);
       toast.success('Added to cravings list!');
     }
     
     if (currentIndex < dishes.length - 1) {
       setCurrentIndex(prev => prev + 1);
     } else {
-      toast("You've seen all the dishes!", { icon: '🍽️' });
+      toast("You've seen all the dishes! Looping back...", { icon: '🍽️' });
+      setCurrentIndex(0);
     }
   };
 
   const addToCart = () => {
     const currentDish = dishes[currentIndex];
+    setCart(prev => [...prev, currentDish]);
     if (currentDish?.travelScore !== undefined && currentDish.travelScore < 60) {
       toast.error(`Warning: This item may not travel well! (${currentDish.travelScore}/100)`, { duration: 4000 });
     }
     toast.success('Added to Cart!');
   };
+
+  const totalCalories = cart.reduce((sum, item) => sum + (item.macros?.calories || 0), 0);
+  const totalProtein = cart.reduce((sum, item) => sum + (item.macros?.protein || 0), 0);
+  const firstItemName = cart.length > 0 ? cart[0].itemName : "";
 
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto relative">
@@ -87,7 +95,7 @@ const CravingFeed = () => {
                 value={macros.maxCalories}
                 onChange={handleMacroChange}
                 placeholder="e.g. 500"
-                className="w-full bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-(--color-primary)"
+                className="w-full bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 rounded-lg px-3 py-2 text-sm outline-none focus:border-(--color-primary)"
               />
             </div>
             <div className="flex-1">
@@ -98,12 +106,36 @@ const CravingFeed = () => {
                 value={macros.minProtein}
                 onChange={handleMacroChange}
                 placeholder="e.g. 30"
-                className="w-full bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-(--color-primary)"
+                className="w-full bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 rounded-lg px-3 py-2 text-sm outline-none focus:border-(--color-primary)"
               />
             </div>
           </div>
         )}
       </div>
+
+      {/* Cart Summary */}
+      {cart.length > 0 && (
+        <div className="w-full bg-(--color-primary) text-white rounded-2xl p-4 mb-4 shadow-lg animate-in slide-in-from-top-2 border border-orange-500/30">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="font-bold text-lg flex items-center gap-2"><FaShoppingCart /> Your Selections</h3>
+            <span className="bg-white/20 px-2.5 py-0.5 rounded-full text-xs font-bold">{cart.length} items</span>
+          </div>
+          <div className="text-sm font-medium mb-3 opacity-90 bg-black/10 p-2 rounded-md max-h-24 overflow-y-auto">
+            Selected Items: <span className="font-bold text-white leading-relaxed">{cart.map(item => item.itemName).join(', ')}</span>
+          </div>
+          
+          <div className="flex gap-3">
+            <div className="flex-1 bg-black/20 rounded-lg p-2 text-center border border-white/10 shadow-inner">
+              <span className="block text-xs uppercase tracking-wider opacity-80 mb-0.5">Total Calories</span>
+              <span className="font-bold text-lg">🔥 {totalCalories}</span>
+            </div>
+            <div className="flex-1 bg-black/20 rounded-lg p-2 text-center border border-white/10 shadow-inner">
+              <span className="block text-xs uppercase tracking-wider opacity-80 mb-0.5">Total Protein</span>
+              <span className="font-bold text-lg">💪 {totalProtein}g</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {loading ? (
         <div className="flex h-[70vh] items-center justify-center w-full bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700">

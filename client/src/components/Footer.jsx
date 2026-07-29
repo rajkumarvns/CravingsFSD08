@@ -1,12 +1,13 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logoCircle from "../assets/circleLogo.png";
+import { useAuth } from "../context/AuthContext";
 
 const Footer = () => {
   const location = useLocation().pathname;
   const currentYear = new Date().getFullYear();
   const navigate = useNavigate();
+  const { isLogin, role } = useAuth();
 
   if (location.toLowerCase().includes("dashboard")) return null;
 
@@ -67,7 +68,13 @@ const Footer = () => {
               </li>
               <li
                 className="text-sm hover:text-(--color-primary) transition-colors duration-200 cursor-pointer"
-                onClick={() => navigate("/restaurant-dashboard")}
+                onClick={() => {
+                  if (isLogin && role === "restaurant") {
+                    navigate("/restaurant-dashboard");
+                  } else {
+                    navigate("/login");
+                  }
+                }}
               >
                 Restaurant Dashboard
               </li>
@@ -86,7 +93,13 @@ const Footer = () => {
               </li>
               <li
                 className="text-sm hover:text-(--color-primary) transition-colors duration-200 cursor-pointer"
-                onClick={() => navigate("/rider-dashboard")}
+                onClick={() => {
+                  if (isLogin && role === "rider") {
+                    navigate("/rider-dashboard");
+                  } else {
+                    navigate("/login");
+                  }
+                }}
               >
                 Rider Dashboard
               </li>

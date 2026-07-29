@@ -59,6 +59,7 @@ const RestaurantSchema = mongoose.Schema(
       default: "inactive",
     },
     averageRating: { type: Number, default: 0 },
+    numReviews: { type: Number, default: 0 },
     cuisineTypes: {
       type: [String],
       required: true,
