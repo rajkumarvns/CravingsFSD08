@@ -3,6 +3,11 @@ import toast from "react-hot-toast";
 import { MdOutlineAddAPhoto, MdDelete, MdRestaurantMenu } from "react-icons/md";
 import api from "../../../config/ApiConfig";
 import runningLoader from "../../../assets/runningLoader.gif";
+import BasicDetailsSection from "./sections/BasicDetailsSection";
+import PhotosSection from "./sections/PhotosSection";
+import DocumentsSection from "./sections/DocumentsSection";
+import FinancialDetailsSection from "./sections/FinancialDetailsSection";
+import ContactAndHoursSection from "./sections/ContactAndHoursSection";
 
 const MAX_IMAGE_SIZE_BYTES = 2097152; // 1MB
 const MAX_GALLERY_IMAGES = 8;
@@ -235,231 +240,38 @@ const CreateRestaurantProfile = ({ onSuccess, onCancel }) => {
         <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full -translate-y-1/2 translate-x-1/3"></div>
       </div>
 
-      {/* SECTION 1: Basic Details */}
-      <div className="bg-(--color-base-100) p-6 rounded-2xl shadow-md border border-(--color-base-300) hover:shadow-xl transition-all duration-300 transform">
-        <h3 className="text-xl font-bold text-(--color-base-content) border-b-2 border-(--color-primary) pb-2 inline-block mb-6">Basic Details & Location</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Restaurant Name</label>
-            <input type="text" name="restaurantName" value={formData.restaurantName} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Restaurant Type</label>
-            <select name="restaurantType" value={formData.restaurantType} onChange={handleChange} className="px-3 py-2 border rounded bg-white focus:ring-2 focus:ring-(--color-primary) outline-none transition-all">
-              <option value="veg">Veg</option>
-              <option value="non-veg">Non-Veg</option>
-              <option value="jain">Jain</option>
-              <option value="vegan">Vegan</option>
-              <option value="both">Both</option>
-            </select>
-          </div>
-          <div className="flex flex-col gap-1 col-span-full">
-            <label className="text-sm font-medium">Cuisine Types (Comma Separated)</label>
-            <input type="text" name="cuisineTypes" value={formData.cuisineTypes} onChange={handleChange} placeholder="e.g. Italian, Chinese" required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-          <div className="flex flex-col gap-1 col-span-full">
-            <label className="text-sm font-medium">Description</label>
-            <textarea name="description" value={formData.description} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" rows="3"></textarea>
-          </div>
-          <div className="flex flex-col gap-1 col-span-full md:col-span-2">
-            <div className="flex justify-between items-center">
-              <label className="text-sm font-medium">Address</label>
-              <button
-                type="button"
-                onClick={handleGetLocation}
-                className="flex items-center gap-2 bg-(--color-primary) text-(--color-primary-content) px-2 py-0.5 rounded text-xs hover:opacity-90 transition-opacity disabled:opacity-50"
-                disabled={isGettingLocation}
-              >
-                {isGettingLocation ? "Getting Current Location..." : "Get Current Location"}
-              </button>
-            </div>
-            <input type="text" name="address" value={formData.address} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-            {formData.lat && formData.lon && (
-              <p className="text-xs text-gray-500 mt-1">
-                Selected Coordinates: {formData.lat}, {formData.lon}
-              </p>
-            )}
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">City</label>
-            <input type="text" name="city" value={formData.city} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">State</label>
-            <input type="text" name="state" value={formData.state} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Pin Code</label>
-            <input type="text" name="pinCode" value={formData.pinCode} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Country</label>
-            <input type="text" name="country" value={formData.country} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-        </div>
-      </div>
+      <BasicDetailsSection 
+        formData={formData} 
+        handleChange={handleChange} 
+        handleGetLocation={handleGetLocation} 
+        isGettingLocation={isGettingLocation} 
+      />
 
-      {/* SECTION 2: Photos */}
-      <div className="bg-(--color-base-100) p-6 rounded-2xl shadow-md border border-(--color-base-300) hover:shadow-xl transition-all duration-300 transform">
-        <h3 className="text-xl font-bold text-(--color-base-content) border-b-2 border-(--color-primary) pb-2 inline-block mb-6">Restaurant Photos</h3>
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          {/* Cover Image - 40% (col-span-2) */}
-          <div className="lg:col-span-2 flex flex-col h-full">
-            <h4 className="font-bold mb-3 text-sm text-(--color-base-content) uppercase tracking-wide">Cover Image</h4>
-            <div className="relative w-full grow min-h-75 bg-gray-100 rounded-2xl overflow-hidden flex items-center justify-center border-2 border-dashed border-gray-300 group hover:border-(--color-primary) transition-colors duration-300 shadow-inner">
-              {coverImagePreview ? (
-                <img src={coverImagePreview} alt="Restaurant Cover Preview" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-              ) : (
-                <div className="flex flex-col items-center opacity-50 relative z-10">
-                  <MdOutlineAddAPhoto className="text-5xl mb-2 text-gray-400" />
-                  <span className="text-lg font-medium text-gray-500">No Cover Image</span>
-                </div>
-              )}
-              <label className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer text-white backdrop-blur-sm z-20">
-                <MdOutlineAddAPhoto className="text-5xl mb-3 animate-bounce" />
-                <span className="text-lg font-bold tracking-wide">Upload Cover (Max 1MB)</span>
-                <input type="file" accept="image/*" required={!coverImagePreview} onChange={handleCoverImageChange} className="hidden" />
-              </label>
-            </div>
-          </div>
+      <PhotosSection 
+        coverImagePreview={coverImagePreview}
+        handleCoverImageChange={handleCoverImageChange}
+        restaurantImagesPreview={restaurantImagesPreview}
+        handleRestaurantImagesChange={handleRestaurantImagesChange}
+        removeRestaurantImage={removeRestaurantImage}
+        MAX_GALLERY_IMAGES={MAX_GALLERY_IMAGES}
+      />
 
-          {/* Gallery Images - 60% (col-span-3) */}
-          <div className="lg:col-span-3 flex flex-col h-full">
-            <div className="flex justify-between items-end mb-4">
-              <h4 className="font-bold text-sm text-(--color-base-content) uppercase tracking-wide">Gallery Images <span className="text-gray-400 font-normal lowercase">(Max 8, 1MB each)</span></h4>
-              <label className="cursor-pointer bg-white border border-(--color-primary) text-(--color-primary) hover:bg-(--color-primary) hover:text-white px-4 py-1.5 rounded-lg text-sm flex items-center gap-2 font-bold shadow-md transition-all duration-300 transform hover:-translate-y-1">
-                <MdOutlineAddAPhoto className="text-xl" /> Add Gallery
-                <input type="file" accept="image/*" multiple onChange={handleRestaurantImagesChange} className="hidden" />
-              </label>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-gray-50/50 p-4 rounded-2xl border border-gray-200 grow">
-              {restaurantImagesPreview.map((src, idx) => (
-                <div key={idx} className="relative group rounded-xl overflow-hidden border border-gray-200 aspect-square shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                  <img src={src} alt={`Restaurant Gallery ${idx + 1}`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <button type="button" onClick={() => removeRestaurantImage(idx)} className="absolute top-2 right-2 bg-red-500/90 backdrop-blur text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-lg hover:bg-red-600 hover:scale-110 transform duration-200">
-                    <MdDelete className="text-sm" />
-                  </button>
-                </div>
-              ))}
-              {restaurantImagesPreview.length === 0 && (
-                <div className="col-span-full flex flex-col items-center justify-center text-gray-400 py-10 border-2 border-dashed border-gray-200 rounded-2xl bg-white min-h-50">
-                  <MdOutlineAddAPhoto className="text-5xl mb-3 opacity-30 text-gray-400" />
-                  <span className="text-sm font-medium text-gray-500">Upload gallery images to attract customers!</span>
-                </div>
-              )}
-            </div>
-            <div className="text-right text-sm font-bold text-gray-500 mt-2">{restaurantImagesPreview.length} / {MAX_GALLERY_IMAGES} uploaded</div>
-          </div>
-        </div>
-      </div>
+      <DocumentsSection 
+        formData={formData} 
+        handleChange={handleChange} 
+        partnerOptions={partnerOptions} 
+        companyOptions={companyOptions} 
+      />
 
-      {/* SECTION 3: Documents */}
-      <div className="bg-(--color-base-100) p-6 rounded-2xl shadow-md border border-(--color-base-300) hover:shadow-xl transition-all duration-300 transform">
-        <h3 className="text-xl font-bold text-(--color-base-content) border-b-2 border-(--color-primary) pb-2 inline-block mb-6">Documents & Legal</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Legal Name</label>
-            <select
-              name="legalName"
-              value={formData.legalName}
-              onChange={handleChange}
-              required
-              className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all bg-white"
-            >
-              <option value="" disabled>Select a company...</option>
-              {partnerOptions.map(opt => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </select>
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Company Type</label>
-            <select
-              name="companyType"
-              value={formData.companyType}
-              onChange={handleChange}
-              required
-              className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all bg-white"
-            >
-              <option value="" disabled>Select a company type...</option>
-              {companyOptions.map(opt => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </select>
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">GST Certificate (Reg No.)</label>
-            <input type="text" name="gstCertificate" value={formData.gstCertificate} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">FSSAI Certificate No.</label>
-            <input type="text" name="fssaiCertificate" value={formData.fssaiCertificate} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">PAN Card No.</label>
-            <input type="text" name="panCard" value={formData.panCard} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-        </div>
-      </div>
+      <FinancialDetailsSection 
+        formData={formData} 
+        handleChange={handleChange} 
+      />
 
-      {/* SECTION 4: Financial Details */}
-      <div className="bg-(--color-base-100) p-6 rounded-2xl shadow-md border border-(--color-base-300) hover:shadow-xl transition-all duration-300 transform">
-        <h3 className="text-xl font-bold text-(--color-base-content) border-b-2 border-(--color-primary) pb-2 inline-block mb-6">Financial Details</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Bank Name</label>
-            <input type="text" name="bankName" value={formData.bankName} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Account Number</label>
-            <input type="text" name="accountNumber" value={formData.accountNumber} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">IFSC Code</label>
-            <input type="text" name="ifscCode" value={formData.ifscCode} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-        </div>
-      </div>
-
-      {/* SECTION 5: Contact & Hours */}
-      <div className="bg-(--color-base-100) p-6 rounded-2xl shadow-md border border-(--color-base-300) hover:shadow-xl transition-all duration-300 transform">
-        <h3 className="text-xl font-bold text-(--color-base-content) border-b-2 border-(--color-primary) pb-2 inline-block mb-6">Contact & Hours</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Contact Email</label>
-            <input type="email" name="contactEmail" value={formData.contactEmail} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Contact Phone</label>
-            <input type="tel" name="contactPhone" value={formData.contactPhone} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Opening Time (HH:MM)</label>
-            <input type="time" name="openingTime" value={formData.openingTime} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Closing Time (HH:MM)</label>
-            <input type="time" name="closingTime" value={formData.closingTime} onChange={handleChange} required className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-        </div>
-
-        <h4 className="text-md font-bold mt-6 mb-4 text-(--color-base-content)">Social Media Links (Optional)</h4>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Facebook URL</label>
-            <input type="url" name="facebookUrl" value={formData.facebookUrl} onChange={handleChange} placeholder="https://facebook.com/..." className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Instagram URL</label>
-            <input type="url" name="instagramUrl" value={formData.instagramUrl} onChange={handleChange} placeholder="https://instagram.com/..." className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Twitter URL</label>
-            <input type="url" name="twitterUrl" value={formData.twitterUrl} onChange={handleChange} placeholder="https://twitter.com/..." className="px-3 py-2 border rounded focus:ring-2 focus:ring-(--color-primary) outline-none transition-all" />
-          </div>
-        </div>
-      </div>
+      <ContactAndHoursSection 
+        formData={formData} 
+        handleChange={handleChange} 
+      />
 
       {/* SUBMIT BUTTON */}
       <div className="mt-8 flex justify-end gap-4">
