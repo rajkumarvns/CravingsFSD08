@@ -17,6 +17,7 @@ import AdminDashboard from "./pages/dashboard/AdminDashboard";
 import Test from "./pages/Test";
 import OrderNow from "./pages/OrderNow";
 import RestaurantDetailsPage from "./pages/RestaurantDetailsPage";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 
 const App = () => {
@@ -53,6 +54,7 @@ const App = () => {
           path="/restaurant-details/:restaurantId"
           element={<RestaurantDetailsPage />}
         />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       </Routes>
 
       {shouldShowFooter && <Footer />}
