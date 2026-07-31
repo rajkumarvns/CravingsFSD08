@@ -98,7 +98,7 @@ const RestaurantDashboard = () => {
           />
         </div>
         <div className="flex-1 bg-(--color-base-100) p-4 rounded-2xl shadow-xl h-full overflow-y-auto w-full">
-          {activeTab === "overview" && <RestaurantOverview activeRestaurantId={activeRestaurantId} />}
+          {activeTab === "overview" && <RestaurantOverview activeRestaurantId={activeRestaurantId} restaurants={restaurants} refreshRestaurants={fetchRestaurants} />}
           {activeTab === "menu" && <RestaurantMenu activeRestaurantId={activeRestaurantId} />}
           {activeTab === "orders" && <RestaurantOrders activeRestaurantId={activeRestaurantId} />}
           {activeTab === "settings" && <RestaurantSetting activeRestaurantId={activeRestaurantId} refreshRestaurants={fetchRestaurants} restaurants={restaurants} />}

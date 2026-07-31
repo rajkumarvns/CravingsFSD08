@@ -93,7 +93,7 @@ const OrderNow = () => {
                   className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 flex flex-col h-full"
                 >
                   {/* Image Container */}
-                  <div className="relative w-full h-48 flex-shrink-0">
+                  <div className="relative w-full h-48 shrink-0">
                     <img
                       src={image}
                       alt={restaurant.restaurantName}

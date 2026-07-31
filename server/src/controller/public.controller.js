@@ -176,7 +176,7 @@ export const getDishReviews = async (req, res, next) => {
 
 export const GetAllRestaurants = async (req, res, next) => {
   try {
-    const restaurants = await Restaurant.find();
+    const restaurants = await Restaurant.find({ status: "active", isOpen: true });
     res.status(200).json({ data: restaurants });
   } catch (error) {
     console.log(error.message);

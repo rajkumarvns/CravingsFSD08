@@ -5,7 +5,8 @@ import AdminSetting from "../../components/adminDashboard/AdminSetting";
 import Sidebar from "../../components/Sidebar";
 import AdminOverview from "../../components/adminDashboard/AdminOverview";
 import AdminOrders from "../../components/adminDashboard/AdminOrders";
-import { MdDashboard } from "react-icons/md";
+import AdminRestaurants from "../../components/adminDashboard/AdminRestaurants";
+import { MdDashboard, MdRestaurant } from "react-icons/md";
 import { FaShoppingCart } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 
@@ -24,6 +25,7 @@ const AdminDashboard = () => {
   const mainTabs = [
     { name: "Overview", value: "overview", icon: <MdDashboard size={20} /> },
     { name: "Orders", value: "orders", icon: <FaShoppingCart size={20} /> },
+    { name: "Restaurants", value: "restaurants", icon: <MdRestaurant size={20} /> },
   ];
   const settingsTab = { name: "Settings", value: "settings", icon: <IoMdSettings size={20} /> };
 
@@ -60,6 +62,7 @@ const AdminDashboard = () => {
         <div className="flex-1 bg-(--color-base-100) p-4 rounded-2xl shadow-xl h-full overflow-y-auto w-full">
           {activeTab === "overview" && <AdminOverview />}
           {activeTab === "orders" && <AdminOrders />}
+          {activeTab === "restaurants" && <AdminRestaurants />}
           {activeTab === "settings" && <AdminSetting />}
         </div>
       </div>

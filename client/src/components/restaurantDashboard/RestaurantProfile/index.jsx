@@ -13,7 +13,9 @@ const RestaurantProfileContainer = ({ activeRestaurantId, refreshRestaurants, re
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [activeTab, setActiveTab] = useState("basic");
 
-  const profileData = restaurants?.find(r => r._id === activeRestaurantId);
+  const profileData = activeRestaurantId 
+    ? restaurants?.find(r => r._id === activeRestaurantId) 
+    : restaurants?.[0];
   const isProfileCreated = !!profileData;
 
   const handleToggleStatus = async () => {
