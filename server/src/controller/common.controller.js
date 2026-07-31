@@ -61,8 +61,7 @@ export const EditUserProfile = async (req, res, next) => {
       .status(200)
       .json({ message: "User Updated Sucessfully", data: existingUser });
   } catch (error) {
-    console.log(error.message);
-    next();
+    next(error);
   }
 };
 
@@ -106,8 +105,7 @@ export const UpdateUserPassword = async (req, res, next) => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     res.status(200).json({ message: "Password updated successfully" });
   } catch (error) {
-    console.log(error.message);
-    next();
+    next(error);
   }
 };
 

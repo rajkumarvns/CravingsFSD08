@@ -39,7 +39,6 @@ export const ContactUsForm = async (req, res, next) => {
       message: "Thanks for Contacting us! You will hear back from us soon",
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -70,7 +69,6 @@ export const FeedbackForm = async (req, res, next) => {
       message: "Thanks for your feedback! We appreciate your input.",
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -179,8 +177,7 @@ export const GetAllRestaurants = async (req, res, next) => {
     const restaurants = await Restaurant.find({ status: "active", isOpen: true });
     res.status(200).json({ data: restaurants });
   } catch (error) {
-    console.log(error.message);
-    next();
+    next(error);
   }
 };
 
@@ -205,7 +202,6 @@ export const GetRestaurantDetails = async (req, res, next) => {
 
     res.status(200).json({ data: restaurantDetails });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };

@@ -165,7 +165,7 @@ const RestaurantDetailsPage = () => {
                     
                     {qty === 0 ? (
                       <button 
-                        onClick={() => handleAddToCart(item)}
+                        onClick={() => handleAddToCart({...item, restaurantId: restaurant._id})}
                         className="bg-[#c2410c] text-white px-5 py-1.5 rounded-md text-sm font-bold shadow hover:bg-[#a3360a] transition flex items-center justify-center min-w-18"
                       >
                         + Add
@@ -173,7 +173,7 @@ const RestaurantDetailsPage = () => {
                     ) : (
                       <div className="flex items-center bg-[#F6F4EB] rounded-md border border-gray-200 overflow-hidden shadow-sm">
                         <button 
-                          onClick={() => handleRemoveFromCart(item, false)}
+                          onClick={() => handleRemoveFromCart({...item, restaurantId: restaurant._id}, false)}
                           className="px-3 py-1.5 text-[#c2410c] hover:bg-gray-200 transition font-bold"
                         >
                           −
@@ -182,7 +182,7 @@ const RestaurantDetailsPage = () => {
                           {qty}
                         </span>
                         <button 
-                          onClick={() => handleAddToCart(item)}
+                          onClick={() => handleAddToCart({...item, restaurantId: restaurant._id})}
                           className="px-3 py-1.5 text-[#c2410c] hover:bg-gray-200 transition font-bold"
                         >
                           +

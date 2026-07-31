@@ -18,8 +18,7 @@ export const getRestaurantProfile = async (req, res, next) => {
       data: existingRestaurants, // This is now an array
     });
   } catch (error) {
-    console.log(error.message);
-    next();
+    next(error);
   }
 };
 
@@ -135,8 +134,7 @@ export const restaurantUpdateProfile = async (req, res, next) => {
       });
     }
   } catch (error) {
-    console.log(error.message);
-    next();
+    next(error);
   }
 };
 
@@ -169,7 +167,6 @@ export const toggleRestaurantStatus = async (req, res, next) => {
       data: existingRestaurant,
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };

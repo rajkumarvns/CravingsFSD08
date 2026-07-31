@@ -129,44 +129,52 @@ const Navbar = () => {
 
       {/* Cart Modal Overlay */}
       {isCartOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-sm transition-opacity" onClick={() => setIsCartOpen(false)}>
+        <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm transition-all duration-500" onClick={() => setIsCartOpen(false)}>
           <div 
-            className="w-full sm:w-96 bg-white h-full shadow-2xl flex flex-col transform transition-transform"
+            className="w-full sm:w-[400px] h-full shadow-2xl flex flex-col transform transition-transform duration-500 translate-x-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-l border-white/20 dark:border-gray-800"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-white">
-              <div className="flex items-center gap-2">
-                <IoCartOutline size={24} className="text-[#c2410c]" />
-                <h2 className="text-xl font-bold text-gray-800">Your Cart</h2>
+            <div className="flex items-center justify-between p-5 border-b border-gray-200/50 dark:border-gray-800/50 bg-gradient-to-r from-orange-50 to-white dark:from-orange-900/10 dark:to-transparent">
+              <div className="flex items-center gap-3">
+                <div className="bg-orange-100 dark:bg-orange-500/20 p-2 rounded-xl text-orange-600 dark:text-orange-400">
+                  <IoCartOutline size={26} />
+                </div>
+                <div>
+                  <h2 className="text-xl font-black text-gray-800 dark:text-white tracking-tight">Your Cart</h2>
+                  <p className="text-xs text-gray-500 font-medium">{totalItems} {totalItems === 1 ? 'item' : 'items'} selected</p>
+                </div>
               </div>
               <button 
                 onClick={() => setIsCartOpen(false)}
-                className="p-2 rounded-full hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-800"
+                className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-500 hover:text-gray-800 dark:hover:text-white group"
               >
-                <IoCloseOutline size={24} />
+                <IoCloseOutline size={26} className="group-hover:rotate-90 transition-transform duration-300" />
               </button>
             </div>
 
             {/* Cart Items */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/50">
+            <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-gray-50/30 dark:bg-black/20 custom-scrollbar">
               {cart.map((c) => {
                 const itemImage = c.item.image?.url || "https://placehold.co/150x150?text=Food";
                 return (
-                <div key={c.item._id} className="flex gap-4 p-3 bg-white rounded-xl shadow-sm border border-gray-100">
-                  <img src={itemImage} alt={c.item.itemName} className="w-20 h-20 object-cover rounded-lg" />
-                  <div className="flex-1 flex flex-col justify-between">
+                <div key={c.item._id} className="flex gap-4 p-3 bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-md border border-gray-100 dark:border-gray-700/50 transform hover:-translate-y-0.5 transition-all duration-300 group">
+                  <div className="relative w-24 h-24 shrink-0 overflow-hidden rounded-xl">
+                    <img src={itemImage} alt={c.item.itemName} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                  </div>
+                  <div className="flex-1 flex flex-col justify-between py-1">
                     <div>
-                      <h4 className="font-semibold text-gray-800 line-clamp-1">{c.item.itemName}</h4>
-                      <p className="text-[#c2410c] font-bold">₹{c.item.price}</p>
+                      <h4 className="font-bold text-gray-800 dark:text-gray-100 line-clamp-1 group-hover:text-orange-600 transition-colors">{c.item.itemName}</h4>
+                      <p className="text-orange-600 dark:text-orange-400 font-extrabold text-sm mt-0.5">₹{c.item.price}</p>
                     </div>
-                    <div className="flex items-center justify-between mt-2">
-                      <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-1 border border-gray-100">
-                        <button onClick={() => handleRemoveFromCart(c.item, false)} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-white hover:shadow-sm text-[#c2410c] font-bold text-lg transition-all">-</button>
-                        <span className="font-bold text-gray-700 min-w-[20px] text-center">{c.quantity}</span>
-                        <button onClick={() => handleAddToCart(c.item)} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-white hover:shadow-sm text-[#c2410c] font-bold text-lg transition-all">+</button>
+                    <div className="flex items-center justify-between mt-3">
+                      <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700/50 rounded-lg p-1 border border-gray-200/50 dark:border-gray-600/50">
+                        <button onClick={() => handleRemoveFromCart(c.item, false)} className="w-8 h-8 flex items-center justify-center rounded-md bg-white dark:bg-gray-600 shadow-sm hover:bg-orange-500 hover:text-white text-orange-600 dark:text-orange-400 font-bold text-lg transition-all active:scale-95">-</button>
+                        <span className="font-bold text-gray-800 dark:text-gray-200 min-w-[24px] text-center text-sm">{c.quantity}</span>
+                        <button onClick={() => handleAddToCart(c.item)} className="w-8 h-8 flex items-center justify-center rounded-md bg-white dark:bg-gray-600 shadow-sm hover:bg-orange-500 hover:text-white text-orange-600 dark:text-orange-400 font-bold text-lg transition-all active:scale-95">+</button>
                       </div>
-                      <p className="font-bold text-gray-800">₹{c.item.price * c.quantity}</p>
+                      <p className="font-black text-gray-800 dark:text-white text-lg">₹{c.item.price * c.quantity}</p>
                     </div>
                   </div>
                 </div>
@@ -175,13 +183,26 @@ const Navbar = () => {
             </div>
 
             {/* Footer */}
-            <div className="p-4 bg-white border-t border-gray-100 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-gray-600 font-medium">Item Total</span>
-                <span className="text-xl font-bold text-gray-800">₹{totalAmount}</span>
+            <div className="p-6 bg-white dark:bg-gray-900 border-t border-gray-200/50 dark:border-gray-800 shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.1)] relative z-10">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-gray-500 dark:text-gray-400 font-medium">Item Total</span>
+                <span className="text-gray-800 dark:text-white font-bold">₹{totalAmount}</span>
               </div>
-              <button className="w-full bg-[#c2410c] hover:bg-[#a0350a] text-white py-3.5 rounded-xl font-bold text-lg transition-colors shadow-md hover:shadow-lg flex items-center justify-center gap-2">
-                Proceed to Checkout
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100 dark:border-gray-800 border-dashed">
+                <span className="text-gray-500 dark:text-gray-400 font-medium text-sm flex items-center gap-1">Delivery Fee <IoCartOutline/></span>
+                <span className="text-green-500 font-bold text-sm tracking-wide uppercase">Free</span>
+              </div>
+              <div className="flex items-center justify-between mb-6">
+                <span className="text-gray-800 dark:text-white font-black text-lg">Grand Total</span>
+                <span className="text-2xl font-black text-orange-600 dark:text-orange-400">₹{totalAmount}</span>
+              </div>
+              <button className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-4 rounded-xl font-bold text-lg transition-all shadow-xl shadow-orange-500/25 hover:shadow-orange-500/40 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 group overflow-hidden relative">
+                <span className="relative z-10 flex items-center gap-2">
+                  Proceed to Checkout
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </span>
+                {/* Subtle shine effect on button */}
+                <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite] skew-x-12"></div>
               </button>
             </div>
           </div>

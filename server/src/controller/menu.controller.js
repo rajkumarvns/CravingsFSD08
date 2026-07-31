@@ -42,7 +42,14 @@ export const createMenuItem = async (req, res, next) => {
       image: uploadedImage,
       isTopRated: req.body.isTopRated === 'true' || req.body.isTopRated === true,
       isRecommended: req.body.isRecommended === 'true' || req.body.isRecommended === true,
+      isNew: req.body.isNew === 'true' || req.body.isNew === true,
       travelScore: travelScore !== undefined ? Number(travelScore) : 100,
+      macros: {
+        calories: Math.floor(Math.random() * 400) + 200,
+        protein: Math.floor(Math.random() * 30) + 5,
+        carbs: Math.floor(Math.random() * 50) + 10,
+        fats: Math.floor(Math.random() * 30) + 5
+      }
     };
 
     const updatedMenu = await Menu.findOneAndUpdate(
@@ -96,6 +103,7 @@ export const updateMenuItem = async (req, res, next) => {
     if (travelScore !== undefined) setFields["menuItems.$.travelScore"] = Number(travelScore);
     if (req.body.isTopRated !== undefined) setFields["menuItems.$.isTopRated"] = req.body.isTopRated === 'true' || req.body.isTopRated === true;
     if (req.body.isRecommended !== undefined) setFields["menuItems.$.isRecommended"] = req.body.isRecommended === 'true' || req.body.isRecommended === true;
+    if (req.body.isNew !== undefined) setFields["menuItems.$.isNew"] = req.body.isNew === 'true' || req.body.isNew === true;
 
     const updatedMenu = await Menu.findOneAndUpdate(
       { restaurantId, "menuItems._id": itemId },
