@@ -89,12 +89,12 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-[90vh] bg-[url('/foodTable.webp')] flex items-center justify-end bg-cover bg-center p-10 py-12 md:pe-30">
-      <div className="bg-white rounded-lg shadow-md px-10 py-6 max-w-md w-full">
-        <h1 className="text-3xl font-bold text-(--color-primary) mb-2 text-center">
+    <div className="min-h-[90vh] bg-[url('/foodTable.webp')] flex items-center justify-center md:justify-end bg-cover bg-center p-4 sm:p-10 py-12 md:pe-30">
+      <div className="bg-white rounded-lg shadow-md px-6 sm:px-10 py-6 max-w-md w-full">
+        <h1 className="text-2xl sm:text-3xl font-bold text-(--color-primary) mb-2 text-center">
           Create Account
         </h1>
-        <p className="text-(--color-secondary) text-center mb-4">
+        <p className="text-(--color-secondary) text-center mb-4 text-sm sm:text-base">
           Join us as a Customer, Restaurant, or Rider
         </p>
 
@@ -103,7 +103,7 @@ const Register = () => {
           <label className="block text-(--color-neutral) font-semibold mb-3">
             Register as:
           </label>
-          <div className="flex gap-5">
+          <div className="flex flex-wrap gap-3 sm:gap-5">
             {["customer", "restaurant", "rider"].map((type) => (
               <label
                 key={type}
@@ -193,7 +193,7 @@ const Register = () => {
           </div>
 
           {/* Gender & Date of Birth */}
-          <div className="mb-4 grid grid-cols-2 gap-4">
+          <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <select
                 name="gender"
