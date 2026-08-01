@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 async function fixMacros() {
   await mongoose.connect('mongodb://localhost:27017/CravingsFSD08_DB');

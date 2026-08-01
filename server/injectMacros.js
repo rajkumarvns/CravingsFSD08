@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 let code = fs.readFileSync('src/seeders/menu.seed.js', 'utf8');
 
 if (!code.includes('macros:')) {
