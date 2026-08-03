@@ -83,7 +83,7 @@ const RestaurantDetailsPage = () => {
 
           {/* Restaurant Info Card */}
           <div className="flex flex-col md:flex-row gap-6 items-start">
-            <div className="w-full md:w-75 h-48 md:h-45 rounded-xl overflow-hidden shadow-sm shrink-0 border border-gray-100">
+            <div className="w-full md:w-72 h-48 rounded-xl overflow-hidden shadow-sm shrink-0 border border-gray-100">
               <img 
                 src={restaurantImage} 
                 alt={restaurant?.restaurantName} 
@@ -135,8 +135,8 @@ const RestaurantDetailsPage = () => {
               const itemImage = item.image?.url || "https://placehold.co/150x150?text=Food";
 
               return (
-                <div key={item._id} className="bg-white rounded-xl p-4 shadow-md flex gap-4 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
-                  <div className="w-24 h-24 md:w-32 md:h-32 rounded-lg overflow-hidden shrink-0 border border-gray-100">
+                <div key={item._id} className="bg-white rounded-xl p-3 sm:p-4 shadow-md flex gap-3 sm:gap-4 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-lg overflow-hidden shrink-0 border border-gray-100">
                     <img 
                       src={itemImage} 
                       alt={item.itemName}
@@ -144,46 +144,46 @@ const RestaurantDetailsPage = () => {
                     />
                   </div>
                   
-                  <div className="flex-1 flex flex-col justify-between py-1">
+                  <div className="flex-1 flex flex-col justify-between py-1 min-w-0">
                     <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-bold text-lg text-gray-900">{item.itemName}</h3>
-                        <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${
+                      <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-1">
+                        <h3 className="font-bold text-base sm:text-lg text-gray-900 truncate max-w-full">{item.itemName}</h3>
+                        <span className={`text-[9px] sm:text-[10px] uppercase font-bold px-1.5 sm:px-2 py-0.5 rounded-full shrink-0 ${
                           isVeg ? 'bg-green-600 text-white' : 'bg-red-500 text-white'
                         }`}>
                           {isVeg ? 'veg' : 'non-veg'}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-500 line-clamp-2 md:line-clamp-3 font-medium pr-4">
+                      <p className="text-xs sm:text-sm text-gray-500 line-clamp-2 md:line-clamp-3 font-medium pr-2 sm:pr-4">
                         {item.description}
                       </p>
                     </div>
                   </div>
                   
-                  <div className="flex flex-col justify-between items-end min-w-20 py-1">
-                    <span className="font-bold text-lg text-[#c2410c]">₹{item.price}</span>
+                  <div className="flex flex-col justify-between items-end min-w-[70px] sm:min-w-[80px] py-1 shrink-0">
+                    <span className="font-bold text-base sm:text-lg text-[#c2410c]">₹{item.price}</span>
                     
                     {qty === 0 ? (
                       <button 
                         onClick={() => handleAddToCart({...item, restaurantId: restaurant._id})}
-                        className="bg-[#c2410c] text-white px-5 py-1.5 rounded-md text-sm font-bold shadow hover:bg-[#a3360a] transition flex items-center justify-center min-w-18"
+                        className="bg-[#c2410c] text-white px-3 sm:px-5 py-1 sm:py-1.5 rounded-md text-xs sm:text-sm font-bold shadow hover:bg-[#a3360a] transition flex items-center justify-center min-w-[60px] sm:min-w-[72px]"
                       >
                         + Add
                       </button>
                     ) : (
-                      <div className="flex items-center bg-[#F6F4EB] rounded-md border border-gray-200 overflow-hidden shadow-sm">
+                      <div className="flex items-center bg-[#F6F4EB] rounded-md border border-gray-200 overflow-hidden shadow-sm h-[28px] sm:h-[32px]">
                         <button 
                           onClick={() => handleRemoveFromCart({...item, restaurantId: restaurant._id}, false)}
-                          className="px-3 py-1.5 text-[#c2410c] hover:bg-gray-200 transition font-bold"
+                          className="px-2 sm:px-3 py-1 text-[#c2410c] hover:bg-gray-200 transition font-bold flex items-center justify-center h-full"
                         >
                           −
                         </button>
-                        <span className="px-2 font-bold text-gray-800 min-w-5 text-center text-sm">
+                        <span className="px-1 sm:px-2 font-bold text-gray-800 min-w-[20px] text-center text-xs sm:text-sm">
                           {qty}
                         </span>
                         <button 
                           onClick={() => handleAddToCart({...item, restaurantId: restaurant._id})}
-                          className="px-3 py-1.5 text-[#c2410c] hover:bg-gray-200 transition font-bold"
+                          className="px-2 sm:px-3 py-1 text-[#c2410c] hover:bg-gray-200 transition font-bold flex items-center justify-center h-full"
                         >
                           +
                         </button>
