@@ -177,7 +177,7 @@ const ForgotPasswordModal = ({ open, onClose }) => {
         </div>
 
         {/* Footer Actions */}
-        <footer className="p-6 border-t border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row justify-end gap-3 bg-white dark:bg-gray-800 rounded-b-3xl">
+        <footer className="p-4 sm:p-6 border-t border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row justify-end gap-3 bg-white dark:bg-gray-800 rounded-b-3xl">
           <button
             onClick={handleCloseModal}
             className="w-full sm:w-auto px-6 py-3 sm:py-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-xl font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm order-2 sm:order-1"

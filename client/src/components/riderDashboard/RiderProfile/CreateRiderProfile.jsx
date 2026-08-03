@@ -96,8 +96,8 @@ const CreateRiderProfile = ({ onSuccess, onCancel }) => {
       </div>
 
       {/* SECTION 1: Vehicle Details */}
-      <div className="bg-(--color-base-100) p-6 rounded-2xl shadow-md border border-(--color-base-300) hover:shadow-xl transition-all duration-300">
-        <h3 className="text-xl font-bold border-b-2 border-(--color-primary) pb-2 inline-block mb-6">
+      <div className="bg-(--color-base-100) p-4 sm:p-6 rounded-2xl shadow-md border border-(--color-base-300) hover:shadow-xl transition-all duration-300">
+        <h3 className="text-lg sm:text-xl font-bold border-b-2 border-(--color-primary) pb-2 inline-block mb-4 sm:mb-6">
           Vehicle Details
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -151,8 +151,8 @@ const CreateRiderProfile = ({ onSuccess, onCancel }) => {
       </div>
 
       {/* SECTION 2: Documents */}
-      <div className="bg-(--color-base-100) p-6 rounded-2xl shadow-md border border-(--color-base-300) hover:shadow-xl transition-all duration-300">
-        <h3 className="text-xl font-bold border-b-2 border-(--color-primary) pb-2 inline-block mb-6">
+      <div className="bg-(--color-base-100) p-4 sm:p-6 rounded-2xl shadow-md border border-(--color-base-300) hover:shadow-xl transition-all duration-300">
+        <h3 className="text-lg sm:text-xl font-bold border-b-2 border-(--color-primary) pb-2 inline-block mb-4 sm:mb-6">
           Documents (ID/No.)
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -215,8 +215,8 @@ const CreateRiderProfile = ({ onSuccess, onCancel }) => {
       </div>
 
       {/* SECTION 3: Current Address */}
-      <div className="bg-(--color-base-100) p-6 rounded-2xl shadow-md border border-(--color-base-300) hover:shadow-xl transition-all duration-300">
-        <h3 className="text-xl font-bold border-b-2 border-(--color-primary) pb-2 inline-block mb-6">
+      <div className="bg-(--color-base-100) p-4 sm:p-6 rounded-2xl shadow-md border border-(--color-base-300) hover:shadow-xl transition-all duration-300">
+        <h3 className="text-lg sm:text-xl font-bold border-b-2 border-(--color-primary) pb-2 inline-block mb-4 sm:mb-6">
           Current Address
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -279,8 +279,8 @@ const CreateRiderProfile = ({ onSuccess, onCancel }) => {
       </div>
 
       {/* SECTION 4: Financial Details */}
-      <div className="bg-(--color-base-100) p-6 rounded-2xl shadow-md border border-(--color-base-300) hover:shadow-xl transition-all duration-300">
-        <h3 className="text-xl font-bold border-b-2 border-(--color-primary) pb-2 inline-block mb-6">
+      <div className="bg-(--color-base-100) p-4 sm:p-6 rounded-2xl shadow-md border border-(--color-base-300) hover:shadow-xl transition-all duration-300">
+        <h3 className="text-lg sm:text-xl font-bold border-b-2 border-(--color-primary) pb-2 inline-block mb-4 sm:mb-6">
           Financial Details
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -321,13 +321,13 @@ const CreateRiderProfile = ({ onSuccess, onCancel }) => {
       </div>
 
       {/* SUBMIT BUTTON */}
-      <div className="mt-8 flex justify-end gap-4">
+      <div className="mt-8 flex flex-col sm:flex-row justify-end gap-4">
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
             disabled={isLoading}
-            className="bg-gray-200 text-gray-700 px-8 py-3 rounded-xl font-bold text-lg hover:bg-gray-300 transition-all"
+            className="bg-gray-200 text-gray-700 w-full sm:w-auto px-8 py-3 rounded-xl font-bold text-lg hover:bg-gray-300 transition-all text-center"
           >
             Cancel
           </button>
@@ -335,7 +335,7 @@ const CreateRiderProfile = ({ onSuccess, onCancel }) => {
         <button
           type="submit"
           disabled={isLoading}
-          className="bg-(--color-primary) text-(--color-primary-content) px-8 py-3 rounded-xl font-bold text-lg disabled:bg-opacity-70 flex items-center justify-center gap-3 shadow-lg hover:shadow-orange-500/40 hover:bg-orange-700 transition-all"
+          className="bg-(--color-primary) text-(--color-primary-content) w-full sm:w-auto px-8 py-3 rounded-xl font-bold text-lg disabled:bg-opacity-70 flex items-center justify-center gap-3 shadow-lg hover:shadow-orange-500/40 hover:bg-orange-700 transition-all"
         >
           {isLoading ? (
             <>

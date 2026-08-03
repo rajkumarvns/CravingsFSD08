@@ -160,25 +160,25 @@ const RestaurantDetailsPage = () => {
                     </div>
                   </div>
                   
-                  <div className="flex flex-col justify-between items-end min-w-[70px] sm:min-w-[80px] py-1 shrink-0">
+                  <div className="flex flex-col justify-between items-end min-w-17.5 sm:min-w-20 py-1 shrink-0">
                     <span className="font-bold text-base sm:text-lg text-[#c2410c]">₹{item.price}</span>
                     
                     {qty === 0 ? (
                       <button 
                         onClick={() => handleAddToCart({...item, restaurantId: restaurant._id})}
-                        className="bg-[#c2410c] text-white px-3 sm:px-5 py-1 sm:py-1.5 rounded-md text-xs sm:text-sm font-bold shadow hover:bg-[#a3360a] transition flex items-center justify-center min-w-[60px] sm:min-w-[72px]"
+                        className="bg-[#c2410c] text-white px-3 sm:px-5 py-1 sm:py-1.5 rounded-md text-xs sm:text-sm font-bold shadow hover:bg-[#a3360a] transition flex items-center justify-center min-w-15 sm:min-w-18"
                       >
                         + Add
                       </button>
                     ) : (
-                      <div className="flex items-center bg-[#F6F4EB] rounded-md border border-gray-200 overflow-hidden shadow-sm h-[28px] sm:h-[32px]">
+                      <div className="flex items-center bg-[#F6F4EB] rounded-md border border-gray-200 overflow-hidden shadow-sm h-7 sm:h-8">
                         <button 
                           onClick={() => handleRemoveFromCart({...item, restaurantId: restaurant._id}, false)}
                           className="px-2 sm:px-3 py-1 text-[#c2410c] hover:bg-gray-200 transition font-bold flex items-center justify-center h-full"
                         >
                           −
                         </button>
-                        <span className="px-1 sm:px-2 font-bold text-gray-800 min-w-[20px] text-center text-xs sm:text-sm">
+                        <span className="px-1 sm:px-2 font-bold text-gray-800 min-w-5 text-center text-xs sm:text-sm">
                           {qty}
                         </span>
                         <button 

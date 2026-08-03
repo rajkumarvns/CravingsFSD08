@@ -79,37 +79,37 @@ const RiderSetting = () => {
             <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent"></div>
             
             {/* Top Right Actions */}
-            <div className="absolute top-4 right-4 z-20 flex gap-2">
+            <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 flex flex-col sm:flex-row gap-2">
               {!editingProfile ? (
                 <>
                   <button
                     onClick={() => setEditingProfile(true)}
-                    className="flex items-center gap-2 bg-white/90 hover:bg-white text-gray-800 px-4 py-2 rounded-xl text-sm font-bold shadow-lg transition-all"
+                    className="flex items-center gap-1.5 sm:gap-2 bg-white/90 hover:bg-white text-gray-800 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold shadow-lg transition-all"
                   >
-                    <MdEdit className="text-lg text-(--color-primary)" /> Edit Profile
+                    <MdEdit className="text-base sm:text-lg text-(--color-primary)" /> Edit
                   </button>
                   <button
                     onClick={() => setIsPasswordChangeModalOpen(true)}
-                    className="flex items-center gap-2 bg-white/90 hover:bg-white text-gray-800 px-4 py-2 rounded-xl text-sm font-bold shadow-lg transition-all"
+                    className="flex items-center gap-1.5 sm:gap-2 bg-white/90 hover:bg-white text-gray-800 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold shadow-lg transition-all"
                   >
-                    <MdOutlineLockReset className="text-lg text-(--color-primary)" /> Change Password
+                    <MdOutlineLockReset className="text-base sm:text-lg text-(--color-primary)" /> <span className="hidden sm:inline">Change Password</span><span className="sm:hidden">Password</span>
                   </button>
                 </>
               ) : (
                 <>
                   <button
                     onClick={handleCancelProfile}
-                    className="flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-xl text-sm font-bold transition-all"
+                    className="flex items-center justify-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition-all w-full sm:w-auto"
                     disabled={isLoading}
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleSaveProfile}
-                    className="flex items-center gap-2 bg-white text-(--color-primary) px-6 py-2 rounded-xl text-sm font-bold shadow-lg hover:shadow-xl transition-all disabled:opacity-70"
+                    className="flex items-center justify-center gap-2 bg-white text-(--color-primary) px-4 sm:px-6 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold shadow-lg hover:shadow-xl transition-all disabled:opacity-70 w-full sm:w-auto"
                     disabled={isLoading}
                   >
-                    {isLoading ? "Saving..." : "Save Changes"}
+                    {isLoading ? "Saving..." : "Save"}
                   </button>
                 </>
               )}

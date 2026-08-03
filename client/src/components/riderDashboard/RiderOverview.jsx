@@ -119,22 +119,22 @@ const RiderOverview = () => {
             {/* Order Item */}
             {[1, 2, 3].map((item, index) => (
               <div key={index} className="group flex items-center justify-between p-4 rounded-2xl bg-white/50 dark:bg-white/5 hover:bg-white/80 dark:hover:bg-white/10 transition-all duration-300 border border-transparent hover:border-gray-200 dark:hover:border-white/10 shadow-sm hover:shadow-md cursor-pointer">
-                <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-inner font-bold text-lg
+                <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 shrink-0 rounded-xl flex items-center justify-center shadow-inner font-bold text-base sm:text-lg
                     ${index === 0 ? 'bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400' : 
                       index === 1 ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400' : 
                       'bg-orange-100 text-orange-600 dark:bg-orange-900/40 dark:text-orange-400'}
                   `}>
                     #{item}
                   </div>
-                  <div>
-                    <h4 className="font-bold text-gray-800 dark:text-gray-100">Order #CRV-{Math.floor(Math.random() * 9000) + 1000}</h4>
-                    <p className="text-xs text-gray-500 font-medium">Burger King • 2.4 km</p>
+                  <div className="min-w-0">
+                    <h4 className="font-bold text-sm sm:text-base text-gray-800 dark:text-gray-100 truncate">Order #CRV-{Math.floor(Math.random() * 9000) + 1000}</h4>
+                    <p className="text-[10px] sm:text-xs text-gray-500 font-medium truncate">Burger King • 2.4 km</p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-bold text-gray-800 dark:text-gray-100">${(Math.random() * 20 + 10).toFixed(2)}</p>
-                  <p className={`text-xs font-semibold px-2 py-1 rounded-full mt-1 inline-block
+                <div className="text-right shrink-0 ml-2">
+                  <p className="font-bold text-sm sm:text-base text-gray-800 dark:text-gray-100">${(Math.random() * 20 + 10).toFixed(2)}</p>
+                  <p className={`text-[10px] sm:text-xs font-semibold px-2 py-1 rounded-full mt-1 inline-block
                     ${index === 0 ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300' : 
                       'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'}
                   `}>

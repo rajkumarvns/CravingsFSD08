@@ -10,8 +10,8 @@ const PhotosSection = ({
   MAX_GALLERY_IMAGES,
 }) => {
   return (
-    <div className="bg-(--color-base-100) p-6 rounded-2xl shadow-md border border-(--color-base-300) hover:shadow-xl transition-all duration-300 transform">
-      <h3 className="text-xl font-bold text-(--color-base-content) border-b-2 border-(--color-primary) pb-2 inline-block mb-6">Restaurant Photos</h3>
+    <div className="bg-(--color-base-100) p-4 sm:p-6 rounded-2xl shadow-md border border-(--color-base-300) hover:shadow-xl transition-all duration-300 transform">
+      <h3 className="text-lg sm:text-xl font-bold text-(--color-base-content) border-b-2 border-(--color-primary) pb-2 inline-block mb-4 sm:mb-6">Restaurant Photos</h3>
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         {/* Cover Image - 40% (col-span-2) */}
         <div className="lg:col-span-2 flex flex-col h-full">

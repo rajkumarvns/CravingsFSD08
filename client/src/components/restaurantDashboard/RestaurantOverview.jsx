@@ -36,7 +36,7 @@ const RestaurantOverview = ({ activeRestaurantId, restaurants, refreshRestaurant
 
       {/* Network Quick Controls - This shows ALL restaurants for this manager */}
       {restaurants && restaurants.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
           <h3 className="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">
             <IoRestaurantOutline className="text-[#c2410c]" size={22} />
             My Restaurant Network
@@ -88,36 +88,68 @@ const RestaurantOverview = ({ activeRestaurantId, restaurants, refreshRestaurant
       </div>
 
       {/* Recent Orders Table */}
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 overflow-x-auto">
+      <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-gray-100">
         <h3 className="font-bold text-gray-800 text-lg mb-4">Recent Orders</h3>
-        <table className="w-full min-w-[600px] text-sm text-left">
-          <thead className="text-xs text-gray-500 uppercase bg-gray-50 rounded-t-lg">
-            <tr>
-              <th className="px-4 py-3 rounded-tl-lg">Order ID</th>
-              <th className="px-4 py-3">Customer</th>
-              <th className="px-4 py-3">Amount</th>
-              <th className="px-4 py-3 rounded-tr-lg">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {recentOrders.map((order, index) => (
-              <tr key={index} className="hover:bg-gray-50/50 transition-colors">
-                <td className="px-4 py-3 font-medium text-gray-900">{order.id}</td>
-                <td className="px-4 py-3 text-gray-700">{order.customer}</td>
-                <td className="px-4 py-3 font-bold text-gray-900">{order.amount}</td>
-                <td className="px-4 py-3">
-                  <span className={`px-2.5 py-1 rounded-md text-xs font-bold ${
-                    order.status === "Delivered" ? "bg-green-100 text-green-700 border border-green-200" :
-                    order.status === "Preparing" ? "bg-yellow-100 text-yellow-700 border border-yellow-200" :
-                    "bg-red-100 text-red-700 border border-red-200"
-                  }`}>
-                    {order.status}
-                  </span>
-                </td>
+        
+        {/* Desktop Table View */}
+        <div className="hidden sm:block overflow-x-auto">
+          <table className="w-full min-w-[600px] text-sm text-left">
+            <thead className="text-xs text-gray-500 uppercase bg-gray-50 rounded-t-lg">
+              <tr>
+                <th className="px-4 py-3 rounded-tl-lg">Order ID</th>
+                <th className="px-4 py-3">Customer</th>
+                <th className="px-4 py-3">Amount</th>
+                <th className="px-4 py-3 rounded-tr-lg">Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {recentOrders.map((order, index) => (
+                <tr key={index} className="hover:bg-gray-50/50 transition-colors">
+                  <td className="px-4 py-3 font-medium text-gray-900">{order.id}</td>
+                  <td className="px-4 py-3 text-gray-700">{order.customer}</td>
+                  <td className="px-4 py-3 font-bold text-gray-900">{order.amount}</td>
+                  <td className="px-4 py-3">
+                    <span className={`px-2.5 py-1 rounded-md text-xs font-bold ${
+                      order.status === "Delivered" ? "bg-green-100 text-green-700 border border-green-200" :
+                      order.status === "Preparing" ? "bg-yellow-100 text-yellow-700 border border-yellow-200" :
+                      "bg-red-100 text-red-700 border border-red-200"
+                    }`}>
+                      {order.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="sm:hidden flex flex-col gap-3">
+          {recentOrders.map((order, index) => (
+            <div key={index} className="border border-gray-100 rounded-xl p-3 shadow-sm bg-gray-50/30">
+              <div className="flex justify-between items-center border-b border-gray-100 pb-2 mb-2">
+                <span className="font-bold text-gray-900">{order.id}</span>
+                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                  order.status === "Delivered" ? "bg-green-100 text-green-700 border border-green-200" :
+                  order.status === "Preparing" ? "bg-yellow-100 text-yellow-700 border border-yellow-200" :
+                  "bg-red-100 text-red-700 border border-red-200"
+                }`}>
+                  {order.status}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-wide">Customer</p>
+                  <p className="font-medium text-sm text-gray-800">{order.customer}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] text-gray-500 uppercase tracking-wide">Amount</p>
+                  <p className="font-bold text-[#c2410c]">{order.amount}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
