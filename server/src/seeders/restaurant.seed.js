@@ -71,16 +71,15 @@ const restaurantSeed = async () => {
     await Restaurant.deleteMany({});
     await Menu.deleteMany({});
 
-    // Get the standard manager from user.seed.js
-    let manager = await User.findOne({ email: "manager1@gmail.com" });
-    if (!manager) {
-      console.log("Manager1 not found! Make sure userSeed runs before restaurantSeed.");
-      return;
-    }
-
     console.log("Seeding real Bhopal restaurants...");
 
-    for (let rest of bhopalRestaurants) {
+    for (let [index, rest] of bhopalRestaurants.entries()) {
+      let managerEmail = `manager${(index % 5) + 1}@gmail.com`;
+      let manager = await User.findOne({ email: managerEmail });
+      if (!manager) {
+        console.log(`Manager ${managerEmail} not found!`);
+        continue;
+      }
       // Assign real Unsplash images based on the restaurant
       let imageUrl = "";
       if (rest.restaurantName.includes("Manohar Dairy")) {

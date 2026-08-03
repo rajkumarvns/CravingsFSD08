@@ -3,16 +3,57 @@ import bcrypt from "bcrypt";
 
 const userSeed = async () => {
   try {
+    const defaultPassword = await bcrypt.hash("Manager@123", 10);
     const UserData = [
       {
         fullName: "Manager1",
-        email: "manager1@gmail.com".toLowerCase(),
-        password: await bcrypt.hash("Manager@123", 10),
+        email: "manager1@gmail.com",
+        password: defaultPassword,
         dob: "2000-01-01",
         gender: "other",
         userType: "restaurant",
         phone: "9876543210",
-        photo: { url: "https://placehold.co/600x400?text=M", publicId: null },
+        photo: { url: "https://placehold.co/600x400?text=M1", publicId: null },
+      },
+      {
+        fullName: "Manager2",
+        email: "manager2@gmail.com",
+        password: defaultPassword,
+        dob: "2000-01-01",
+        gender: "other",
+        userType: "restaurant",
+        phone: "9876543211",
+        photo: { url: "https://placehold.co/600x400?text=M2", publicId: null },
+      },
+      {
+        fullName: "Manager3",
+        email: "manager3@gmail.com",
+        password: defaultPassword,
+        dob: "2000-01-01",
+        gender: "other",
+        userType: "restaurant",
+        phone: "9876543212",
+        photo: { url: "https://placehold.co/600x400?text=M3", publicId: null },
+      },
+      {
+        fullName: "Manager4",
+        email: "manager4@gmail.com",
+        password: defaultPassword,
+        dob: "2000-01-01",
+        gender: "other",
+        userType: "restaurant",
+        phone: "9876543213",
+        photo: { url: "https://placehold.co/600x400?text=M4", publicId: null },
+      },
+      {
+        fullName: "Manager5",
+        email: "manager5@gmail.com",
+        password: defaultPassword,
+        dob: "2000-01-01",
+        gender: "other",
+        userType: "restaurant",
+        phone: "9876543214",
+        photo: { url: "https://placehold.co/600x400?text=M5", publicId: null },
       },
       {
         fullName: "Customer1",
