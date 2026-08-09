@@ -9,6 +9,7 @@ import RiderProfileContainer from "../../components/riderDashboard/RiderProfile/
 import { MdDashboard } from "react-icons/md";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
+import { FiMenu, FiX } from "react-icons/fi";
 
 const RiderDashboard = () => {
   const { isLogin, role } = useAuth();
@@ -16,6 +17,7 @@ const RiderDashboard = () => {
   const location = useLocation();
   const active = location.state?.activeTab;
   const [activeTab, setActiveTab] = React.useState(active || "overview");
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
 
   React.useEffect(() => {
     if (location.state?.activeTab) {
@@ -48,19 +50,49 @@ const RiderDashboard = () => {
   }
 
   return (
-    <>
-      <div className="h-[calc(100vh-64px)] flex overflow-hidden relative">
-        <div className="h-full shrink-0">
-          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} mainTabs={mainTabs} settingsTab={settingsTab} subtitle="Rider Panel" />
-        </div>
-        <div className="flex-1 bg-(--color-base-100) p-4 rounded-2xl shadow-xl h-full overflow-y-auto w-full">
-          {activeTab === "overview" && <RiderOverview />}
-          {activeTab === "orders" && <RiderOrders />}
-          {activeTab === "profile" && <RiderProfileContainer />}
-          {activeTab === "settings" && <RiderSetting />}
-        </div>
+    <div className="h-[calc(100vh-64px)] flex flex-col lg:flex-row overflow-hidden relative">
+      {/* Mobile Header for Hamburger */}
+      <div className="lg:hidden flex items-center justify-between p-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-40 shrink-0 shadow-sm">
+        <span className="font-bold text-xl text-gray-800 dark:text-white">Rider Dashboard</span>
+        <button 
+          onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+          className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg text-(--color-primary) hover:bg-gray-200 transition-colors"
+        >
+          {isMobileSidebarOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+        </button>
       </div>
-    </>
+
+      {/* Sidebar Wrapper */}
+      <div className={`
+        fixed lg:relative top-[64px] lg:top-0 left-0 h-[calc(100vh-64px)] lg:h-full shrink-0 z-50
+        transition-transform duration-300 ease-in-out
+        ${isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+      `}>
+        <Sidebar 
+          activeTab={activeTab} 
+          setActiveTab={(tab) => { setActiveTab(tab); setIsMobileSidebarOpen(false); }} 
+          mainTabs={mainTabs} 
+          settingsTab={settingsTab} 
+          subtitle="Rider Panel" 
+        />
+      </div>
+
+      {/* Overlay for mobile */}
+      {isMobileSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden top-[64px]"
+          onClick={() => setIsMobileSidebarOpen(false)}
+        />
+      )}
+
+      {/* Main Content */}
+      <div className="flex-1 bg-(--color-base-100) p-4 rounded-2xl shadow-xl h-full overflow-y-auto w-full">
+        {activeTab === "overview" && <RiderOverview />}
+        {activeTab === "orders" && <RiderOrders />}
+        {activeTab === "profile" && <RiderProfileContainer />}
+        {activeTab === "settings" && <RiderSetting />}
+      </div>
+    </div>
   );
 };
 

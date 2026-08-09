@@ -25,9 +25,9 @@ const CustomerOverview = () => {
           <p className="text-3xl font-bold">$1,245.50</p>
         </div>
       </div>
-      <div className="bg-(--color-base-200) p-4 rounded-lg">
-        <h3 className="font-semibold mb-3">Recent Orders</h3>
-        <table className="w-full">
+      <div className="bg-(--color-base-200) p-4 rounded-lg overflow-x-auto">
+        <h3 className="font-semibold mb-3 whitespace-nowrap">Recent Orders</h3>
+        <table className="w-full min-w-[500px]">
           <thead>
             <tr className="border-b border-(--color-secondary)">
               <th className="text-left py-2 text-sm text-(--color-neutral)">Order ID</th>

@@ -144,7 +144,7 @@ const Navbar = () => {
 
       {/* Cart Modal Overlay */}
       {isCartOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm transition-all duration-500" onClick={() => setIsCartOpen(false)}>
+        <div className="fixed inset-0 z-[100] flex justify-end bg-black/60 backdrop-blur-sm transition-all duration-500" onClick={() => setIsCartOpen(false)}>
           <div 
             className="w-full sm:w-100 h-full shadow-2xl flex flex-col transform transition-transform duration-500 translate-x-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-l border-white/20 dark:border-gray-800"
             onClick={(e) => e.stopPropagation()}
