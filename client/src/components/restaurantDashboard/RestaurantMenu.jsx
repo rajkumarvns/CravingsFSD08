@@ -191,7 +191,17 @@ const RestaurantMenu = ({ activeRestaurantId }) => {
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto items-stretch sm:items-center">
             <button
               className="hover:bg-(--color-primary) border border-(--color-primary) text-(--color-primary) hover:text-white px-4 py-2 rounded transition-colors flex items-center gap-2"
-              onClick={() => setIsAddNewItemModalOpen(true)}
+              onClick={() => {
+                if (!user) {
+                  showToast("first login", "error");
+                  return;
+                }
+                if (user.userType !== "restaurant") {
+                  showToast("only restaurant can add menu items", "error");
+                  return;
+                }
+                setIsAddNewItemModalOpen(true);
+              }}
             >
               <IoMdAddCircleOutline />
               Add New Item

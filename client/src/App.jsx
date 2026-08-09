@@ -22,6 +22,11 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 const App = () => {
   const location = useLocation();
+  
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   const hideFooterRoutes = [
     "/customer-dashboard",
     "/restaurant-dashboard",

@@ -3,12 +3,13 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import api from "../config/ApiConfig";
+import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "../context/AuthContext";
 import ForgotPasswordModal from "../components/commonModals/ForgotPasswordModal";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setUser, setIsLogin, setRole } = useAuth();
+  const { setUser, setIsLogin, setRole, handleGoogleLogin } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -91,6 +92,38 @@ const Login = () => {
           <p className="text-(--color-secondary) text-center mb-6">
             Login to your Cravings account
           </p>
+
+          {/* Google Login */}
+          <div className="flex justify-center mb-4">
+            <GoogleLogin
+              onSuccess={async (credentialResponse) => {
+                const res = await handleGoogleLogin(credentialResponse);
+                if (res?.success) {
+                  const role = res.data.userType;
+                  if (role === "restaurant") navigate("/restaurant-dashboard");
+                  else if (role === "rider") navigate("/rider-dashboard");
+                  else if (role === "admin") navigate("/admin-dashboard");
+                  else navigate("/customer-dashboard");
+                }
+              }}
+              onError={() => {
+                toast.error("Google Login Failed");
+              }}
+              text="signin_with"
+              width="100%"
+            />
+          </div>
+
+          <div className="relative mb-4">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">
+                Or login with email
+              </span>
+            </div>
+          </div>
 
           {/* Login Form */}
           <form onSubmit={handleSubmit}>

@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { useAuth } from "./AuthContext.jsx";
 
 const CartContext = createContext();
 
 export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
+  const { user } = useAuth();
   const [cart, setCart] = useState(() => {
     try {
       const storedCart = localStorage.getItem("cravingsCart");
@@ -25,6 +27,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const handleAddToCart = (item) => {
+    if (!user) {
+      toast.error("Please login first to add items to cart");
+      return;
+    }
     // Prevent adding from different restaurants without user confirmation
     if (cart.length > 0 && cart[0].item.restaurantId !== item.restaurantId) {
       const confirmClear = window.confirm("Your cart contains items from another restaurant. Do you want to clear it and add this item instead?");

@@ -11,21 +11,25 @@ const UserSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    googleId: {
+      type: String,
+      default: null,
+    },
     phone: {
       type: String,
-      required: true,
+      required: function() { return !this.googleId; },
     },
     dob: {
       type: Date,
-      required: true,
+      required: function() { return !this.googleId; },
     },
     gender: {
       type: String,
-      required: true,
+      required: function() { return !this.googleId; },
     },
     password: {
       type: String,
-      required: true,
+      required: function() { return !this.googleId; },
     },
     photo: {
       url: {

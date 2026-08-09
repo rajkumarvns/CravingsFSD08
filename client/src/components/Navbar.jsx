@@ -7,6 +7,20 @@ import { IoCartOutline, IoCloseOutline } from "react-icons/io5";
 import toast from "react-hot-toast";
 import api from "../config/ApiConfig";
 import { useCart } from "../context/CartContext";
+import { useGoogleOneTapLogin } from '@react-oauth/google';
+
+const GoogleOneTap = () => {
+  const { handleGoogleLogin } = useAuth();
+  useGoogleOneTapLogin({
+    onSuccess: (credentialResponse) => {
+      handleGoogleLogin(credentialResponse);
+    },
+    onError: () => {
+      console.log('Google One Tap Login Failed');
+    },
+  });
+  return null;
+};
 
 const Navbar = () => {
   const { user, isLogin, role, setUser, setIsLogin, setRole } = useAuth();
@@ -54,6 +68,7 @@ const Navbar = () => {
 
   return (
     <>
+      {!isLogin && <GoogleOneTap />}
       <div className="sticky top-0 z-99 flex items-center justify-between px-12 py-1 bg-(--color-primary) text-white w-full h-16 shadow-md">
         <div className="h-full">
           <Link to="/">
@@ -131,11 +146,11 @@ const Navbar = () => {
       {isCartOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm transition-all duration-500" onClick={() => setIsCartOpen(false)}>
           <div 
-            className="w-full sm:w-[400px] h-full shadow-2xl flex flex-col transform transition-transform duration-500 translate-x-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-l border-white/20 dark:border-gray-800"
+            className="w-full sm:w-100 h-full shadow-2xl flex flex-col transform transition-transform duration-500 translate-x-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-l border-white/20 dark:border-gray-800"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-5 border-b border-gray-200/50 dark:border-gray-800/50 bg-gradient-to-r from-orange-50 to-white dark:from-orange-900/10 dark:to-transparent">
+            <div className="flex items-center justify-between p-5 border-b border-gray-200/50 dark:border-gray-800/50 bg-linear-to-r from-orange-50 to-white dark:from-orange-900/10 dark:to-transparent">
               <div className="flex items-center gap-3">
                 <div className="bg-orange-100 dark:bg-orange-500/20 p-2 rounded-xl text-orange-600 dark:text-orange-400">
                   <IoCartOutline size={26} />
@@ -161,7 +176,7 @@ const Navbar = () => {
                 <div key={c.item._id} className="flex gap-4 p-3 bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-md border border-gray-100 dark:border-gray-700/50 transform hover:-translate-y-0.5 transition-all duration-300 group">
                   <div className="relative w-24 h-24 shrink-0 overflow-hidden rounded-xl">
                     <img src={itemImage} alt={c.item.itemName} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent"></div>
                   </div>
                   <div className="flex-1 flex flex-col justify-between py-1">
                     <div>
@@ -171,7 +186,7 @@ const Navbar = () => {
                     <div className="flex items-center justify-between mt-3">
                       <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700/50 rounded-lg p-1 border border-gray-200/50 dark:border-gray-600/50">
                         <button onClick={() => handleRemoveFromCart(c.item, false)} className="w-8 h-8 flex items-center justify-center rounded-md bg-white dark:bg-gray-600 shadow-sm hover:bg-orange-500 hover:text-white text-orange-600 dark:text-orange-400 font-bold text-lg transition-all active:scale-95">-</button>
-                        <span className="font-bold text-gray-800 dark:text-gray-200 min-w-[24px] text-center text-sm">{c.quantity}</span>
+                        <span className="font-bold text-gray-800 dark:text-gray-200 min-w-6 text-center text-sm">{c.quantity}</span>
                         <button onClick={() => handleAddToCart(c.item)} className="w-8 h-8 flex items-center justify-center rounded-md bg-white dark:bg-gray-600 shadow-sm hover:bg-orange-500 hover:text-white text-orange-600 dark:text-orange-400 font-bold text-lg transition-all active:scale-95">+</button>
                       </div>
                       <p className="font-black text-gray-800 dark:text-white text-lg">₹{c.item.price * c.quantity}</p>
@@ -196,9 +211,9 @@ const Navbar = () => {
                 <span className="text-gray-800 dark:text-white font-black text-lg">Grand Total</span>
                 <span className="text-2xl font-black text-orange-600 dark:text-orange-400">₹{totalAmount}</span>
               </div>
-              <button className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-4 rounded-xl font-bold text-lg transition-all shadow-xl shadow-orange-500/25 hover:shadow-orange-500/40 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 group overflow-hidden relative">
+              <button className="w-full bg-linear-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-4 rounded-xl font-bold text-lg transition-all shadow-xl shadow-orange-500/25 hover:shadow-orange-500/40 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 group overflow-hidden relative">
                 <span className="relative z-10 flex items-center gap-2">
-                  Proceed to Checkout
+                  Place Order
                   <span className="group-hover:translate-x-1 transition-transform">→</span>
                 </span>
                 {/* Subtle shine effect on button */}

@@ -6,12 +6,14 @@ import {
   SendOtp,
   VerifyOtp,
   ResetPassword,
+  GoogleLogin,
 } from "../controller/auth.controller.js";
 import { OTPAuthProtect } from "../middleware/auth.middelware.js";
 
 const router = express.Router();
 
 router.post("/register", RegisterUser);
+router.post("/google", GoogleLogin);
 router.post("/login", LoginUser);
 router.get("/logout", LogoutUser);
 router.post("/send-otp", SendOtp);
