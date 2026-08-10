@@ -8,6 +8,8 @@ import toast from "react-hot-toast";
 import api from "../config/ApiConfig";
 import { useCart } from "../context/CartContext";
 import { useGoogleOneTapLogin } from '@react-oauth/google';
+import { loadRazorpayScript } from "../utils/loadRazorpay";
+import ReceiptModal from "./payment/ReceiptModal";
 
 const GoogleOneTap = () => {
   const { handleGoogleLogin } = useAuth();
@@ -25,8 +27,10 @@ const GoogleOneTap = () => {
 const Navbar = () => {
   const { user, isLogin, role, setUser, setIsLogin, setRole } = useAuth();
   const navigate = useNavigate();
-  const { totalItems, cart, totalAmount, handleAddToCart, handleRemoveFromCart } = useCart();
+  const { totalItems, cart, totalAmount, handleAddToCart, handleRemoveFromCart, clearCart } = useCart();
   const [isCartOpen, setIsCartOpen] = React.useState(false);
+  const [isCheckingOut, setIsCheckingOut] = React.useState(false);
+  const [receiptData, setReceiptData] = React.useState(null);
 
   React.useEffect(() => {
     if (totalItems === 0 && isCartOpen) {
@@ -63,6 +67,81 @@ const Navbar = () => {
         error.response?.data?.message ||
         "Unknown error occurred during registration. Please try again.",
       );
+    }
+  };
+
+  const handlePlaceOrder = async () => {
+    setIsCheckingOut(true);
+    try {
+      const res = await loadRazorpayScript();
+
+      if (!res) {
+        toast.error("Razorpay SDK failed to load. Are you online?");
+        setIsCheckingOut(false);
+        return;
+      }
+
+      const orderResponse = await api.post(`/payment/create-order`, {
+        amount: totalAmount,
+      });
+
+      const { data } = orderResponse.data;
+
+      const options = {
+        key: data.keyId,
+        amount: data.amount,
+        currency: data.currency,
+        name: "Cravings Delivery",
+        description: "Order Payment",
+        order_id: data.orderId,
+        handler: async function (response) {
+          try {
+            const verifyRes = await api.post(`/payment/verify`, {
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+
+            if (verifyRes.data.success) {
+              toast.success("Payment successful and verified!");
+              setIsCartOpen(false);
+              setReceiptData({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                amount: totalAmount,
+                items: cart,
+              });
+              clearCart();
+            } else {
+              toast.error("Payment verification failed.");
+            }
+          } catch (err) {
+            console.error("Verification error:", err);
+            toast.error("An error occurred during verification.");
+          }
+        },
+        prefill: {
+          name: user?.name || "Test User",
+          email: user?.email || "test@example.com",
+          contact: user?.phone || "9999999999",
+        },
+        theme: {
+          color: "#ea580c",
+        },
+      };
+
+      const paymentObject = new window.Razorpay(options);
+
+      paymentObject.on("payment.failed", function (response) {
+        toast.error("Payment failed. " + response.error.description);
+      });
+
+      paymentObject.open();
+    } catch (error) {
+      console.error(error);
+      toast.error("Could not initiate payment.");
+    } finally {
+      setIsCheckingOut(false);
     }
   };
 
@@ -144,7 +223,7 @@ const Navbar = () => {
 
       {/* Cart Modal Overlay */}
       {isCartOpen && (
-        <div className="fixed inset-0 z-[100] flex justify-end bg-black/60 backdrop-blur-sm transition-all duration-500" onClick={() => setIsCartOpen(false)}>
+        <div className="fixed inset-0 z-100 flex justify-end bg-black/60 backdrop-blur-sm transition-all duration-500" onClick={() => setIsCartOpen(false)}>
           <div 
             className="w-full sm:w-100 h-full shadow-2xl flex flex-col transform transition-transform duration-500 translate-x-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-l border-white/20 dark:border-gray-800"
             onClick={(e) => e.stopPropagation()}
@@ -211,9 +290,9 @@ const Navbar = () => {
                 <span className="text-gray-800 dark:text-white font-black text-lg">Grand Total</span>
                 <span className="text-2xl font-black text-orange-600 dark:text-orange-400">₹{totalAmount}</span>
               </div>
-              <button className="w-full bg-linear-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-4 rounded-xl font-bold text-lg transition-all shadow-xl shadow-orange-500/25 hover:shadow-orange-500/40 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 group overflow-hidden relative">
+              <button onClick={handlePlaceOrder} disabled={isCheckingOut} className="w-full bg-linear-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-4 rounded-xl font-bold text-lg transition-all shadow-xl shadow-orange-500/25 hover:shadow-orange-500/40 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 group overflow-hidden relative disabled:opacity-50 disabled:cursor-not-allowed">
                 <span className="relative z-10 flex items-center gap-2">
-                  Place Order
+                  {isCheckingOut ? "Processing..." : "Place Order"}
                   <span className="group-hover:translate-x-1 transition-transform">→</span>
                 </span>
                 {/* Subtle shine effect on button */}
@@ -223,6 +302,11 @@ const Navbar = () => {
           </div>
         </div>
       )}
+      <ReceiptModal 
+        isOpen={!!receiptData} 
+        onClose={() => setReceiptData(null)} 
+        data={receiptData} 
+      />
     </>
   );
 };
