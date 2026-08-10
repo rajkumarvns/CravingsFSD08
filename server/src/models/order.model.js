@@ -89,7 +89,7 @@ const OrderSchema = mongoose.Schema(
         paymentMethod: {
           type: String,
           enum: ["card", "upi"],
-          required: false,
+          required: true,
         },
         paymentStatus: {
           type: String,
@@ -99,6 +99,7 @@ const OrderSchema = mongoose.Schema(
         razorpayOrderId: { type: String, required: false },
         razorpayPaymentId: { type: String, required: false, sparse: true, unique: true },
         razorpaySignature: { type: String, required: false },
+        paidAt: { type: Date, required: false },
       },
     },
   },

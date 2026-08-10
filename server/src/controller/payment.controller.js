@@ -1,125 +1,135 @@
 import crypto from "crypto";
-import razorpay from "../config/razorpay.js";
+import Razorpay from "razorpay";
 import Order from "../models/order.model.js";
+import Customer from "../models/customer.model.js";
 
-// Dummy test data for order creation since Cart integration is pending
-// This ensures we have valid ObjectIds if needed, but we'll try to just
-// save a pending order with placeholder customer/restaurant if necessary,
-// or we can require them from frontend. For this test implementation,
-// we will expect `amount` from the frontend, but in production, ALWAYS
-// calculate amount from cart/DB.
+// Lazily create Razorpay instance so missing keys fail loudly
+const getRazorpayInstance = () =>
+  new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+  });
 
-export const createOrder = async (req, res) => {
+// ─── Helper: find a customer's order safely ─────────────────────────────────
+const getCustomerOrder = async (userId, orderId) => {
+  let customer = await Customer.findOne({ customerId: userId });
+  if (!customer) {
+    customer = await Customer.create({ customerId: userId });
+  }
+  return Order.findOne({ _id: orderId, customerId: customer._id });
+};
+
+// ─── POST /payment/create-order ──────────────────────────────────────────────
+// 1. Takes the app's orderId from the body
+// 2. Creates a Razorpay order (amount in paise, 1 INR = 100 paise)
+// 3. Saves the razorpayOrderId on our order document
+// 4. Returns key + order details to the frontend
+export const CreateRazorpayOrder = async (req, res, next) => {
   try {
-    const {
-      amount,
-      currency = "INR",
-      receipt = `receipt_${Date.now()}`,
-    } = req.body;
-
-    // IMPORTANT: Security check
-    // In a real application, you MUST calculate the amount server-side based on the cart.
-    // For this test integration, we will accept the amount from the frontend to allow testing.
-
-    if (!amount) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Amount is required" });
+    const { orderId } = req.body;
+    if (!orderId) {
+      const err = new Error("orderId is required");
+      err.statusCode = 400;
+      return next(err);
     }
 
-    const options = {
-      amount: amount * 100, // Amount in paise
-      currency,
-      receipt,
-      payment_capture: 1, // Auto capture
-    };
+    const order = await getCustomerOrder(req.user._id, orderId);
+    if (!order) {
+      const err = new Error("Order not found");
+      err.statusCode = 404;
+      return next(err);
+    }
 
-    const razorpayOrder = await razorpay.orders.create(options);
+    if (order.paymentDetails?.paymentStatus === "completed") {
+      const err = new Error("Payment already completed for this order");
+      err.statusCode = 400;
+      return next(err);
+    }
 
-    // Create a pending order in the database (Optional, depending on flow)
-    // We will skip full DB order creation here since we lack restaurantId/customerId
-    // But we'll demonstrate it if you pass IDs.
+    const razorpay = getRazorpayInstance();
+
+    // Razorpay expects amount in the SMALLEST currency unit (paise for INR)
+    const razorpayOrder = await razorpay.orders.create({
+      amount: Math.round(order.billDetails.finalAmount * 100), // e.g. ₹250 → 25000
+      currency: "INR",
+      receipt: `receipt_${order._id}`,        // your internal reference
+      notes: { appOrderId: String(order._id) }, // optional metadata
+    });
+
+    // Save the Razorpay order ID so we can match it during verification
+    order.paymentDetails.razorpayOrderId = razorpayOrder.id;
+    await order.save();
 
     return res.status(200).json({
-      success: true,
-      message: "Razorpay order created successfully",
+      message: "Razorpay order created",
       data: {
-        orderId: razorpayOrder.id,
+        key: process.env.RAZORPAY_KEY_ID, // sent to frontend to open checkout
+        razorpayOrderId: razorpayOrder.id,
         amount: razorpayOrder.amount,
         currency: razorpayOrder.currency,
-        keyId: process.env.RAZORPAY_KEY_ID,
+        appOrderId: order._id,
       },
     });
   } catch (error) {
-    console.error("Error creating Razorpay order:", error);
-    return res
-      .status(500)
-      .json({
-        success: false,
-        message: "Internal Server Error",
-        error: error.message,
-      });
+    next(error);
   }
 };
 
-export const verifyPayment = async (req, res) => {
+// ─── POST /payment/verify ────────────────────────────────────────────────────
+// After the user pays, Razorpay sends 3 IDs to the frontend handler.
+// We MUST verify the HMAC-SHA256 signature on the backend to confirm
+// the payment was not tampered with.
+export const VerifyRazorpayPayment = async (req, res, next) => {
   try {
-    const {
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature,
-      application_order_id,
-    } = req.body;
+    const { orderId, razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
-    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Missing required payment details" });
+    if (!orderId || !razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      const err = new Error("All payment verification fields are required");
+      err.statusCode = 400;
+      return next(err);
     }
 
-    // Verify signature
-    const secret = process.env.RAZORPAY_KEY_SECRET;
-    const generatedSignature = crypto
-      .createHmac("sha256", secret)
+    const order = await getCustomerOrder(req.user._id, orderId);
+    if (!order) {
+      const err = new Error("Order not found");
+      err.statusCode = 404;
+      return next(err);
+    }
+
+    // ── Signature Verification (CRITICAL security step) ──────────────────────
+    // Razorpay signs: "razorpay_order_id|razorpay_payment_id"
+    // using your Key Secret as the HMAC key.
+    // If the computed hash matches the received signature → payment is genuine.
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
       .update(`${razorpay_order_id}|${razorpay_payment_id}`)
       .digest("hex");
 
-    if (generatedSignature !== razorpay_signature) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Payment verification failed: Invalid signature",
-        });
+    if (expectedSignature !== razorpay_signature) {
+      // Signatures don't match → payment was tampered with
+      order.paymentDetails.paymentStatus = "failed";
+      order.orderStatus = "failed";
+      await order.save();
+
+      const err = new Error("Payment signature verification failed");
+      err.statusCode = 400;
+      return next(err);
     }
 
-    // Signature is valid.
-    // If application_order_id is passed, update the order in DB
-    if (application_order_id) {
-      await Order.findByIdAndUpdate(application_order_id, {
-        "paymentDetails.paymentStatus": "completed",
-        "paymentDetails.razorpayOrderId": razorpay_order_id,
-        "paymentDetails.razorpayPaymentId": razorpay_payment_id,
-        "paymentDetails.razorpaySignature": razorpay_signature,
-      });
-    }
+    // ── Payment is verified. Update the order ────────────────────────────────
+    order.paymentDetails.paymentStatus = "completed";
+    order.paymentDetails.razorpayOrderId = razorpay_order_id;
+    order.paymentDetails.razorpayPaymentId = razorpay_payment_id;
+    order.paymentDetails.razorpaySignature = razorpay_signature;
+    order.paymentDetails.paidAt = new Date();
+    order.orderStatus = "accepted"; // move order to next stage
+    await order.save();
 
     return res.status(200).json({
-      success: true,
-      message: "Payment verified successfully",
-      data: {
-        razorpay_payment_id,
-        razorpay_order_id,
-      },
+      message: "Payment verified and order successful",
+      data: order,
     });
   } catch (error) {
-    console.error("Error verifying payment:", error);
-    return res
-      .status(500)
-      .json({
-        success: false,
-        message: "Internal Server Error",
-        error: error.message,
-      });
+    next(error);
   }
 };

@@ -2,9 +2,9 @@ import React from "react";
 
 const AdminOverview = () => {
   const recentOrders = [
-    { id: "#ORD-1001", restaurant: "Burger King", amount: "$45.00", status: "Delivered" },
-    { id: "#ORD-1002", restaurant: "Pizza Hut", amount: "$32.50", status: "Preparing" },
-    { id: "#ORD-1003", restaurant: "KFC", amount: "$18.75", status: "Delivered" }
+    { id: "#ORD-1001", restaurant: "Burger King", amount: "₹45.00", status: "Delivered" },
+    { id: "#ORD-1002", restaurant: "Pizza Hut", amount: "₹32.50", status: "Preparing" },
+    { id: "#ORD-1003", restaurant: "KFC", amount: "₹18.75", status: "Delivered" }
   ];
 
   return (
@@ -17,7 +17,7 @@ const AdminOverview = () => {
         </div>
         <div className="bg-(--color-base-200) p-4 rounded-lg">
           <p className="text-(--color-neutral) text-sm">Total Revenue (Platform)</p>
-          <p className="text-3xl font-bold">$45,240.00</p>
+          <p className="text-3xl font-bold">₹45,240.00</p>
         </div>
       </div>
       <div className="bg-(--color-base-200) p-4 rounded-lg">

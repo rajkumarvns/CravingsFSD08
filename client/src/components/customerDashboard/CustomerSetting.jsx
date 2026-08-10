@@ -13,6 +13,7 @@ const CustomerSetting = () => {
   const [profilePic, setProfilePic] = useState(null);
   const [profilePicPreview, setProfilePicPreview] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDetectingLocation, setIsDetectingLocation] = useState(false);
   const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("personal");
 
@@ -64,6 +65,52 @@ const CustomerSetting = () => {
   const handleRemoveAddress = (index) => {
     const newAddresses = formData.addresses.filter((_, i) => i !== index);
     setFormData({ ...formData, addresses: newAddresses });
+  };
+
+  const handleDetectLocation = async (index) => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser");
+      return;
+    }
+
+    setIsDetectingLocation(true);
+    const toastId = toast.loading("Detecting your location...");
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          // Reverse geocoding using Nominatim (OpenStreetMap)
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`);
+          const data = await res.json();
+          
+          if (data && data.address) {
+            const newAddresses = [...formData.addresses];
+            newAddresses[index] = {
+              ...newAddresses[index],
+              address: data.display_name || "",
+              city: data.address.city || data.address.town || data.address.village || "",
+              state: data.address.state || "",
+              pincode: data.address.postcode || "",
+            };
+            setFormData({ ...formData, addresses: newAddresses });
+            toast.success("Location detected successfully!", { id: toastId });
+          } else {
+            toast.error("Could not fetch address details", { id: toastId });
+          }
+        } catch (err) {
+          console.error(err);
+          toast.error("Failed to detect location", { id: toastId });
+        } finally {
+          setIsDetectingLocation(false);
+        }
+      },
+      (error) => {
+        setIsDetectingLocation(false);
+        toast.error("Please allow location access to use this feature", { id: toastId });
+      },
+      { timeout: 10000 }
+    );
   };
 
   const handleSaveProfile = async () => {
@@ -119,11 +166,11 @@ const CustomerSetting = () => {
 
   return (
     <>
-      <div className="w-full max-w-5xl mx-auto py-4 px-4 sm:px-8">
-        <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-3xl overflow-hidden border border-gray-100 dark:border-gray-700 relative">
+      <div className="w-full max-w-5xl mx-auto py-4 px-4 sm:px-8 mb-20">
+        <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-3xl border border-gray-100 dark:border-gray-700 relative">
           
           {/* Banner Image */}
-          <div className="h-32 sm:h-48 w-full bg-gradient-to-r from-orange-400 via-rose-500 to-purple-600 relative overflow-hidden">
+          <div className="h-32 sm:h-48 w-full bg-gradient-to-r from-orange-400 via-rose-500 to-purple-600 relative overflow-hidden rounded-t-3xl">
             <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
             
@@ -231,7 +278,7 @@ const CustomerSetting = () => {
           </div>
 
           {/* Form Body */}
-          <div className="p-4 sm:p-8 space-y-8 h-full pb-20">
+          <div className="p-4 sm:p-8 space-y-8 pb-10">
             {activeSection === "personal" && (
               <div>
                 <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-2">
@@ -384,6 +431,17 @@ const CustomerSetting = () => {
                         <h4 className="font-extrabold text-gray-700 dark:text-gray-200">
                           Location {addr.isDefault ? <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full uppercase tracking-wider">Default</span> : ""}
                         </h4>
+                        {editingProfile && (
+                          <button
+                            type="button"
+                            onClick={() => handleDetectLocation(index)}
+                            disabled={isDetectingLocation}
+                            className="ml-auto flex items-center gap-1.5 text-xs font-bold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-500/10 hover:bg-orange-100 dark:hover:bg-orange-500/20 px-3 py-1.5 rounded-lg border border-orange-200 dark:border-orange-500/20 transition-colors"
+                          >
+                            <FaMapMarkerAlt />
+                            {isDetectingLocation ? "Detecting..." : "Detect Location"}
+                          </button>
+                        )}
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

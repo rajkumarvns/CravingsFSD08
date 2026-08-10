@@ -2,18 +2,18 @@ import React from "react";
 
 const RestaurantOrders = ({ activeRestaurantId }) => {
   const mockOrders = [
-    { id: "#ORD-1001", customer: "John Doe", amount: "$45.00", status: "Delivered", date: "2026-07-10" },
-    { id: "#ORD-1002", customer: "Jane Smith", amount: "$32.50", status: "Preparing", date: "2026-07-10" },
-    { id: "#ORD-1003", customer: "Bob Johnson", amount: "$18.75", status: "Delivered", date: "2026-07-09" },
-    { id: "#ORD-1004", customer: "Alice Brown", amount: "$55.20", status: "Cancelled", date: "2026-07-09" },
-    { id: "#ORD-1005", customer: "Charlie Davis", amount: "$22.00", status: "Delivered", date: "2026-07-08" },
-    { id: "#ORD-1006", customer: "Diana Prince", amount: "$41.10", status: "Preparing", date: "2026-07-08" },
-    { id: "#ORD-1007", customer: "Evan Wright", amount: "$15.00", status: "Delivered", date: "2026-07-07" },
-    { id: "#ORD-1008", customer: "Fiona Apple", amount: "$68.90", status: "Delivered", date: "2026-07-07" },
-    { id: "#ORD-1009", customer: "George King", amount: "$29.50", status: "Delivered", date: "2026-07-06" },
-    { id: "#ORD-1010", customer: "Hannah Scott", amount: "$37.25", status: "Delivered", date: "2026-07-06" },
-    { id: "#ORD-1011", customer: "Ian Bell", amount: "$50.00", status: "Delivered", date: "2026-07-05" },
-    { id: "#ORD-1012", customer: "Julia Roberts", amount: "$24.80", status: "Delivered", date: "2026-07-05" }
+    { id: "#ORD-1001", customer: "John Doe", amount: "₹45.00", status: "Delivered", date: "2026-07-10" },
+    { id: "#ORD-1002", customer: "Jane Smith", amount: "₹32.50", status: "Preparing", date: "2026-07-10" },
+    { id: "#ORD-1003", customer: "Bob Johnson", amount: "₹18.75", status: "Delivered", date: "2026-07-09" },
+    { id: "#ORD-1004", customer: "Alice Brown", amount: "₹55.20", status: "Cancelled", date: "2026-07-09" },
+    { id: "#ORD-1005", customer: "Charlie Davis", amount: "₹22.00", status: "Delivered", date: "2026-07-08" },
+    { id: "#ORD-1006", customer: "Diana Prince", amount: "₹41.10", status: "Preparing", date: "2026-07-08" },
+    { id: "#ORD-1007", customer: "Evan Wright", amount: "₹15.00", status: "Delivered", date: "2026-07-07" },
+    { id: "#ORD-1008", customer: "Fiona Apple", amount: "₹68.90", status: "Delivered", date: "2026-07-07" },
+    { id: "#ORD-1009", customer: "George King", amount: "₹29.50", status: "Delivered", date: "2026-07-06" },
+    { id: "#ORD-1010", customer: "Hannah Scott", amount: "₹37.25", status: "Delivered", date: "2026-07-06" },
+    { id: "#ORD-1011", customer: "Ian Bell", amount: "₹50.00", status: "Delivered", date: "2026-07-05" },
+    { id: "#ORD-1012", customer: "Julia Roberts", amount: "₹24.80", status: "Delivered", date: "2026-07-05" }
   ];
 
   return (

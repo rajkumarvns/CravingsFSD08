@@ -32,6 +32,8 @@ app.use(cookieParser());
 
 app.use(morgan("dev"));
 
+import OrderRouter from "./src/router/order.route.js";
+
 app.use("/auth", AuthRouter);
 app.use("/public", PublicRouter);
 app.use("/common", CommonRouter);
@@ -42,6 +44,7 @@ app.use("/customer", customerRouter);
 app.use("/rider", riderRouter);
 app.use("/pools", PoolRouter);
 app.use("/payment", PaymentRouter);
+app.use("/order", OrderRouter);
 
 //Default API
 app.get("/", (req, res) => {

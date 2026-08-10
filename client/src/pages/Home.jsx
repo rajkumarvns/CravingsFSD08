@@ -107,9 +107,7 @@ const Home = () => {
       filtered = filtered.filter(
         (r) =>
           r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          r.cuisines.some((c) =>
-            c.toLowerCase().includes(searchQuery.toLowerCase()),
-          ) ||
+          r.cuisines.toLowerCase().includes(searchQuery.toLowerCase()) ||
           r.city.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
@@ -124,9 +122,11 @@ const Home = () => {
       };
 
       const selectedCuisine = categoryMap[selectedCategory];
-      filtered = filtered.filter((r) =>
-        r.cuisines.some((c) => c.toLowerCase().includes(selectedCuisine)),
-      );
+      if (selectedCuisine) {
+        filtered = filtered.filter((r) =>
+          r.cuisines.toLowerCase().includes(selectedCuisine),
+        );
+      }
     }
 
     setFilteredRestaurants(filtered);

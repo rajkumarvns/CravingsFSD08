@@ -2,16 +2,16 @@ import React from "react";
 
 const AdminOrders = () => {
   const mockOrders = [
-    { id: "#ORD-1001", restaurant: "Burger King", amount: "$45.00", status: "Delivered", date: "2026-07-10" },
-    { id: "#ORD-1002", restaurant: "Pizza Hut", amount: "$32.50", status: "Preparing", date: "2026-07-10" },
-    { id: "#ORD-1003", restaurant: "KFC", amount: "$18.75", status: "Delivered", date: "2026-07-09" },
-    { id: "#ORD-1004", restaurant: "Subway", amount: "$55.20", status: "Cancelled", date: "2026-07-09" },
-    { id: "#ORD-1005", restaurant: "McDonalds", amount: "$22.00", status: "Delivered", date: "2026-07-08" },
-    { id: "#ORD-1006", restaurant: "Domino's", amount: "$41.10", status: "Preparing", date: "2026-07-08" },
-    { id: "#ORD-1007", restaurant: "Taco Bell", amount: "$15.00", status: "Delivered", date: "2026-07-07" },
-    { id: "#ORD-1008", restaurant: "Wendy's", amount: "$68.90", status: "Delivered", date: "2026-07-07" },
-    { id: "#ORD-1009", restaurant: "Chipotle", amount: "$29.50", status: "Delivered", date: "2026-07-06" },
-    { id: "#ORD-1010", restaurant: "Panda Express", amount: "$37.25", status: "Delivered", date: "2026-07-06" }
+    { id: "#ORD-1001", restaurant: "Burger King", amount: "₹45.00", status: "Delivered", date: "2026-07-10" },
+    { id: "#ORD-1002", restaurant: "Pizza Hut", amount: "₹32.50", status: "Preparing", date: "2026-07-10" },
+    { id: "#ORD-1003", restaurant: "KFC", amount: "₹18.75", status: "Delivered", date: "2026-07-09" },
+    { id: "#ORD-1004", restaurant: "Subway", amount: "₹55.20", status: "Cancelled", date: "2026-07-09" },
+    { id: "#ORD-1005", restaurant: "McDonalds", amount: "₹22.00", status: "Delivered", date: "2026-07-08" },
+    { id: "#ORD-1006", restaurant: "Domino's", amount: "₹41.10", status: "Preparing", date: "2026-07-08" },
+    { id: "#ORD-1007", restaurant: "Taco Bell", amount: "₹15.00", status: "Delivered", date: "2026-07-07" },
+    { id: "#ORD-1008", restaurant: "Wendy's", amount: "₹68.90", status: "Delivered", date: "2026-07-07" },
+    { id: "#ORD-1009", restaurant: "Chipotle", amount: "₹29.50", status: "Delivered", date: "2026-07-06" },
+    { id: "#ORD-1010", restaurant: "Panda Express", amount: "₹37.25", status: "Delivered", date: "2026-07-06" }
   ];
 
   return (

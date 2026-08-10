@@ -71,75 +71,121 @@ const Navbar = () => {
   };
 
   const handlePlaceOrder = async () => {
-    setIsCheckingOut(true);
-    try {
-      const res = await loadRazorpayScript();
+    if (!isLogin) {
+      toast.error("Please login first");
+      return;
+    }
+    if (role !== "customer") {
+      toast.error("Only customers can order");
+      return;
+    }
+    if (!cart?.length) {
+      toast.error("Cart is empty");
+      return;
+    }
 
-      if (!res) {
+    try {
+      setIsCheckingOut(true);
+
+      const restaurantId = cart[0].item.restaurantId;
+      
+      // Attempt to get user's live geolocation
+      const getGeoLocation = () => {
+        return new Promise((resolve) => {
+          if (!navigator.geolocation) {
+            resolve(null);
+          } else {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                resolve({
+                  lat: position.coords.latitude.toString(),
+                  lon: position.coords.longitude.toString(),
+                });
+              },
+              () => resolve(null),
+              { timeout: 5000, maximumAge: 0, enableHighAccuracy: true }
+            );
+          }
+        });
+      };
+      
+      const geoLocation = await getGeoLocation();
+
+      const createOrderRes = await api.post("/order/create", {
+        restaurantId,
+        paymentMethod: "upi",
+        amount: totalAmount,
+        orderItems: cart.map((c) => ({ itemId: c.item._id, quantity: c.quantity })),
+        geoLocation
+      });
+      
+      const appOrderId = createOrderRes?.data?.data?._id;
+
+      if (!appOrderId) {
+        throw new Error("Failed to create order");
+      }
+
+      const paymentOrderRes = await api.post("/payment/create-order", { orderId: appOrderId });
+      const paymentData = paymentOrderRes?.data?.data;
+
+      const loaded = await loadRazorpayScript();
+      if (!loaded) {
         toast.error("Razorpay SDK failed to load. Are you online?");
         setIsCheckingOut(false);
         return;
       }
 
-      const orderResponse = await api.post(`/payment/create-order`, {
-        amount: totalAmount,
-      });
-
-      const { data } = orderResponse.data;
-
       const options = {
-        key: data.keyId,
-        amount: data.amount,
-        currency: data.currency,
+        key: paymentData.key,
+        amount: paymentData.amount,
+        currency: paymentData.currency,
         name: "Cravings Delivery",
-        description: "Order Payment",
-        order_id: data.orderId,
+        description: "Food Order Payment",
+        order_id: paymentData.razorpayOrderId,
+
         handler: async function (response) {
           try {
-            const verifyRes = await api.post(`/payment/verify`, {
-              razorpay_payment_id: response.razorpay_payment_id,
+            const verifyRes = await api.post("/payment/verify", {
+              orderId: appOrderId,
               razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
             });
 
-            if (verifyRes.data.success) {
-              toast.success("Payment successful and verified!");
-              setIsCartOpen(false);
-              setReceiptData({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                amount: totalAmount,
-                items: cart,
-              });
-              clearCart();
-            } else {
-              toast.error("Payment verification failed.");
-            }
+            toast.success("Payment successful!");
+            setIsCartOpen(false);
+            setReceiptData({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              amount: totalAmount,
+              items: cart,
+            });
+            clearCart();
+            navigate("/customer-dashboard");
           } catch (err) {
-            console.error("Verification error:", err);
-            toast.error("An error occurred during verification.");
+            toast.error(err.response?.data?.message || "Payment verification failed");
           }
         },
         prefill: {
-          name: user?.name || "Test User",
+          name: user?.fullName || user?.name || "Test User",
           email: user?.email || "test@example.com",
           contact: user?.phone || "9999999999",
         },
-        theme: {
-          color: "#ea580c",
+        theme: { color: "#ea580c" },
+        modal: {
+          ondismiss: () => toast.error("Payment cancelled"),
         },
       };
 
-      const paymentObject = new window.Razorpay(options);
+      const rzp = new window.Razorpay(options);
 
-      paymentObject.on("payment.failed", function (response) {
-        toast.error("Payment failed. " + response.error.description);
+      rzp.on("payment.failed", function (response) {
+        toast.error(`Payment failed: ${response.error.description}`);
       });
 
-      paymentObject.open();
+      rzp.open();
     } catch (error) {
-      console.error(error);
-      toast.error("Could not initiate payment.");
+      toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
       setIsCheckingOut(false);
     }
