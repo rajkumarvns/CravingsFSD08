@@ -18,6 +18,7 @@ import Test from "./pages/Test";
 import OrderNow from "./pages/OrderNow";
 import RestaurantDetailsPage from "./pages/RestaurantDetailsPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 
 
 const App = () => {
@@ -60,6 +61,7 @@ const App = () => {
           element={<RestaurantDetailsPage />}
         />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
       </Routes>
 
       {shouldShowFooter && <Footer />}
