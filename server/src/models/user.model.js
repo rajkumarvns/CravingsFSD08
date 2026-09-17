@@ -21,11 +21,11 @@ const UserSchema = mongoose.Schema(
     },
     dob: {
       type: Date,
-      required: function() { return !this.googleId; },
+      default: null,
     },
     gender: {
       type: String,
-      required: function() { return !this.googleId; },
+      default: null,
     },
     password: {
       type: String,

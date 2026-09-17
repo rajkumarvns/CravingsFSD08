@@ -7,22 +7,8 @@ import { IoCartOutline, IoCloseOutline } from "react-icons/io5";
 import toast from "react-hot-toast";
 import api from "../config/ApiConfig";
 import { useCart } from "../context/CartContext";
-import { useGoogleOneTapLogin } from '@react-oauth/google';
 import { loadRazorpayScript } from "../utils/loadRazorpay";
 import ReceiptModal from "./payment/ReceiptModal";
-
-const GoogleOneTap = () => {
-  const { handleGoogleLogin } = useAuth();
-  useGoogleOneTapLogin({
-    onSuccess: (credentialResponse) => {
-      handleGoogleLogin(credentialResponse);
-    },
-    onError: () => {
-      console.log('Google One Tap Login Failed');
-    },
-  });
-  return null;
-};
 
 const Navbar = () => {
   const { user, isLogin, role, setUser, setIsLogin, setRole } = useAuth();
@@ -193,7 +179,6 @@ const Navbar = () => {
 
   return (
     <>
-      {!isLogin && <GoogleOneTap />}
       <div className="sticky top-0 z-99 flex items-center justify-between px-12 py-1 bg-(--color-primary) text-white w-full h-16 shadow-md">
         <div className="h-full">
           <Link to="/">

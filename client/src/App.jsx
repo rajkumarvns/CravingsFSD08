@@ -19,6 +19,7 @@ import OrderNow from "./pages/OrderNow";
 import RestaurantDetailsPage from "./pages/RestaurantDetailsPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import SiteMap from "./pages/SiteMap";
 
 
 const App = () => {
@@ -62,6 +63,7 @@ const App = () => {
         />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/site-map" element={<SiteMap />} />
       </Routes>
 
       {shouldShowFooter && <Footer />}

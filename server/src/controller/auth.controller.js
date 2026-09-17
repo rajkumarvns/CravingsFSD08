@@ -2,16 +2,12 @@ import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import { genToken } from "../utils/auth.service.js";
 import OTP from "../models/otp.model.js";
-import { OAuth2Client } from "google-auth-library";
-
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
 import { genOTPToken } from "../utils/auth.service.js";
 import { sendOTPEmail } from "../utils/email.service.js";
 
 export const RegisterUser = async (req, res, next) => {
   try {
-    const { fullName, email, password, phone, gender, dob, userType } =
+    const { fullName, email, password, phone, userType } =
       req.body;
 
     if (
@@ -19,8 +15,6 @@ export const RegisterUser = async (req, res, next) => {
       !email ||
       !password ||
       !phone ||
-      !gender ||
-      !dob ||
       !userType
     ) {
       const error = new Error("All fields Required");
@@ -49,8 +43,6 @@ export const RegisterUser = async (req, res, next) => {
       email,
       password: hashedPassword,
       phone,
-      gender,
-      dob,
       photo,
       userType,
     });
@@ -223,51 +215,3 @@ export const ResetPassword = async (req, res, next) => {
   }
 };
 
-export const GoogleLogin = async (req, res, next) => {
-  try {
-    const { credential, userType } = req.body;
-    
-    if (!credential) {
-      const error = new Error("Google credential is required");
-      error.statusCode = 400;
-      return next(error);
-    }
-
-    const ticket = await client.verifyIdToken({
-      idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-    
-    const payload = ticket.getPayload();
-    const { sub: googleId, email, name: fullName, picture } = payload;
-
-    let existingUser = await User.findOne({ email });
-
-    if (!existingUser) {
-      const photo = { url: picture || `https://placehold.co/600x400?text=${fullName.charAt(0).toUpperCase()}`, publicId: null };
-      
-      existingUser = await User.create({
-        fullName,
-        email,
-        googleId,
-        userType: userType || "customer",
-        photo
-      });
-    } else if (!existingUser.googleId) {
-      // Link Google ID if email exists but not linked yet
-      existingUser.googleId = googleId;
-      await existingUser.save();
-    }
-
-    await genToken(existingUser, res);
-
-    res.status(200).json({
-      message: "Logged in with Google successfully",
-      data: existingUser,
-    });
-
-  } catch (error) {
-    console.error("Google Auth Error:", error);
-    next(new Error("Google Authentication failed"));
-  }
-};
