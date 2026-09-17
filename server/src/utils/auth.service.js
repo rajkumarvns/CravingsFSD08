@@ -11,8 +11,8 @@ export const genToken = async (user, res) => {
     res.cookie("Oreo", token, {
       maxAge: 1000 * 60 * 60 * 24,
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
     });
     console.log(token);
   } catch (error) {
@@ -31,8 +31,8 @@ export const genOTPToken = async (user, res) => {
     res.cookie("kitkat", token, {
       maxAge: 1000 * 60 * 10,
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
     });
 
     console.log(token);

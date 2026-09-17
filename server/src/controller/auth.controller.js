@@ -92,8 +92,8 @@ export const LogoutUser = async (req, res, next) => {
   try {
     res.clearCookie("Oreo", {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
     });
 
     res.status(200).json({ message: "Logout Sucessfully" });
