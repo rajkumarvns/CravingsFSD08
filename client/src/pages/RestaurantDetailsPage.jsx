@@ -52,10 +52,10 @@ const RestaurantDetailsPage = () => {
       <div className="flex flex-col items-center justify-center min-h-screen">
         <NoDataFound height="auto" width="100%" text="Restaurant Not Found" />
         <button 
-          onClick={() => navigate(-1)} 
+          onClick={() => navigate("/order-now")} 
           className="mt-6 bg-[#c2410c] text-white px-6 py-2 rounded-lg shadow font-bold"
         >
-          Go Back
+          Back to Restaurants
         </button>
       </div>
     );

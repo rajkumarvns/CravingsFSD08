@@ -19,7 +19,7 @@ const Seed = async () => {
   } catch (error) {
     console.log(error.message);
   }
-  finally{
+  finally {
     process.exit(1);
   }
 };

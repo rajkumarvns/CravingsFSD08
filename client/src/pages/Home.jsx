@@ -21,8 +21,20 @@ import CTASection from "../components/home/CTASection";
 
 const Home = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  
+  const { user, role } = useAuth();
+
+  const handleNavigateToDashboard = () => {
+    if (role === "restaurant") {
+      navigate("/restaurant-dashboard", { state: { activeTab: "settings" } });
+    } else if (role === "rider") {
+      navigate("/rider-dashboard", { state: { activeTab: "settings" } });
+    } else if (role === "admin") {
+      navigate("/admin-dashboard", { state: { activeTab: "settings" } });
+    } else {
+      navigate("/customer-dashboard", { state: { activeTab: "settings" } });
+    }
+  };
+
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
   const selectedCategory = searchParams.get("category") || "all";
@@ -134,15 +146,16 @@ const Home = () => {
 
   return (
     <div className="min-h-screen">
-      <HeroSection 
-        user={user} 
-        navigate={navigate} 
-        setViewMode={setViewMode} 
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery} 
+      <HeroSection
+        user={user}
+        navigate={navigate}
+        setViewMode={setViewMode}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        handleNavigateToDashboard={handleNavigateToDashboard}
       />
 
-      <RestaurantsGrid 
+      <RestaurantsGrid
         viewMode={viewMode}
         setViewMode={setViewMode}
         loading={loading}
@@ -158,7 +171,7 @@ const Home = () => {
 
       <CustomerFeedbackSection />
 
-      <CTASection navigate={navigate} />
+      <CTASection navigate={navigate} user={user} handleNavigateToDashboard={handleNavigateToDashboard} />
     </div>
   );
 };

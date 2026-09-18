@@ -1,6 +1,6 @@
 import React from "react";
 
-const CTASection = ({ navigate }) => {
+const CTASection = ({ navigate, user, handleNavigateToDashboard }) => {
   return (
     <section className="bg-(--color-primary) text-(--color-primary-content) py-12 md:py-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -11,12 +11,21 @@ const CTASection = ({ navigate }) => {
           Grow your business with Cravings. Join thousands of restaurants
           already delivering with us.
         </p>
-        <button
-          onClick={() => navigate("/register")}
-          className="bg-(--color-base-100) text-(--color-primary) px-8 py-3 rounded-lg font-semibold hover:bg-(--color-base-200) transition"
-        >
-          Partner With Us
-        </button>
+        {!user ? (
+          <button
+            onClick={() => navigate("/register")}
+            className="bg-(--color-base-100) text-(--color-primary) px-8 py-3 rounded-lg font-semibold hover:bg-(--color-base-200) transition"
+          >
+            Partner With Us
+          </button>
+        ) : (
+          <button
+            onClick={handleNavigateToDashboard}
+            className="bg-(--color-base-100) text-(--color-primary) px-8 py-3 rounded-lg font-semibold hover:bg-(--color-base-200) transition"
+          >
+            Go to Dashboard
+          </button>
+        )}
       </div>
     </section>
   );

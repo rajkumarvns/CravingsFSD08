@@ -2,7 +2,7 @@ import React from "react";
 import { IoSearch } from "react-icons/io5";
 import CarouselComponent from "../CarouselComponent";
 
-const HeroSection = ({ user, navigate, setViewMode, searchQuery, setSearchQuery }) => {
+const HeroSection = ({ user, navigate, setViewMode, searchQuery, setSearchQuery, handleNavigateToDashboard }) => {
   return (
     <section className="relative text-(--color-primary-content) py-16 md:py-40 overflow-hidden">
       {/* Carousel Background */}
@@ -26,12 +26,19 @@ const HeroSection = ({ user, navigate, setViewMode, searchQuery, setSearchQuery 
             doorstep
           </p>
           <div className="flex gap-4 justify-center pointer-events-auto">
-            {!user && (
+            {!user ? (
               <button
                 onClick={() => navigate("/register/customer")}
                 className="bg-(--color-primary) text-(--color-primary-content) px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition"
               >
                 Sign Up
+              </button>
+            ) : (
+              <button
+                onClick={handleNavigateToDashboard}
+                className="bg-(--color-primary) text-(--color-primary-content) px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition"
+              >
+                Go to Dashboard
               </button>
             )}
             <button
